@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "320031012975",
+    "project_id": "chattin-18246",
+    "storage_bucket": "chattin-18246.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320031012975:android:cd187160d19076e2e2359a",
+        "android_client_info": {
+          "package_name": "com.example.chattin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcw13zp3IWlLDBmhsS_D2vV4yC39pVch8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
