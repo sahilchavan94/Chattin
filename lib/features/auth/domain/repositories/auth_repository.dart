@@ -8,4 +8,10 @@ abstract interface class AuthRepository {
   );
   Future<Either<Failure, String>> sendEmailVerificationLink();
   Future<Either<Failure, String>> checkVerificationStatus();
+  Future<Either<Failure, String>> setAccountDetails({
+    required String displayName,
+    required String phoneNumber,
+    required String phoneCode,
+    required String imageUrl,
+  });
 }

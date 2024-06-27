@@ -1,12 +1,18 @@
 // ignore: depend_on_referenced_packages
 
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
+import 'package:chattin/core/common/features/upload/domain/usecases/general_upload.dart';
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/constants.dart';
 import 'package:chattin/core/utils/toasts.dart';
 import 'package:chattin/features/auth/domain/usecases/check_status.dart';
 import 'package:chattin/features/auth/domain/usecases/email_auth.dart';
 import 'package:chattin/features/auth/domain/usecases/email_verification.dart';
+import 'package:chattin/features/auth/domain/usecases/set_account_details.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
 
@@ -17,10 +23,16 @@ class AuthCubit extends Cubit<AuthState> {
       _createAccountWithEmailAndPasswordUseCase;
   final SendEmailVerificationLinkUseCase _sendEmailVerificationLinkUseCase;
   final CheckVerificationStatusUseCase _checkVerificationStatusUseCase;
+  final SetAccountDetailsUseCase _setAccountDetailsUseCase;
+  final GeneralUploadUseCase _generalUploadUseCase;
+  final FirebaseAuth _firebaseAuth;
   AuthCubit(
     this._createAccountWithEmailAndPasswordUseCase,
     this._sendEmailVerificationLinkUseCase,
     this._checkVerificationStatusUseCase,
+    this._setAccountDetailsUseCase,
+    this._generalUploadUseCase,
+    this._firebaseAuth,
   ) : super(AuthState.initial());
 
   //method for sending otp
@@ -34,7 +46,7 @@ class AuthCubit extends Cubit<AuthState> {
     response.fold(
       (l) {
         showToast(
-          content: '${l.message}',
+          content: l.message ?? "Something went wrong",
           description:
               'Server responded with an unexpected error, please try again',
           type: ToastificationType.error,
@@ -69,7 +81,7 @@ class AuthCubit extends Cubit<AuthState> {
     response.fold(
       (l) {
         showToast(
-          content: '${l.message}',
+          content: l.message ?? "Something went wrong",
           description:
               'Server responded with an unexpected error, please try again',
           type: ToastificationType.error,
@@ -86,7 +98,11 @@ class AuthCubit extends Cubit<AuthState> {
             content: "Email already verified",
             type: ToastificationType.success,
           );
-
+          emit(
+            state.copyWith(
+              authStatus: AuthStatus.success,
+            ),
+          );
           return;
         }
         showToast(
@@ -112,7 +128,7 @@ class AuthCubit extends Cubit<AuthState> {
     response.fold(
       (l) {
         showToast(
-          content: '${l.message}',
+          content: l.message ?? "Something went wrong",
           description:
               'Server responded with an unexpected error, please try again',
           type: ToastificationType.error,
@@ -134,6 +150,9 @@ class AuthCubit extends Cubit<AuthState> {
               authStatus: AuthStatus.success,
             ),
           );
+          Constants.navigatorKey.currentContext!.pushReplacement(
+            RoutePath.createProfile.path,
+          );
           return;
         }
         showToast(
@@ -142,7 +161,65 @@ class AuthCubit extends Cubit<AuthState> {
               "The email you added is not verified yet. Email verification is needed to continue with further process",
           type: ToastificationType.error,
         );
+        emit(
+          state.copyWith(
+            authStatus: AuthStatus.failure,
+          ),
+        );
       },
     );
+  }
+
+  //method for setting the account details
+  Future<void> setAccountDetails({
+    required String displayName,
+    required String phoneNumber,
+    required String phoneCode,
+    required File imageFile,
+  }) async {
+    emit(state.copyWith(authStatus: AuthStatus.loading));
+
+    final response = await _generalUploadUseCase.call(
+      imageFile,
+      _firebaseAuth.currentUser!.uid,
+    );
+
+    if (response.isRight()) {
+      final String imageUrl = response.getRight().getOrElse(() => "");
+      if (imageUrl.isEmpty) {
+        showToast(
+          content: "Something went wrong",
+          description:
+              "Some unexpected issue occured while performing the operation, try again later",
+          type: ToastificationType.success,
+        );
+        emit(state.copyWith(authStatus: AuthStatus.failure));
+        return;
+      }
+      final authResponse = await _setAccountDetailsUseCase.call(
+        displayName: displayName,
+        phoneNumber: phoneNumber,
+        phoneCode: phoneCode,
+        imageUrl: imageUrl,
+      );
+      authResponse.fold(
+        (l) {
+          showToast(
+            content: l.message ?? "Something went wrong",
+            description:
+                "Some unexpected issue occured while performing the operation, try again later",
+            type: ToastificationType.success,
+          );
+          emit(state.copyWith(authStatus: AuthStatus.failure));
+        },
+        (r) {
+          showToast(
+            content: r,
+            type: ToastificationType.success,
+          );
+          emit(state.copyWith(authStatus: AuthStatus.success));
+        },
+      );
+    }
   }
 }

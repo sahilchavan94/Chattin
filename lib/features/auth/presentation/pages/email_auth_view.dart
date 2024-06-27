@@ -115,7 +115,7 @@ class _PhoneAuthViewState extends State<PhoneAuthView> {
                               _passwordController.text.trim(),
                             );
                       },
-                      title: 'Recheck Title',
+                      title: 'Recheck Email',
                       approvalText: 'Continue',
                       rejectionText: 'Cancel',
                     );

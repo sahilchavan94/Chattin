@@ -1,6 +1,7 @@
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/constants.dart';
 import 'package:chattin/features/auth/presentation/pages/check_verification_status.dart';
+import 'package:chattin/features/auth/presentation/pages/create_profile_view.dart';
 import 'package:chattin/features/auth/presentation/pages/email_auth_view.dart';
 import 'package:chattin/features/auth/presentation/pages/verify_email_view.dart';
 import 'package:chattin/init_dependencies.dart';
@@ -37,10 +38,9 @@ class MyRouter {
     redirect: (context, state) {
       final isLoggedIn = serviceLocator<FirebaseAuth>().currentUser;
       final isGoingToVerify = state.fullPath == RoutePath.emailAuth.path;
-      //if the user is logged out
       if (isLoggedIn == null) {
         return RoutePath.emailAuth.path;
-      } else if (!isLoggedIn.emailVerified && isGoingToVerify) {
+      } else if (isLoggedIn.emailVerified && isGoingToVerify) {
         return RoutePath.verifyEmail.path;
       } else {
         return null;
@@ -76,6 +76,16 @@ class MyRouter {
             context: context,
             state: state,
             child: const CheckVerificationView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.createProfile.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const CreateProfileView(),
           );
         },
       )

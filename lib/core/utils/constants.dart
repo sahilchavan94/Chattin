@@ -2,4 +2,7 @@ import 'package:flutter/material.dart';
 
 class Constants {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  //collection names
+  static String userCollection = "users";
 }

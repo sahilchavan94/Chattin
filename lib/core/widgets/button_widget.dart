@@ -24,7 +24,12 @@ class ButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () {
+        if (isLoading != null && isLoading == true) {
+          return;
+        }
+        onPressed();
+      },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(6),
         child: Container(

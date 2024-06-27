@@ -60,4 +60,28 @@ class AuthRepositoryImpl implements AuthRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, String>> setAccountDetails({
+    required String displayName,
+    required String phoneNumber,
+    required String phoneCode,
+    required String imageUrl,
+  }) async {
+    try {
+      final response = await authRemoteDataSourceImpl.setAccountDetails(
+        displayName: displayName,
+        phoneNumber: phoneNumber,
+        phoneCode: phoneCode,
+        imageUrl: imageUrl,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          e.error,
+        ),
+      );
+    }
+  }
 }

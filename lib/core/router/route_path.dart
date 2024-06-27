@@ -10,4 +10,7 @@ class RoutePath {
   static const RouteName checkVerification = RouteName(
     path: '/check_status',
   );
+  static const RouteName createProfile = RouteName(
+    path: '/create_profile',
+  );
 }
