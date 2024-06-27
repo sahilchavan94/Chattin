@@ -28,13 +28,13 @@ class AuthState {
     );
   }
 
-  @override
-  bool operator ==(covariant AuthState other) {
-    if (identical(this, other)) return true;
+  // @override
+  // bool operator ==(covariant AuthState other) {
+  //   if (identical(this, other)) return true;
 
-    return other.authStatus == authStatus && other.message == message;
-  }
+  //   return other.authStatus == authStatus && other.message == message;
+  // }
 
-  @override
-  int get hashCode => authStatus.hashCode ^ message.hashCode;
+  // @override
+  // int get hashCode => authStatus.hashCode ^ message.hashCode;
 }

@@ -1,15 +1,34 @@
+import 'package:chattin/core/utils/app_pallete.dart';
+import 'package:chattin/core/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:toastification/toastification.dart';
 
-void showToast(String content, String description, ToastificationType type) {
+void showToast({
+  required String content,
+  String? description,
+  required ToastificationType type,
+}) {
   toastification.show(
     type: ToastificationType.success,
     style: ToastificationStyle.flatColored,
     autoCloseDuration: const Duration(seconds: 5),
-    title: Text(content),
-    // you can also use RichText widget for title and description parameters
-    description: Text(description),
-    alignment: Alignment.topRight,
+    title: Text(
+      content,
+      style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+        color: AppPallete.whiteColor,
+        fontSize: 15,
+      ),
+    ),
+    description: description == null
+        ? null
+        : Text(
+            description,
+            style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+              color: AppPallete.greyColor,
+              fontSize: 15,
+            ),
+          ),
+    alignment: Alignment.bottomCenter,
     direction: TextDirection.ltr,
     animationDuration: const Duration(milliseconds: 300),
     // animationBuilder: (context, animation, alignment, child) {
@@ -19,23 +38,34 @@ void showToast(String content, String description, ToastificationType type) {
     //     opacity: ,
     //   );
     // },
-    icon: const Icon(Icons.check),
-    primaryColor: Colors.green,
-    backgroundColor: Colors.white,
-    foregroundColor: Colors.black,
+    icon: type == ToastificationType.success
+        ? const Icon(
+            Icons.check,
+            color: AppPallete.whiteColor,
+          )
+        : const Icon(
+            Icons.cancel,
+            color: AppPallete.whiteColor,
+          ),
+    primaryColor: type == ToastificationType.success
+        ? AppPallete.blueColor
+        : const Color.fromARGB(255, 254, 96, 84),
+    backgroundColor:
+        type == ToastificationType.success ? AppPallete.blueColor : Colors.red,
+    foregroundColor: Colors.white,
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     borderRadius: BorderRadius.circular(12),
-    // boxShadow: const [
-    //   BoxShadow(
-    //     color: Color(0x07000000),
-    //     blurRadius: 16,
-    //     offset: Offset(0, 16),
-    //     spreadRadius: 0,
-    //   )
-    // ],
-    showProgressBar: true,
-    closeButtonShowType: CloseButtonShowType.onHover,
+    boxShadow: const [
+      BoxShadow(
+        color: Color(0x07000000),
+        blurRadius: 16,
+        offset: Offset(0, 16),
+        spreadRadius: 0,
+      )
+    ],
+    showProgressBar: false,
+    closeButtonShowType: CloseButtonShowType.always,
     closeOnClick: false,
     pauseOnHover: true,
     dragToClose: true,

@@ -12,17 +12,50 @@ class AuthRepositoryImpl implements AuthRepository {
     required this.authRemoteDataSourceImpl,
   });
   @override
-  Future<Either<Failure, String>> sendOtpOnPhone(String phoneNumber) async {
+  Future<Either<Failure, String>> createAccountWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
     try {
-      return Right(
-        await authRemoteDataSourceImpl.sendOtpOnPhone(
-          phoneNumber,
-        ),
+      final response =
+          await authRemoteDataSourceImpl.createAccountWithEmailAndPassword(
+        email,
+        password,
       );
+      return Right(response);
     } on ServerException catch (e) {
       return Left(
         Failure(
-          e.toString(),
+          e.error,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> sendEmailVerificationLink() async {
+    try {
+      final response =
+          await authRemoteDataSourceImpl.sendEmailVerificationLink();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          e.error,
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> checkVerificationStatus() async {
+    try {
+      final response = await authRemoteDataSourceImpl.checkVerificationStatus();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          e.error,
         ),
       );
     }

@@ -3,13 +3,13 @@ import 'package:chattin/core/errors/failure.dart';
 import 'package:chattin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:fpdart/fpdart.dart';
 
-class SendOtpOnPhoneUseCase {
+class CheckVerificationStatusUseCase {
   final AuthRepository authRepository;
-  SendOtpOnPhoneUseCase({
+  CheckVerificationStatusUseCase({
     required this.authRepository,
   });
 
-  Future<Either<Failure, String>> call(String phoneNumber) async {
-    return await authRepository.sendOtpOnPhone(phoneNumber);
+  Future<Either<Failure, String>> call() async {
+    return await authRepository.checkVerificationStatus();
   }
 }

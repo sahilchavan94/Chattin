@@ -1,6 +1,10 @@
 import 'package:chattin/core/router/route_path.dart';
-import 'package:chattin/features/auth/presentation/pages/phone_auth_view.dart';
-import 'package:chattin/features/auth/presentation/pages/verify_otp_view.dart';
+import 'package:chattin/core/utils/constants.dart';
+import 'package:chattin/features/auth/presentation/pages/check_verification_status.dart';
+import 'package:chattin/features/auth/presentation/pages/email_auth_view.dart';
+import 'package:chattin/features/auth/presentation/pages/verify_email_view.dart';
+import 'package:chattin/init_dependencies.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -30,10 +34,23 @@ CustomTransitionPage buildPageWithSlideTransition({
 
 class MyRouter {
   static final router = GoRouter(
-    initialLocation: RoutePath.phoneAuth.path,
+    redirect: (context, state) {
+      final isLoggedIn = serviceLocator<FirebaseAuth>().currentUser;
+      final isGoingToVerify = state.fullPath == RoutePath.emailAuth.path;
+      //if the user is logged out
+      if (isLoggedIn == null) {
+        return RoutePath.emailAuth.path;
+      } else if (!isLoggedIn.emailVerified && isGoingToVerify) {
+        return RoutePath.verifyEmail.path;
+      } else {
+        return null;
+      }
+    },
+    initialLocation: RoutePath.emailAuth.path,
+    navigatorKey: Constants.navigatorKey,
     routes: [
       GoRoute(
-        path: RoutePath.phoneAuth.path,
+        path: RoutePath.emailAuth.path,
         pageBuilder: (context, state) {
           return buildPageWithSlideTransition(
             context: context,
@@ -43,12 +60,22 @@ class MyRouter {
         },
       ),
       GoRoute(
-        path: RoutePath.verifyOtp.path,
+        path: RoutePath.verifyEmail.path,
         pageBuilder: (context, state) {
           return buildPageWithSlideTransition(
             context: context,
             state: state,
             child: const VerifyOtpView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.checkVerification.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const CheckVerificationView(),
           );
         },
       )

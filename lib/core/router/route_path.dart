@@ -1,10 +1,13 @@
 import 'package:chattin/core/router/route_name.dart';
 
 class RoutePath {
-  static const RouteName phoneAuth = RouteName(
-    path: '/phone_auth',
+  static const RouteName emailAuth = RouteName(
+    path: '/email_auth',
   );
-  static const RouteName verifyOtp = RouteName(
-    path: '/verify_otp',
+  static const RouteName verifyEmail = RouteName(
+    path: '/verify_email',
+  );
+  static const RouteName checkVerification = RouteName(
+    path: '/check_status',
   );
 }

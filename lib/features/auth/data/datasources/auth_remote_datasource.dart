@@ -1,9 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract interface class AuthRemoteDataSource {
-  Future<String> sendOtpOnPhone(String phoneNumber);
+  Future<String> createAccountWithEmailAndPassword(
+    String email,
+    String password,
+  );
+  Future<String> sendEmailVerificationLink();
+  Future<String> checkVerificationStatus();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -13,24 +19,40 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   });
 
   @override
-  Future<String> sendOtpOnPhone(String phoneNumber) async {
+  Future<String> createAccountWithEmailAndPassword(
+      String email, String password) async {
     try {
-      String id = '';
-      await firebaseAuth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {},
-        verificationFailed: (e) {
-          throw ServerException(error: e.toString());
-        },
-        codeSent: ((String verificationId, int? resendToken) async {
-          id = verificationId;
-        }),
-        codeAutoRetrievalTimeout: (String verificationId) {},
+      await firebaseAuth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
       );
-      if (id.isEmpty) {
-        throw const ServerException(error: "Failed to send the otp");
+      return "Account created successfully";
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> sendEmailVerificationLink() async {
+    try {
+      if (firebaseAuth.currentUser!.emailVerified) {
+        return "";
       }
-      return id;
+      await firebaseAuth.currentUser?.sendEmailVerification();
+      return "Sent verification link to your email";
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> checkVerificationStatus() async {
+    try {
+      firebaseAuth.currentUser!.reload();
+      if (firebaseAuth.currentUser!.emailVerified) {
+        return "Email verified successfully";
+      }
+      return "";
     } catch (e) {
       throw ServerException(error: e.toString());
     }

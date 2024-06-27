@@ -4,13 +4,21 @@ import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatelessWidget {
   final String buttonText;
+  final double? width;
+  final double? height;
   final VoidCallback onPressed;
   final bool? isLoading;
+  final Color? color;
+  final Color? textColor;
   const ButtonWidget({
     super.key,
     required this.buttonText,
     required this.onPressed,
     this.isLoading,
+    this.color,
+    this.textColor,
+    this.width,
+    this.height,
   });
 
   @override
@@ -18,12 +26,12 @@ class ButtonWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(6),
         child: Container(
-          height: 45,
-          width: double.maxFinite,
-          decoration: const BoxDecoration(
-            color: AppPallete.blueColor,
+          height: height ?? 45,
+          width: width ?? double.maxFinite,
+          decoration: BoxDecoration(
+            color: color ?? AppPallete.blueColor,
           ),
           child: Center(
             child: isLoading != null && isLoading == true
@@ -36,7 +44,7 @@ class ButtonWidget extends StatelessWidget {
                     buttonText,
                     style:
                         AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                      color: AppPallete.whiteColor,
+                      color: textColor ?? AppPallete.whiteColor,
                     ),
                   ),
           ),
