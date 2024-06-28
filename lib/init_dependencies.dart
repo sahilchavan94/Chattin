@@ -5,6 +5,7 @@ import 'package:chattin/core/common/features/upload/domain/usecases/general_uplo
 import 'package:chattin/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:chattin/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:chattin/features/auth/domain/repositories/auth_repository.dart';
+import 'package:chattin/features/auth/domain/usecases/check_account_details.dart';
 import 'package:chattin/features/auth/domain/usecases/check_status.dart';
 import 'package:chattin/features/auth/domain/usecases/email_auth.dart';
 import 'package:chattin/features/auth/domain/usecases/email_verification.dart';
@@ -74,6 +75,11 @@ void initAuth() {
         authRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<CheckTheAccountDetailsIfTheEmailIsVerifiedUseCase>(
+      () => CheckTheAccountDetailsIfTheEmailIsVerifiedUseCase(
+        authRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton<GeneralUploadUseCase>(
       () => GeneralUploadUseCase(
         uploadRepository: serviceLocator(),
@@ -81,6 +87,7 @@ void initAuth() {
     )
     ..registerLazySingleton<AuthCubit>(
       () => AuthCubit(
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),

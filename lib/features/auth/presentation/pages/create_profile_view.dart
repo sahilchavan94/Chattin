@@ -4,6 +4,7 @@ import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/utils/picker.dart';
+import 'package:chattin/core/utils/validators.dart';
 import 'package:chattin/core/widgets/bottom_sheet_for_image.dart';
 import 'package:chattin/core/widgets/button_widget.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
@@ -25,10 +26,11 @@ class CreateProfileView extends StatefulWidget {
 class _CreateProfileViewState extends State<CreateProfileView> {
   final TextEditingController _displayNameController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   String selectedCountry = '91';
   File? selectedImage;
 
-  Future<void> selectImage(ImageSource imageSource) async {
+  Future<void> _selectImage(ImageSource imageSource) async {
     final pickedImage = await Picker.pickImage(imageSource);
     if (pickedImage != null) {
       setState(() {
@@ -38,6 +40,13 @@ class _CreateProfileViewState extends State<CreateProfileView> {
     }
   }
 
+  bool _validateProfileDetails() {
+    if (_formKey.currentState!.validate()) {
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,181 +54,201 @@ class _CreateProfileViewState extends State<CreateProfileView> {
         title: const Text('Profile'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              verticalSpacing(50),
-              Stack(
-                clipBehavior: Clip.none,
-                alignment: Alignment.bottomRight,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  selectedImage == null
-                      ? ImageWidget(
-                          imagePath: 'assets/images/default_profile.png',
-                          width: 120,
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(60),
-                          child: Image.file(
-                            selectedImage!,
-                            width: 120,
-                            height: 120,
-                            fit: BoxFit.cover,
+                  verticalSpacing(50),
+                  Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      selectedImage == null
+                          ? ImageWidget(
+                              imagePath: 'assets/images/default_profile.png',
+                              width: 120,
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(60),
+                              child: Image.file(
+                                selectedImage!,
+                                width: 120,
+                                height: 120,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                      Positioned(
+                        bottom: -10,
+                        child: IconButton(
+                          onPressed: () {
+                            showBottomSheetForPickingImage(
+                              context,
+                              () {
+                                context.pop();
+                                _selectImage(ImageSource.camera);
+                              },
+                              () {
+                                context.pop();
+                                _selectImage(ImageSource.gallery);
+                              },
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.camera_alt,
+                          ),
+                          color: AppPallete.blueColor,
+                          iconSize: 30,
+                        ),
+                      )
+                    ],
+                  ),
+                  verticalSpacing(26),
+                  InputWidget(
+                    hintText: 'Enter your display name e.g John Doe',
+                    labelText: 'Display name',
+                    textEditingController: _displayNameController,
+                    suffixIcon: const Icon(Icons.person),
+                    validator: Validators.validateDisplayName,
+                  ),
+                  verticalSpacing(12),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Phone Number",
+                      style: AppTheme.darkThemeData.textTheme.displaySmall!
+                          .copyWith(
+                        color: AppPallete.whiteColor,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showCountryPicker(
+                            context: context,
+                            countryListTheme: CountryListThemeData(
+                              textStyle: AppTheme
+                                  .darkThemeData.textTheme.displaySmall!
+                                  .copyWith(
+                                color: AppPallete.whiteColor,
+                              ),
+                              borderRadius: BorderRadius.circular(6),
+                              backgroundColor: AppPallete.bottomSheetColor,
+                              bottomSheetHeight: context.size!.height * .75,
+                              searchTextStyle: AppTheme
+                                  .darkThemeData.textTheme.displaySmall!
+                                  .copyWith(
+                                color: AppPallete.whiteColor,
+                              ),
+                              inputDecoration: InputDecoration(
+                                hintText: "Search for your country",
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 18,
+                                ),
+                                hintStyle: AppTheme
+                                    .darkThemeData.textTheme.displaySmall!
+                                    .copyWith(
+                                  color: AppPallete.greyColor,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                  borderSide: const BorderSide(
+                                    color: AppPallete.greyColor,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  gapPadding: 15,
+                                  borderRadius: BorderRadius.circular(6),
+                                  borderSide: const BorderSide(
+                                    color: AppPallete.greyColor,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  gapPadding: 15,
+                                  borderRadius: BorderRadius.circular(6),
+                                  borderSide: const BorderSide(
+                                    color: AppPallete.greyColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            showPhoneCode:
+                                true, // optional. Shows phone code before the country name.
+                            onSelect: (Country country) {
+                              setState(() {
+                                selectedCountry = country.phoneCode;
+                              });
+                            },
+                          );
+                        },
+                        child: Container(
+                          width: 55,
+                          height: 47,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: AppPallete.greyColor,
+                            ),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Center(
+                            child: Text(
+                              "+$selectedCountry",
+                              style: AppTheme
+                                  .darkThemeData.textTheme.displaySmall!
+                                  .copyWith(
+                                color: AppPallete.whiteColor,
+                              ),
+                            ),
                           ),
                         ),
-                  Positioned(
-                    bottom: -10,
-                    child: IconButton(
-                      onPressed: () {
-                        showBottomSheetForPickingImage(
-                          context,
-                          () {
-                            context.pop();
-                            selectImage(ImageSource.camera);
-                          },
-                          () {
-                            context.pop();
-                            selectImage(ImageSource.gallery);
-                          },
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.camera_alt,
                       ),
-                      color: AppPallete.blueColor,
-                      iconSize: 30,
+                      horizontalSpacing(6),
+                      Expanded(
+                        child: InputWidget(
+                          hintText: 'Enter your 10 digit phone number ',
+                          textEditingController: _phoneNumberController,
+                          suffixIcon: const Icon(Icons.phone),
+                          validator: Validators.validatePhoneNumber,
+                        ),
+                      ),
+                    ],
+                  ),
+                  verticalSpacing(20),
+                  ButtonWidget(
+                    buttonText: 'Finish',
+                    isLoading: context.watch<AuthCubit>().state.authStatus ==
+                        AuthStatus.loading,
+                    onPressed: () {
+                      if (!_validateProfileDetails()) {
+                        return;
+                      }
+                      context.read<AuthCubit>().setAccountDetails(
+                            displayName: _displayNameController.text,
+                            phoneNumber: _phoneNumberController.text.trim(),
+                            phoneCode: selectedCountry,
+                            imageFile: selectedImage!,
+                          );
+                    },
+                  ),
+                  verticalSpacing(20),
+                  Text(
+                    textAlign: TextAlign.center,
+                    "Please ensure that the phone number entered belongs to you and is in a valid format. For now there is no mechanism to verify your phone number so please don't use any other's number",
+                    style:
+                        AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+                      color: AppPallete.greyColor,
                     ),
                   )
                 ],
               ),
-              verticalSpacing(26),
-              InputWidget(
-                hintText: 'Enter your display name e.g John Doe',
-                labelText: 'Display name',
-                textEditingController: _displayNameController,
-                suffixIcon: const Icon(Icons.person),
-              ),
-              verticalSpacing(12),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Phone Number",
-                  style:
-                      AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                    color: AppPallete.whiteColor,
-                  ),
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      showCountryPicker(
-                        context: context,
-                        countryListTheme: CountryListThemeData(
-                          textStyle: AppTheme
-                              .darkThemeData.textTheme.displaySmall!
-                              .copyWith(
-                            color: AppPallete.whiteColor,
-                          ),
-                          borderRadius: BorderRadius.circular(6),
-                          backgroundColor: AppPallete.bottomSheetColor,
-                          bottomSheetHeight: context.size!.height * .75,
-                          searchTextStyle: AppTheme
-                              .darkThemeData.textTheme.displaySmall!
-                              .copyWith(
-                            color: AppPallete.whiteColor,
-                          ),
-                          inputDecoration: InputDecoration(
-                            hintText: "Search for your country",
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                            ),
-                            hintStyle: AppTheme
-                                .darkThemeData.textTheme.displaySmall!
-                                .copyWith(
-                              color: AppPallete.greyColor,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(6),
-                              borderSide: const BorderSide(
-                                color: AppPallete.greyColor,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              gapPadding: 15,
-                              borderRadius: BorderRadius.circular(6),
-                              borderSide: const BorderSide(
-                                color: AppPallete.greyColor,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              gapPadding: 15,
-                              borderRadius: BorderRadius.circular(6),
-                              borderSide: const BorderSide(
-                                color: AppPallete.greyColor,
-                              ),
-                            ),
-                          ),
-                        ),
-                        showPhoneCode:
-                            true, // optional. Shows phone code before the country name.
-                        onSelect: (Country country) {
-                          setState(() {
-                            selectedCountry = country.phoneCode;
-                          });
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: 55,
-                      height: 45,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: AppPallete.greyColor,
-                        ),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Center(
-                        child: Text(
-                          "+$selectedCountry",
-                          style: AppTheme.darkThemeData.textTheme.displaySmall!
-                              .copyWith(
-                            color: AppPallete.whiteColor,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  horizontalSpacing(6),
-                  Expanded(
-                    child: InputWidget(
-                      hintText: 'Enter your 10 digit phone number ',
-                      textEditingController: _phoneNumberController,
-                      suffixIcon: const Icon(Icons.phone),
-                    ),
-                  ),
-                ],
-              ),
-              verticalSpacing(20),
-              ButtonWidget(
-                buttonText: 'Finish',
-                isLoading: context.watch<AuthCubit>().state.authStatus ==
-                    AuthStatus.loading,
-                onPressed: () {
-                  context.read<AuthCubit>().setAccountDetails(
-                        displayName: _displayNameController.text,
-                        phoneNumber: _phoneNumberController.text.trim(),
-                        phoneCode: selectedCountry,
-                        imageFile: selectedImage!,
-                      );
-                },
-              ),
-            ],
+            ),
           ),
         ),
       ),

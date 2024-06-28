@@ -84,4 +84,20 @@ class AuthRepositoryImpl implements AuthRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, String>>
+      checkTheAccountDetailsIfTheEmailIsVerified() async {
+    try {
+      final response = await authRemoteDataSourceImpl
+          .checkTheAccountDetailsIfTheEmailIsVerified();
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          e.error,
+        ),
+      );
+    }
+  }
 }

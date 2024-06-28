@@ -14,4 +14,5 @@ abstract interface class AuthRepository {
     required String phoneCode,
     required String imageUrl,
   });
+  Future<Either<Failure, String>> checkTheAccountDetailsIfTheEmailIsVerified();
 }

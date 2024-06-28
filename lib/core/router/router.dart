@@ -4,6 +4,7 @@ import 'package:chattin/features/auth/presentation/pages/check_verification_stat
 import 'package:chattin/features/auth/presentation/pages/create_profile_view.dart';
 import 'package:chattin/features/auth/presentation/pages/email_auth_view.dart';
 import 'package:chattin/features/auth/presentation/pages/verify_email_view.dart';
+import 'package:chattin/features/chat/presentation/pages/chat_contacts_view.dart';
 import 'package:chattin/init_dependencies.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -38,15 +39,19 @@ class MyRouter {
     redirect: (context, state) {
       final isLoggedIn = serviceLocator<FirebaseAuth>().currentUser;
       final isGoingToVerify = state.fullPath == RoutePath.emailAuth.path;
+      final isGoingToChatContacts =
+          state.fullPath == RoutePath.chatContacts.path;
       if (isLoggedIn == null) {
         return RoutePath.emailAuth.path;
-      } else if (isLoggedIn.emailVerified && isGoingToVerify) {
+      } else if (!isLoggedIn.emailVerified && isGoingToVerify) {
+        return RoutePath.verifyEmail.path;
+      } else if (!isLoggedIn.emailVerified && isGoingToChatContacts) {
         return RoutePath.verifyEmail.path;
       } else {
         return null;
       }
     },
-    initialLocation: RoutePath.emailAuth.path,
+    initialLocation: RoutePath.chatContacts.path,
     navigatorKey: Constants.navigatorKey,
     routes: [
       GoRoute(
@@ -86,6 +91,16 @@ class MyRouter {
             context: context,
             state: state,
             child: const CreateProfileView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.chatContacts.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const ChatContactsView(),
           );
         },
       )

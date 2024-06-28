@@ -42,7 +42,6 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
               "Please make sure that the provided email is correct and in a valid format.The verification process will fail if the mail is incorrect",
               style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                 color: AppPallete.greyColor,
-                fontSize: 10.5,
               ),
               textAlign: TextAlign.center,
             ),
@@ -61,6 +60,7 @@ class _VerifyOtpViewState extends State<VerifyOtpView> {
               },
             ),
             verticalSpacing(12),
+
             // ButtonWidget(
             //   buttonText: 'Change Email',
             //   color: AppPallete.whiteColor,

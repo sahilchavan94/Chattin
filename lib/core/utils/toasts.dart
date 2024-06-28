@@ -10,48 +10,50 @@ void showToast({
 }) {
   toastification.show(
     type: ToastificationType.success,
-    style: ToastificationStyle.flatColored,
+    style: ToastificationStyle.fillColored,
     autoCloseDuration: const Duration(seconds: 5),
-    title: Text(
-      content,
-      style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-        color: AppPallete.whiteColor,
-        fontSize: 15,
+    title: Padding(
+      padding: const EdgeInsets.only(left: 5.0),
+      child: Text(
+        content,
+        style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+          color: AppPallete.whiteColor,
+          fontSize: 14,
+        ),
       ),
     ),
     description: description == null
         ? null
-        : Text(
-            description,
-            style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-              color: AppPallete.greyColor,
-              fontSize: 15,
+        : Padding(
+            padding: const EdgeInsets.only(left: 5.0),
+            child: Text(
+              description,
+              style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+                color: const Color.fromARGB(255, 196, 196, 196),
+                fontSize: 12,
+              ),
             ),
           ),
-    alignment: Alignment.bottomCenter,
+    alignment: Alignment.topCenter,
     direction: TextDirection.ltr,
     animationDuration: const Duration(milliseconds: 300),
-    // animationBuilder: (context, animation, alignment, child) {
-    //   return FadeTransition(
-    //     turns: animation,
-    //     child: child,
-    //     opacity: ,
-    //   );
-    // },
+
     icon: type == ToastificationType.success
         ? const Icon(
-            Icons.check,
+            Icons.check_circle_outline,
             color: AppPallete.whiteColor,
           )
         : const Icon(
-            Icons.cancel,
+            Icons.cancel_outlined,
             color: AppPallete.whiteColor,
           ),
     primaryColor: type == ToastificationType.success
-        ? AppPallete.blueColor
-        : const Color.fromARGB(255, 254, 96, 84),
-    backgroundColor:
-        type == ToastificationType.success ? AppPallete.blueColor : Colors.red,
+        ? AppPallete.successColor
+        : AppPallete.errorColor,
+    backgroundColor: type == ToastificationType.success
+        ? AppPallete.successColor
+        : AppPallete.errorColor,
+
     foregroundColor: Colors.white,
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
     margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -70,6 +72,7 @@ void showToast({
     pauseOnHover: true,
     dragToClose: true,
     applyBlurEffect: true,
+    borderSide: BorderSide.none,
     // callbacks: ToastificationCallbacks(
     //   onTap: (toastItem) => print('Toast ${toastItem.id} tapped'),
     //   onCloseButtonTap: (toastItem) => print('Toast ${toastItem.id} close button tapped'),

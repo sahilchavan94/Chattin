@@ -1,6 +1,6 @@
 class ServerException implements Exception {
-  final String error;
+  final String? error;
   const ServerException({
-    required this.error,
+    this.error,
   });
 }

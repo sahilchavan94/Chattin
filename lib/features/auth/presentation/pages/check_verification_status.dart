@@ -44,7 +44,6 @@ class _ChackVerificationViewState extends State<CheckVerificationView> {
               "Confirm verification status of your email to continue with further account creating procedure",
               style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                 color: AppPallete.greyColor,
-                fontSize: 11,
               ),
               textAlign: TextAlign.center,
             ),

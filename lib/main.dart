@@ -39,7 +39,6 @@ class MyApp extends StatelessWidget {
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
         routerConfig: MyRouter.router,
-        // debugShowMaterialGrid: true,
       ),
     );
   }

@@ -2,6 +2,8 @@
 import 'dart:convert';
 
 import 'package:chattin/core/common/entities/user_entity.dart';
+import 'package:chattin/core/enum/enums.dart';
+import 'package:chattin/core/utils/helper_functions.dart';
 
 class UserModel extends UserEntity {
   UserModel({
@@ -10,6 +12,7 @@ class UserModel extends UserEntity {
     required super.email,
     required super.phoneNumber,
     required super.phoneCode,
+    required super.status,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,6 +22,7 @@ class UserModel extends UserEntity {
       'email': email,
       'phoneNumber': phoneNumber,
       'phoneCode': phoneCode,
+      'status': status,
     };
   }
 
@@ -31,6 +35,9 @@ class UserModel extends UserEntity {
       phoneNumber:
           map['phoneNumber'] != null ? map['phoneNumber'] as String : '',
       phoneCode: map['phoneNumber'] != null ? map['phoneNumber'] as String : '',
+      status: map['status'] != null
+          ? HelperFunctions.parseStatusType(map['status'] as String)
+          : Status.unavailable,
     );
   }
 

@@ -4,5 +4,5 @@ class Constants {
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   //collection names
-  static String userCollection = "users";
+  static const String userCollection = "users";
 }
