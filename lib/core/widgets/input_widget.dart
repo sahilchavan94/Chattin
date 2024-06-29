@@ -12,6 +12,9 @@ class InputWidget extends StatelessWidget {
   final TextEditingController? passwordController;
   final VoidCallback? onSuffixIconPressed;
   final Function(String val) validator;
+  final Color? fillColor;
+  final double? borderRadius;
+  final bool? showBorder;
   const InputWidget({
     super.key,
     this.labelText,
@@ -22,6 +25,9 @@ class InputWidget extends StatelessWidget {
     required this.validator,
     this.height,
     this.passwordController,
+    this.fillColor,
+    this.borderRadius,
+    this.showBorder,
   });
 
   @override
@@ -58,6 +64,8 @@ class InputWidget extends StatelessWidget {
             ),
             decoration: InputDecoration(
               hintText: hintText,
+              filled: true,
+              fillColor: fillColor,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 18,
               ),
@@ -65,40 +73,46 @@ class InputWidget extends StatelessWidget {
                   AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                 color: AppPallete.greyColor,
               ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: const BorderSide(
-                  color: AppPallete.greyColor,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                gapPadding: 15,
-                borderRadius: BorderRadius.circular(6),
-                borderSide: const BorderSide(
-                  color: AppPallete.greyColor,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                gapPadding: 15,
-                borderRadius: BorderRadius.circular(6),
-                borderSide: const BorderSide(
-                  color: AppPallete.greyColor,
-                ),
-              ),
-              errorBorder: OutlineInputBorder(
-                gapPadding: 15,
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(
-                  color: AppPallete.errorColor.withOpacity(.45),
-                ),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                gapPadding: 15,
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(
-                  color: AppPallete.errorColor.withOpacity(.45),
-                ),
-              ),
+              border: showBorder == null
+                  ? OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(borderRadius ?? 6),
+                      borderSide: const BorderSide(
+                        color: AppPallete.greyColor,
+                      ),
+                    )
+                  : noBorder,
+              focusedBorder: showBorder == null
+                  ? OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(borderRadius ?? 6),
+                      borderSide: const BorderSide(
+                        color: AppPallete.greyColor,
+                      ),
+                    )
+                  : noBorder,
+              enabledBorder: showBorder == null
+                  ? OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(borderRadius ?? 6),
+                      borderSide: const BorderSide(
+                        color: AppPallete.greyColor,
+                      ),
+                    )
+                  : noBorder,
+              errorBorder: showBorder == null
+                  ? OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(borderRadius ?? 6),
+                      borderSide: const BorderSide(
+                        color: AppPallete.errorColor,
+                      ),
+                    )
+                  : noBorder,
+              focusedErrorBorder: showBorder == null
+                  ? OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(borderRadius ?? 6),
+                      borderSide: const BorderSide(
+                        color: AppPallete.errorColor,
+                      ),
+                    )
+                  : noBorder,
               errorStyle:
                   AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                 color: AppPallete.errorColor,
@@ -115,3 +129,8 @@ class InputWidget extends StatelessWidget {
     );
   }
 }
+
+OutlineInputBorder noBorder = OutlineInputBorder(
+  borderRadius: BorderRadius.circular(60),
+  borderSide: BorderSide.none,
+);

@@ -215,7 +215,9 @@ class AuthCubit extends Cubit<AuthState> {
         },
         (r) {
           emit(state.copyWith(authStatus: AuthStatus.success));
-
+          Constants.navigatorKey.currentContext!.pushReplacement(
+            RoutePath.chatContacts.path,
+          );
           showToast(
             content: r,
             type: ToastificationType.success,

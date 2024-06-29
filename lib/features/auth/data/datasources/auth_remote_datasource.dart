@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
-import 'dart:developer';
-
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/utils/constants.dart';
@@ -108,6 +106,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .collection(Constants.userCollection)
           .doc(uid)
           .set({
+        "uid": uid,
         "displayName": displayName,
         "email": email,
         "phoneNumber": phoneNumber,

@@ -140,17 +140,17 @@ class ImageWidget extends StatelessWidget {
           );
       }
     }
-    return SizedBox();
+    return const SizedBox();
   }
 }
 
 extension ImageTypeExtension on String {
   ImageType get imageType {
-    if (this.startsWith('http') || this.startsWith('https') || this.isEmpty) {
+    if (startsWith('http') || startsWith('https') || isEmpty) {
       return ImageType.network;
-    } else if (this.endsWith('.svg')) {
+    } else if (endsWith('.svg')) {
       return ImageType.svg;
-    } else if (this.startsWith('file://')) {
+    } else if (startsWith('file://')) {
       return ImageType.file;
     } else {
       return ImageType.png;

@@ -1,6 +1,4 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -22,7 +20,6 @@ class UploadRemoteDataSourceImpl implements UploadRemoteDataSource {
       final response = await ref.putFile(media);
       return await response.ref.getDownloadURL();
     } catch (e) {
-      log("upload error is ${e.toString()}");
       throw ServerException(error: e.toString());
     }
   }

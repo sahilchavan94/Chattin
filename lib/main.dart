@@ -1,6 +1,7 @@
 import 'package:chattin/core/router/router.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubit/contacts_cubit.dart';
 import 'package:chattin/firebase_options.dart';
 import 'package:chattin/init_dependencies.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -19,6 +20,9 @@ void main() async {
       providers: [
         BlocProvider(
           create: (_) => serviceLocator<AuthCubit>(),
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator<ContactsCubit>(),
         ),
       ],
       child: const MyApp(),

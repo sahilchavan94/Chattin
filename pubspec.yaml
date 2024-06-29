@@ -46,6 +46,8 @@ dependencies:
   image_picker: ^1.1.2
   sms_autofill: ^2.4.0
   toastification: ^2.0.0
+  flutter_contacts: ^1.1.7
+  flutter_animate: ^4.5.0
 
 dev_dependencies:
   flutter_lints: ^3.0.0

@@ -21,4 +21,8 @@ class ToastMessages {
       "Email verification successful";
   static const String welcomeSignInMessage =
       "Successfully saved! Welcome to Chattin`!";
+
+  //chat cubit
+  static const String chatContactsFailureMessage =
+      "Something went wrong while fetching the contacts";
 }

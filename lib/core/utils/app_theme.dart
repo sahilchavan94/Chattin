@@ -16,6 +16,9 @@ class AppTheme {
       backgroundColor: AppPallete.backgroundColor,
       surfaceTintColor: AppPallete.backgroundColor,
       elevation: .5,
+      iconTheme: IconThemeData(
+        color: AppPallete.whiteColor,
+      ),
     ),
 
     //bottom sheet

@@ -30,12 +30,12 @@ showBottomSheetForPickingImage(
               ),
             ),
             Text(
-              "This profile picture will be visible to everyone for now ",
+              "This profile picture will be visible to everyone for now. You may change or remove it later",
               style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                 color: AppPallete.whiteColor,
               ),
             ),
-            verticalSpacing(40),
+            verticalSpacing(35),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
