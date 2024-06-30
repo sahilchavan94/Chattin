@@ -4,9 +4,7 @@ import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:chattin/features/profile/presentation/widgets/profile_details_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileView extends StatefulWidget {
@@ -17,6 +15,12 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+  @override
+  void initState() {
+    context.read<ProfileCubit>().getProfileData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +88,7 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ),
                         Text(
-                          userData.about,
+                          userData.about!,
                           style: AppTheme.darkThemeData.textTheme.displaySmall!
                               .copyWith(
                             color: AppPallete.greyColor,
@@ -95,7 +99,7 @@ class _ProfileViewState extends State<ProfileView> {
                           title: 'Profile Information',
                           icon: const Icon(
                             Icons.edit,
-                            color: AppPallete.blueColor,
+                            color: AppPallete.whiteColor,
                           ),
                           userData: userData,
                         ),
@@ -117,7 +121,7 @@ class _ProfileViewState extends State<ProfileView> {
                           'Dark',
                           const Icon(
                             Icons.dark_mode,
-                            color: AppPallete.blueColor,
+                            color: AppPallete.greyColor,
                           ),
                           null,
                         ),
@@ -126,12 +130,12 @@ class _ProfileViewState extends State<ProfileView> {
                           '',
                           const Icon(
                             Icons.settings,
-                            color: AppPallete.blueColor,
+                            color: AppPallete.greyColor,
                           ),
                           const Icon(
                             Icons.arrow_forward,
                             weight: .1,
-                            color: AppPallete.blueColor,
+                            color: AppPallete.whiteColor,
                           ),
                         )
                       ],

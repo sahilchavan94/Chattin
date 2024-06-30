@@ -15,7 +15,9 @@ import 'package:chattin/features/chat/data/datasources/chat_remote_datasource.da
 import 'package:chattin/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:chattin/features/chat/domain/repositories/chat_repository.dart';
 import 'package:chattin/features/chat/domain/usecases/get_app_contacts.dart';
-import 'package:chattin/features/chat/presentation/cubit/contacts_cubit.dart';
+import 'package:chattin/features/chat/domain/usecases/send_message.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contacts_cubit.dart';
 import 'package:chattin/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:chattin/features/profile/data/repsotories/profile_repositoy_impl.dart';
 import 'package:chattin/features/profile/domain/repositories/profile_repository.dart';
@@ -52,6 +54,7 @@ Future<void> initDependencies() async {
   initAuth();
   initContacts();
   initProfile();
+  initChat();
 }
 
 void initAuth() {
@@ -129,6 +132,20 @@ void initContacts() {
     )
     ..registerLazySingleton<ContactsCubit>(
       () => ContactsCubit(
+        serviceLocator(),
+      ),
+    );
+}
+
+void initChat() {
+  serviceLocator
+    ..registerLazySingleton(
+      () => SendMessageUseCase(
+        chatRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => ChatCubit(
         serviceLocator(),
       ),
     );

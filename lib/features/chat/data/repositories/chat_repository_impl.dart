@@ -1,3 +1,4 @@
+import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/core/common/models/user_model.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/errors/failure.dart';
@@ -29,13 +30,18 @@ class ChatRepositoryImpl implements ChatRepository {
   Future<Either<Failure, String>> sendTextMessage({
     required String text,
     required String recieverId,
-    required UserModel sender,
+    required UserEntity sender,
   }) async {
     try {
+      final senderModel = UserModel(
+        uid: sender.uid,
+        displayName: sender.displayName,
+        imageUrl: sender.imageUrl,
+      );
       final response = await chatRemoteDataSourceImpl.sendTextMessage(
         text: text,
         recieverId: recieverId,
-        sender: sender,
+        sender: senderModel,
       );
       return Right(response);
     } on ServerException catch (e) {

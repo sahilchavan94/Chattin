@@ -39,34 +39,34 @@ class ProfileDetailsWidget extends StatelessWidget {
           userData.displayName,
           const Icon(
             Icons.person,
-            color: AppPallete.blueColor,
+            color: AppPallete.greyColor,
           ),
           null,
         ),
         userInfo(
           'Email',
-          userData.email,
+          userData.email!,
           const Icon(
             Icons.email,
-            color: AppPallete.blueColor,
+            color: AppPallete.greyColor,
           ),
           null,
         ),
         userInfo(
           'Phone no',
-          userData.phoneCode,
+          userData.phoneCode!,
           const Icon(
             Icons.phone,
-            color: AppPallete.blueColor,
+            color: AppPallete.greyColor,
           ),
           null,
         ),
         userInfo(
           'About',
-          userData.about,
+          userData.about!,
           const Icon(
             Icons.info,
-            color: AppPallete.blueColor,
+            color: AppPallete.greyColor,
           ),
           null,
         ),
@@ -75,7 +75,7 @@ class ProfileDetailsWidget extends StatelessWidget {
           '24 Oct 2023',
           const Icon(
             Icons.calendar_month,
-            color: AppPallete.blueColor,
+            color: AppPallete.greyColor,
           ),
           null,
         ),

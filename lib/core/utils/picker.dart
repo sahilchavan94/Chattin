@@ -15,7 +15,6 @@ class Picker {
       }
       return null;
     } catch (e) {
-      log("error is ${e.toString()}");
       return null;
     }
   }

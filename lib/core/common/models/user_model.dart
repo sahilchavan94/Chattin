@@ -10,11 +10,11 @@ class UserModel extends UserEntity {
     required super.uid,
     required super.displayName,
     required super.imageUrl,
-    required super.email,
-    required super.phoneNumber,
-    required super.phoneCode,
-    required super.about,
-    required super.status,
+    super.email,
+    super.phoneNumber,
+    super.phoneCode,
+    super.about,
+    super.status,
   });
 
   Map<String, dynamic> toMap() {

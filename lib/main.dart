@@ -1,7 +1,8 @@
 import 'package:chattin/core/router/router.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:chattin/features/chat/presentation/cubit/contacts_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contacts_cubit.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:chattin/firebase_options.dart';
 import 'package:chattin/init_dependencies.dart';
@@ -27,6 +28,10 @@ void main() async {
         ),
         BlocProvider(
           create: (_) => serviceLocator<ProfileCubit>(),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (_) => serviceLocator<ChatCubit>(),
           lazy: false,
         ),
       ],

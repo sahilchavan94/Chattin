@@ -5,11 +5,11 @@ class UserEntity {
   final String uid;
   final String displayName;
   final String imageUrl;
-  final String email;
-  final String phoneNumber;
-  final String phoneCode;
-  final String about;
-  final Status status;
+  final String? email;
+  final String? phoneNumber;
+  final String? phoneCode;
+  final String? about;
+  final Status? status;
   UserEntity({
     required this.uid,
     required this.displayName,

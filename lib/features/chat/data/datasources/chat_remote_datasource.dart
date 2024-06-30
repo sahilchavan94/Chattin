@@ -113,18 +113,24 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   Future<List<ContactEntity>> getAppContacts(List<String> phoneNumbers) async {
     try {
       final List<ContactEntity> appContacts = [];
-      for (String phoneNumber in phoneNumbers) {
+      const int chunkSize = 10;
+      for (int i = 0; i < phoneNumbers.length; i += chunkSize) {
+        final List<String> chunk = phoneNumbers.sublist(
+          i,
+          i + chunkSize > phoneNumbers.length
+              ? phoneNumbers.length
+              : i + chunkSize,
+        );
+
         final response = await firebaseFirestore
             .collection(Constants.userCollection)
-            .where("phoneNumber", isEqualTo: phoneNumber)
+            .where("phoneNumber", whereIn: chunk)
             .get();
 
         if (response.docs.isNotEmpty) {
-          appContacts.add(
-            ContactModel.fromMap(
-              response.docs.first.data(),
-            ),
-          );
+          for (var doc in response.docs) {
+            appContacts.add(ContactModel.fromMap(doc.data()));
+          }
         }
       }
       return appContacts;
