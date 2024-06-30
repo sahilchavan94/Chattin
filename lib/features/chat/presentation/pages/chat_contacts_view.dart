@@ -23,6 +23,21 @@ class _ChatContactsViewState extends State<ChatContactsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.push(RoutePath.selectContact.path);
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+            50,
+          ),
+        ),
+        backgroundColor: AppPallete.bottomSheetColor,
+        child: Image.asset(
+          'assets/images/logo.png',
+          width: 30,
+        ),
+      ),
       body: BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
           if (state.authStatus == AuthStatus.loading) {
@@ -33,7 +48,7 @@ class _ChatContactsViewState extends State<ChatContactsView> {
           return Center(
             child: GestureDetector(
               onTap: () {
-                context.push(RoutePath.selectContact.path);
+                context.push(RoutePath.profileScreen.path);
               },
               child: Text(
                 "Home Page",

@@ -16,6 +16,11 @@ import 'package:chattin/features/chat/data/repositories/chat_repository_impl.dar
 import 'package:chattin/features/chat/domain/repositories/chat_repository.dart';
 import 'package:chattin/features/chat/domain/usecases/get_app_contacts.dart';
 import 'package:chattin/features/chat/presentation/cubit/contacts_cubit.dart';
+import 'package:chattin/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:chattin/features/profile/data/repsotories/profile_repositoy_impl.dart';
+import 'package:chattin/features/profile/domain/repositories/profile_repository.dart';
+import 'package:chattin/features/profile/domain/usecases/get_profile.dart';
+import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -46,6 +51,7 @@ Future<void> initDependencies() async {
   );
   initAuth();
   initContacts();
+  initProfile();
 }
 
 void initAuth() {
@@ -123,6 +129,31 @@ void initContacts() {
     )
     ..registerLazySingleton<ContactsCubit>(
       () => ContactsCubit(
+        serviceLocator(),
+      ),
+    );
+}
+
+void initProfile() {
+  serviceLocator
+    ..registerFactory(
+      () => ProfileRemoteDataSourceImpl(
+        firebaseFirestore: serviceLocator(),
+      ),
+    )
+    ..registerFactory<ProfileRepository>(
+      () => ProfileRepositoryImpl(
+        profileRemoteDataSourceImpl: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<GetProfileDataUseCase>(
+      () => GetProfileDataUseCase(
+        profileRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => ProfileCubit(
+        serviceLocator(),
         serviceLocator(),
       ),
     );

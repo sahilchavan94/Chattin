@@ -94,6 +94,7 @@ class _PhoneAuthViewState extends State<PhoneAuthView> {
                   suffixIcon: const Icon(
                     Icons.email,
                   ),
+                  fillColor: AppPallete.transparent,
                   validator: Validators.validateEmail,
                 ),
                 verticalSpacing(12),
@@ -101,6 +102,7 @@ class _PhoneAuthViewState extends State<PhoneAuthView> {
                   labelText: 'Password',
                   textEditingController: _passwordController,
                   hintText: "Enter your password",
+                  fillColor: AppPallete.transparent,
                   suffixIcon: const Icon(
                     Icons.lock,
                   ),
@@ -109,6 +111,7 @@ class _PhoneAuthViewState extends State<PhoneAuthView> {
                 verticalSpacing(12),
                 InputWidget(
                   labelText: 'Confirm password',
+                  fillColor: AppPallete.transparent,
                   textEditingController: _confirmPasswordController,
                   hintText: "Confirm your password",
                   passwordController: _passwordController,

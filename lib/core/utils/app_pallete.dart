@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class AppPallete {
   //dark theme colors
   static const Color backgroundColor = Color(0XFF171717);
+  static const Color blackColor = Colors.black;
+  static const Color transparent = Colors.transparent;
   static const Color bottomSheetColor = Color(0XFF282F35);
   static const Color blueColor = Color(0XFF128DFF);
   static const Color greyColor = Color(0XFF868686);

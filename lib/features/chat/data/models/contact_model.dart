@@ -1,14 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
 
 class ContactModel extends ContactEntity {
   ContactModel({
-    required super.uid,
+    super.uid,
     required super.displayName,
-    required super.about,
+    super.about,
     required super.imageUrl,
+    super.lastMessage,
+    super.timeSent,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +20,8 @@ class ContactModel extends ContactEntity {
       'displayName': displayName,
       'about': about,
       'imageUrl': imageUrl,
+      'lastMessage': lastMessage ?? ToastMessages.defaultFailureMessage,
+      'timeSent': timeSent ?? timeSent,
     };
   }
 
@@ -27,6 +32,9 @@ class ContactModel extends ContactEntity {
           map['displayName'] != null ? map['displayName'] as String : "",
       about: map['about'] != null ? map['about'] as String : "",
       imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : "",
+      lastMessage:
+          map['lastMessage'] != null ? map['lastMessage'] as String : "",
+      timeSent: map['timeSent'] != null ? map['timeSent'] as DateTime : null,
     );
   }
 

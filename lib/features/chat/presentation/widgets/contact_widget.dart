@@ -8,11 +8,15 @@ class ContactWidget extends StatelessWidget {
   final String imageUrl;
   final String displayName;
   final String about;
+  final double? radius;
+  final bool? hasVerticalSpacing;
   const ContactWidget({
     super.key,
     required this.imageUrl,
     required this.displayName,
     required this.about,
+    this.hasVerticalSpacing,
+    this.radius,
   });
 
   @override
@@ -24,8 +28,8 @@ class ContactWidget extends StatelessWidget {
           children: [
             ImageWidget(
               imagePath: imageUrl,
-              width: 60,
-              height: 60,
+              width: radius ?? 60,
+              height: radius ?? 60,
               fit: BoxFit.cover,
               radius: BorderRadius.circular(60),
             ),
@@ -56,7 +60,9 @@ class ContactWidget extends StatelessWidget {
             )
           ],
         ),
-        verticalSpacing(25),
+        hasVerticalSpacing == true
+            ? verticalSpacing(25)
+            : const SizedBox.shrink(),
       ],
     );
   }

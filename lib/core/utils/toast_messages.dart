@@ -25,4 +25,8 @@ class ToastMessages {
   //chat cubit
   static const String chatContactsFailureMessage =
       "Something went wrong while fetching the contacts";
+
+  //profile cubit
+  static const String profileFailure =
+      "Something unexpected happened while fetching the profile data";
 }

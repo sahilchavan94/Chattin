@@ -1,3 +1,4 @@
+import 'package:chattin/core/common/models/user_model.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/errors/failure.dart';
 import 'package:chattin/features/chat/data/datasources/chat_remote_datasource.dart';
@@ -15,6 +16,26 @@ class ChatRepositoryImpl implements ChatRepository {
     try {
       final response = await chatRemoteDataSourceImpl.getAppContacts(
         phoneNumbers,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(e.toString()),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> sendTextMessage({
+    required String text,
+    required String recieverId,
+    required UserModel sender,
+  }) async {
+    try {
+      final response = await chatRemoteDataSourceImpl.sendTextMessage(
+        text: text,
+        recieverId: recieverId,
+        sender: sender,
       );
       return Right(response);
     } on ServerException catch (e) {

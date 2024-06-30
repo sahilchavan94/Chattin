@@ -114,6 +114,7 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                     textEditingController: _displayNameController,
                     suffixIcon: const Icon(Icons.person),
                     validator: Validators.validateDisplayName,
+                    fillColor: AppPallete.transparent,
                   ),
                   verticalSpacing(12),
                   Align(
@@ -216,6 +217,7 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                           textEditingController: _phoneNumberController,
                           suffixIcon: const Icon(Icons.phone),
                           validator: Validators.validatePhoneNumber,
+                          fillColor: AppPallete.transparent,
                         ),
                       ),
                     ],

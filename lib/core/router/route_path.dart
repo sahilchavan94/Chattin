@@ -22,4 +22,12 @@ class RoutePath {
   static const RouteName selectContact = RouteName(
     path: "/select_contact",
   );
+  static const RouteName chatScreen = RouteName(
+    path: "/chat_screen",
+  );
+
+  //profile path
+  static const RouteName profileScreen = RouteName(
+    path: "/user_profile",
+  );
 }

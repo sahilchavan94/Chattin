@@ -7,34 +7,42 @@ import 'package:chattin/core/utils/helper_functions.dart';
 
 class UserModel extends UserEntity {
   UserModel({
+    required super.uid,
     required super.displayName,
-    required super.photoUrl,
+    required super.imageUrl,
     required super.email,
     required super.phoneNumber,
     required super.phoneCode,
+    required super.about,
     required super.status,
   });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'uid': uid,
       'displayName': displayName,
-      'photoUrl': photoUrl,
+      'imageUrl': imageUrl,
       'email': email,
       'phoneNumber': phoneNumber,
       'phoneCode': phoneCode,
+      'about': about,
       'status': status,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
+      uid: map['uid'] != null ? map['uid'] as String : '',
       displayName:
           map['displayName'] != null ? map['displayName'] as String : '',
-      photoUrl: map['photoUrl'] != null ? map['photoUrl'] as String : '',
+      imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : '',
       email: map['email'] != null ? map['email'] as String : '',
       phoneNumber:
           map['phoneNumber'] != null ? map['phoneNumber'] as String : '',
       phoneCode: map['phoneNumber'] != null ? map['phoneNumber'] as String : '',
+      about: map['about'] != null
+          ? map['about'] as String
+          : 'Hello everyone, I\'m now on Chattin`!',
       status: map['status'] != null
           ? HelperFunctions.parseStatusType(map['status'] as String)
           : Status.unavailable,

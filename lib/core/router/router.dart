@@ -5,7 +5,9 @@ import 'package:chattin/features/auth/presentation/pages/create_profile_view.dar
 import 'package:chattin/features/auth/presentation/pages/email_auth_view.dart';
 import 'package:chattin/features/auth/presentation/pages/verify_email_view.dart';
 import 'package:chattin/features/chat/presentation/pages/chat_contacts_view.dart';
+import 'package:chattin/features/chat/presentation/pages/chat_view.dart';
 import 'package:chattin/features/chat/presentation/pages/select_contacts_view.dart';
+import 'package:chattin/features/profile/presentation/pages/profile_view.dart';
 import 'package:chattin/init_dependencies.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -112,6 +114,31 @@ class MyRouter {
             context: context,
             state: state,
             child: const SelectContactsView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.chatScreen.path,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: ChatView(
+              uid: data['uid'],
+              displayName: data['displayName'],
+              imageUrl: data['imageUrl'],
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.profileScreen.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const ProfileView(),
           );
         },
       )

@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/contacts.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SelectContactsView extends StatefulWidget {
   const SelectContactsView({super.key});
@@ -107,10 +109,24 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                       child: ListView.builder(
                         itemCount: contactsList.length,
                         itemBuilder: (context, index) {
-                          return ContactWidget(
-                            imageUrl: contactsList[index].imageUrl,
-                            displayName: contactsList[index].displayName,
-                            about: contactsList[index].about,
+                          return GestureDetector(
+                            onTap: () {
+                              context.push(
+                                RoutePath.chatScreen.path,
+                                extra: {
+                                  'uid': contactsList[index].uid,
+                                  'displayName':
+                                      contactsList[index].displayName,
+                                  'imageUrl': contactsList[index].imageUrl,
+                                },
+                              );
+                            },
+                            child: ContactWidget(
+                              imageUrl: contactsList[index].imageUrl,
+                              displayName: contactsList[index].displayName,
+                              about: contactsList[index].about!,
+                              hasVerticalSpacing: true,
+                            ),
                           );
                         },
                       ),

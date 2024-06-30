@@ -31,7 +31,7 @@ class AppTheme {
     textTheme: TextTheme(
       displayLarge: GoogleFonts.inter(
         fontSize: 20,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
       ),
       displaySmall: GoogleFonts.inter(
         fontSize: 12,
