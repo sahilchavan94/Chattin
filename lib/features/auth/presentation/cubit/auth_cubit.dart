@@ -68,10 +68,6 @@ class AuthCubit extends Cubit<AuthState> {
         Constants.navigatorKey.currentContext!.pushReplacement(
           RoutePath.verifyEmail.path,
         );
-        showToast(
-          content: r,
-          type: ToastificationType.success,
-        );
       },
     );
   }
@@ -99,10 +95,6 @@ class AuthCubit extends Cubit<AuthState> {
             state.copyWith(
               authStatus: AuthStatus.success,
             ),
-          );
-          showToast(
-            content: ToastMessages.emailAlreadyVerified,
-            type: ToastificationType.success,
           );
 
           return;
@@ -151,10 +143,7 @@ class AuthCubit extends Cubit<AuthState> {
           Constants.navigatorKey.currentContext!.pushReplacement(
             RoutePath.chatContacts.path,
           );
-          showToast(
-            content: r,
-            type: ToastificationType.success,
-          );
+
           return;
         }
         emit(

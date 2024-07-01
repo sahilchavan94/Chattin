@@ -46,7 +46,7 @@ class AppTheme {
 
     //loader
     progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: AppPallete.whiteColor,
+      color: AppPallete.blueColor,
     ),
 
     //snackbar

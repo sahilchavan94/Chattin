@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/features/chat/data/models/message_model.dart';
@@ -40,12 +38,8 @@ class ChatCubit extends Cubit<ChatState> {
       sender: sender,
     );
     response.fold(
-      (l) {
-        log("failed to send message");
-      },
-      (r) {
-        log("message sent");
-      },
+      (l) {},
+      (r) {},
     );
   }
 }

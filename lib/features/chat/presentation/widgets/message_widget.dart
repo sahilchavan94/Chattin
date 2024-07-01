@@ -60,7 +60,8 @@ class MessageWidget extends StatelessWidget {
                   vertical: 9,
                 ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment:
+                      isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                   children: [
                     Text(
                       text,

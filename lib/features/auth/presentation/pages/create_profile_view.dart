@@ -4,6 +4,7 @@ import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/utils/picker.dart';
+import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/core/utils/validators.dart';
 import 'package:chattin/core/widgets/bottom_sheet_for_image.dart';
 import 'package:chattin/core/widgets/button_widget.dart';
@@ -241,8 +242,8 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                   ),
                   verticalSpacing(20),
                   Text(
+                    ToastMessages.phoneMessage,
                     textAlign: TextAlign.center,
-                    "Please ensure that the phone number entered belongs to you and is in a valid format. For now there is no mechanism to verify your phone number so please don't use any other's number",
                     style:
                         AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                       color: AppPallete.greyColor,

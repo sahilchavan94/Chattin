@@ -23,7 +23,9 @@ abstract interface class ChatRemoteDataSource {
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   final FirebaseFirestore firebaseFirestore;
 
-  ChatRemoteDataSourceImpl({required this.firebaseFirestore});
+  ChatRemoteDataSourceImpl({
+    required this.firebaseFirestore,
+  });
 
   _saveDataToContactsSubcollection({
     required UserModel sender,
@@ -128,7 +130,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
         final response = await firebaseFirestore
             .collection(Constants.userCollection)
-            .where("phoneNumber", whereIn: chunk)
+            .where(
+              "phoneNumber",
+              whereIn: chunk,
+            )
             .get();
 
         if (response.docs.isNotEmpty) {

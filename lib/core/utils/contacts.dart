@@ -1,7 +1,7 @@
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 class Contacts {
-  static Future<List<String>> getContacts() async {
+  static Future<List<String>> getContacts({required String selfNumber}) async {
     final persimission = await FlutterContacts.requestPermission();
     if (persimission) {
       try {
@@ -16,6 +16,9 @@ class Contacts {
 
         for (final contact in contacts) {
           final number = contact.phones.first.number.replaceAll(" ", "");
+          if (number == selfNumber) {
+            break;
+          }
           if (number.length > 10) {
             phoneNumbers.add(number.substring(number.length - 10));
           } else {

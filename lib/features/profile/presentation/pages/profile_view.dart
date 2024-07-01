@@ -1,6 +1,7 @@
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
+import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:chattin/features/profile/presentation/widgets/profile_details_widget.dart';
@@ -32,9 +33,7 @@ class _ProfileViewState extends State<ProfileView> {
             );
           }
           if (state.profileStatus == ProfileStatus.failure) {
-            return const Text(
-              "failure",
-            );
+            return const FailureWidget();
           }
           if (state.profileStatus == ProfileStatus.success) {
             final userData = state.userData!;

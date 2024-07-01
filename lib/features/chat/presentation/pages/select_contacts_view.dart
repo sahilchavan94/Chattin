@@ -4,10 +4,12 @@ import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/contacts.dart';
+import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contacts_cubit.dart';
 import 'package:chattin/features/chat/presentation/widgets/contact_widget.dart';
+import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,13 +28,20 @@ class _SelectContactsViewState extends State<SelectContactsView> {
 
   @override
   void initState() {
-    _getContactsFromPhone();
+    _getContactsFromPhone(isRefreshed: false);
     super.initState();
   }
 
-  _getContactsFromPhone() async {
-    List<String> contactsList = await Contacts.getContacts();
-    context.read<ContactsCubit>().getAppContacts(contactsList);
+  _getContactsFromPhone({bool isRefreshed = false}) async {
+    String phoneNumber =
+        context.read<ProfileCubit>().state.userData!.phoneNumber!;
+    List<String> contactsList = await Contacts.getContacts(
+      selfNumber: phoneNumber,
+    );
+    context.read<ContactsCubit>().getAppContacts(
+          contactsList,
+          isRefreshed: isRefreshed,
+        );
   }
 
   @override
@@ -44,6 +53,10 @@ class _SelectContactsViewState extends State<SelectContactsView> {
             child: CircularProgressIndicator(),
           );
         }
+        if (state.authStatus == AuthStatus.failure) {
+          return const FailureWidget();
+        }
+
         return Scaffold(
           appBar: AppBar(
             title: const Text('Select contact'),
@@ -64,15 +77,12 @@ class _SelectContactsViewState extends State<SelectContactsView> {
           body: BlocBuilder<ContactsCubit, ContactsState>(
             builder: (context, contactsState) {
               if (contactsState.contactsStatus == ContactsStatus.loading) {
-                return const Center();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
               if (contactsState.contactsStatus == ContactsStatus.failure) {
-                return const Center(
-                  child: Text(
-                    "failure",
-                    style: TextStyle(color: AppPallete.whiteColor),
-                  ),
-                );
+                return const FailureWidget();
               }
               final contactsList = contactsState.contactList ?? [];
               return Padding(
@@ -103,29 +113,36 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                     ),
                     verticalSpacing(showSearch ? 30 : 0),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: contactsList.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              context.push(
-                                RoutePath.chatScreen.path,
-                                extra: {
-                                  'uid': contactsList[index].uid,
-                                  'displayName':
-                                      contactsList[index].displayName,
-                                  'imageUrl': contactsList[index].imageUrl,
-                                },
-                              );
-                            },
-                            child: ContactWidget(
-                              imageUrl: contactsList[index].imageUrl,
-                              displayName: contactsList[index].displayName,
-                              about: contactsList[index].about!,
-                              hasVerticalSpacing: true,
-                            ),
-                          );
+                      child: RefreshIndicator(
+                        backgroundColor: AppPallete.bottomSheetColor,
+                        color: AppPallete.blueColor,
+                        onRefresh: () async {
+                          _getContactsFromPhone(isRefreshed: true);
                         },
+                        child: ListView.builder(
+                          itemCount: contactsList.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                context.push(
+                                  RoutePath.chatScreen.path,
+                                  extra: {
+                                    'uid': contactsList[index].uid,
+                                    'displayName':
+                                        contactsList[index].displayName,
+                                    'imageUrl': contactsList[index].imageUrl,
+                                  },
+                                );
+                              },
+                              child: ContactWidget(
+                                imageUrl: contactsList[index].imageUrl,
+                                displayName: contactsList[index].displayName,
+                                about: contactsList[index].about!,
+                                hasVerticalSpacing: true,
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],

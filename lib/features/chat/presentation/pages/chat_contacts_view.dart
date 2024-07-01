@@ -1,6 +1,7 @@
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_theme.dart';
+import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,6 +45,9 @@ class _ChatContactsViewState extends State<ChatContactsView> {
             return const Center(
               child: CircularProgressIndicator(),
             );
+          }
+          if (state.authStatus == AuthStatus.failure) {
+            return const FailureWidget();
           }
           return Center(
             child: GestureDetector(
