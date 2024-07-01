@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
@@ -26,7 +25,6 @@ class ContactModel extends ContactEntity {
   }
 
   factory ContactModel.fromMap(Map<String, dynamic> map) {
-    log("map is ${map['uid']}");
     return ContactModel(
       uid: map['uid'] != null ? map['uid'] as String : "",
       displayName:

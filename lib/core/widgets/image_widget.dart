@@ -110,10 +110,10 @@ class ImageWidget extends StatelessWidget {
               child: LinearProgressIndicator(
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.black12
-                    : Colors.grey.shade200,
+                    : Colors.grey.shade900,
                 backgroundColor: Theme.of(context).brightness == Brightness.dark
                     ? Colors.grey.shade900
-                    : Colors.grey.shade100,
+                    : Colors.grey.shade800,
               ),
             ),
             errorWidget: (context, url, error) => Container(

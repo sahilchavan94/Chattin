@@ -15,6 +15,7 @@ import 'package:chattin/features/chat/data/datasources/chat_remote_datasource.da
 import 'package:chattin/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:chattin/features/chat/domain/repositories/chat_repository.dart';
 import 'package:chattin/features/chat/domain/usecases/get_app_contacts.dart';
+import 'package:chattin/features/chat/domain/usecases/get_chat_stream.dart';
 import 'package:chattin/features/chat/domain/usecases/send_message.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
 import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contacts_cubit.dart';
@@ -145,7 +146,14 @@ void initChat() {
       ),
     )
     ..registerLazySingleton(
+      () => GetChatStreamUseCase(
+        chatRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton(
       () => ChatCubit(
+        serviceLocator(),
+        serviceLocator(),
         serviceLocator(),
       ),
     );

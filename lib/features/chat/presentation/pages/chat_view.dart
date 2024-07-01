@@ -1,8 +1,8 @@
 import 'package:chattin/core/utils/app_pallete.dart';
-import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
 import 'package:chattin/features/chat/presentation/widgets/contact_widget.dart';
+import 'package:chattin/features/chat/presentation/widgets/message_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -83,6 +83,7 @@ class _ChatViewState extends State<ChatView> {
                     child: const Icon(
                       Icons.send,
                       size: 20,
+                      color: AppPallete.whiteColor,
                     ),
                   )
                 ],
@@ -92,10 +93,39 @@ class _ChatViewState extends State<ChatView> {
         ),
       ),
       body: Center(
-        child: Text(
-          "Chat View",
-          style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-            color: AppPallete.whiteColor,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: StreamBuilder(
+            stream:
+                context.read<ChatCubit>().getChatStream(receiverId: widget.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                final messages = snapshot.data!;
+                if (messages.isNotEmpty) {
+                  return ListView.builder(
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final userData =
+                          context.read<ProfileCubit>().state.userData!;
+                      final isMe = messages[index].senderId == userData.uid;
+                      return MessageWidget(
+                        text: messages[index].text,
+                        name: isMe ? userData.displayName : widget.displayName,
+                        isMe: isMe,
+                        imageUrl: isMe ? userData.imageUrl : widget.imageUrl,
+                        timeSent: messages[index].timeSent!,
+                      );
+                    },
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           ),
         ),
       ),

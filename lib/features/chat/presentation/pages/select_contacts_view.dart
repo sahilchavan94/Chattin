@@ -64,9 +64,7 @@ class _SelectContactsViewState extends State<SelectContactsView> {
           body: BlocBuilder<ContactsCubit, ContactsState>(
             builder: (context, contactsState) {
               if (contactsState.contactsStatus == ContactsStatus.loading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const Center();
               }
               if (contactsState.contactsStatus == ContactsStatus.failure) {
                 return const Center(
@@ -103,7 +101,7 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                             duration: Durations.medium4,
                           ),
                     ),
-                    verticalSpacing(30),
+                    verticalSpacing(showSearch ? 30 : 0),
                     Expanded(
                       child: ListView.builder(
                         itemCount: contactsList.length,

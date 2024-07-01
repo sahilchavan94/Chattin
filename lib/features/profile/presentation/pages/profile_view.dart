@@ -46,7 +46,8 @@ class _ProfileViewState extends State<ProfileView> {
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      AppPallete.blueColor.withOpacity(.5),
+                      AppPallete.blueColor.withOpacity(.8),
+                      AppPallete.backgroundColor,
                       AppPallete.backgroundColor,
                       AppPallete.backgroundColor,
                       AppPallete.backgroundColor,
@@ -68,7 +69,7 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ),
                         ),
-                        verticalSpacing(50),
+                        verticalSpacing(15),
                         Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: ImageWidget(

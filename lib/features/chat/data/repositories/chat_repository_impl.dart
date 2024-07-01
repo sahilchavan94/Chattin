@@ -3,6 +3,7 @@ import 'package:chattin/core/common/models/user_model.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/errors/failure.dart';
 import 'package:chattin/features/chat/data/datasources/chat_remote_datasource.dart';
+import 'package:chattin/features/chat/data/models/message_model.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
 import 'package:chattin/features/chat/domain/repositories/chat_repository.dart';
 import 'package:fpdart/fpdart.dart';
@@ -49,5 +50,17 @@ class ChatRepositoryImpl implements ChatRepository {
         Failure(e.toString()),
       );
     }
+  }
+
+  @override
+  Stream<List<MessageModel>> getChatStream({
+    required String recieverId,
+    required String senderId,
+  }) {
+    final response = chatRemoteDataSourceImpl.getChatStream(
+      recieverId: recieverId,
+      senderId: senderId,
+    );
+    return response;
   }
 }

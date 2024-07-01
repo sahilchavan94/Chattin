@@ -14,6 +14,10 @@ abstract interface class ChatRemoteDataSource {
     required String recieverId,
     required UserModel sender,
   });
+  Stream<List<MessageModel>> getChatStream({
+    required String recieverId,
+    required String senderId,
+  });
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -181,5 +185,31 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     } catch (e) {
       throw ServerException(error: e.toString());
     }
+  }
+
+  @override
+  Stream<List<MessageModel>> getChatStream({
+    required String recieverId,
+    required String senderId,
+  }) {
+    return firebaseFirestore
+        .collection(Constants.userCollection)
+        .doc(senderId)
+        .collection(Constants.chatsSubCollection)
+        .doc(recieverId)
+        .collection(Constants.messagesSubCollection)
+        .orderBy('timeSent')
+        .snapshots()
+        .map((event) {
+      List<MessageModel> messages = [];
+      for (var document in event.docs) {
+        messages.add(
+          MessageModel.fromMap(
+            document.data(),
+          ),
+        );
+      }
+      return messages;
+    });
   }
 }

@@ -15,6 +15,7 @@ class InputWidget extends StatelessWidget {
   final Color? fillColor;
   final double? borderRadius;
   final bool? showBorder;
+  final int? maxLines;
   const InputWidget({
     super.key,
     this.labelText,
@@ -28,6 +29,7 @@ class InputWidget extends StatelessWidget {
     this.fillColor,
     this.borderRadius,
     this.showBorder,
+    this.maxLines,
   });
 
   @override
@@ -47,6 +49,7 @@ class InputWidget extends StatelessWidget {
         SizedBox(
           height: height,
           child: TextFormField(
+            maxLines: maxLines,
             controller: textEditingController,
             validator: (val) {
               if (passwordController != null &&
