@@ -52,6 +52,7 @@ class ChatRepositoryImpl implements ChatRepository {
     }
   }
 
+  //i need to know whether there I can use fpdart with streams : will research on it
   @override
   Stream<List<MessageModel>> getChatStream({
     required String recieverId,

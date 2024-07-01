@@ -5,8 +5,8 @@ class ContactEntity {
   final String displayName;
   final String? about;
   final String imageUrl;
-
   //adding 2 extra fields just to resuse the model in case of showing the chat contacts on the home screen
+  //not created another chat contact for fetching chat contacts added last message and time sent here only
   final String? lastMessage;
   final DateTime? timeSent;
   ContactEntity({

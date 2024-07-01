@@ -132,7 +132,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
             .get();
 
         if (response.docs.isNotEmpty) {
-          for (var doc in response.docs) {
+          for (final doc in response.docs) {
             appContacts.add(ContactModel.fromMap(doc.data()));
           }
         }
@@ -151,7 +151,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
   }) async {
     try {
       final timeSent = DateTime.now();
-      var messageId = const Uuid().v1();
+      final messageId = const Uuid().v1();
       UserModel? receiver;
 
       //get the receiver's data
@@ -202,7 +202,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         .snapshots()
         .map((event) {
       List<MessageModel> messages = [];
-      for (var document in event.docs) {
+      for (final document in event.docs) {
         messages.add(
           MessageModel.fromMap(
             document.data(),
