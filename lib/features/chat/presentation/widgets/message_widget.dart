@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
@@ -24,7 +22,6 @@ class MessageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log(timeSent.toString());
     return Column(
       children: [
         Row(

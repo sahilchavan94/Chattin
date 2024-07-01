@@ -1,9 +1,11 @@
 import 'package:chattin/core/common/models/user_model.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/utils/constants.dart';
+import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/features/chat/data/models/contact_model.dart';
 import 'package:chattin/features/chat/data/models/message_model.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
+import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,10 +16,11 @@ abstract interface class ChatRemoteDataSource {
     required String recieverId,
     required UserModel sender,
   });
-  Stream<List<MessageModel>> getChatStream({
+  Stream<List<MessageEntity>> getChatStream({
     required String recieverId,
     required String senderId,
   });
+  Stream<List<ContactEntity>> getChatContacts(String uid);
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -186,18 +189,18 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         messageId: messageId,
         timeSent: timeSent,
       );
-      return "";
+      return ToastMessages.welcomeSignInMessage; //change it later
     } catch (e) {
       throw ServerException(error: e.toString());
     }
   }
 
   @override
-  Stream<List<MessageModel>> getChatStream({
+  Stream<List<MessageEntity>> getChatStream({
     required String recieverId,
     required String senderId,
   }) {
-    return firebaseFirestore
+    final response = firebaseFirestore
         .collection(Constants.userCollection)
         .doc(senderId)
         .collection(Constants.chatsSubCollection)
@@ -216,5 +219,27 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       }
       return messages;
     });
+    return response;
+  }
+
+  @override
+  Stream<List<ContactEntity>> getChatContacts(String uid) {
+    final response = firebaseFirestore
+        .collection(Constants.userCollection)
+        .doc(uid)
+        .collection(Constants.chatsSubCollection)
+        .snapshots()
+        .asyncMap((event) {
+      List<ContactEntity> contacts = [];
+      for (final document in event.docs) {
+        contacts.add(
+          ContactModel.fromMap(
+            document.data(),
+          ),
+        );
+      }
+      return contacts;
+    });
+    return response;
   }
 }

@@ -20,7 +20,7 @@ class ContactModel extends ContactEntity {
       'displayName': displayName,
       'imageUrl': imageUrl,
       'lastMessage': lastMessage ?? ToastMessages.defaultFailureMessage,
-      'timeSent': timeSent ?? timeSent,
+      'timeSent': timeSent?.millisecondsSinceEpoch,
     };
   }
 
@@ -33,7 +33,9 @@ class ContactModel extends ContactEntity {
       imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : "",
       lastMessage:
           map['lastMessage'] != null ? map['lastMessage'] as String : "",
-      timeSent: map['timeSent'] != null ? map['timeSent'] as DateTime : null,
+      timeSent: map['timeSent'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['timeSent'] as int)
+          : null,
     );
   }
 

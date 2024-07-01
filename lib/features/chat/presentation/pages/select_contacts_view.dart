@@ -3,6 +3,7 @@
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
+import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/utils/contacts.dart';
 import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
@@ -85,9 +86,12 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                 return const FailureWidget();
               }
               final contactsList = contactsState.contactList ?? [];
+              final currentUserUid =
+                  context.read<ProfileCubit>().state.userData!.uid;
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Visibility(
                       visible: showSearch,
@@ -112,6 +116,14 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                           ),
                     ),
                     verticalSpacing(showSearch ? 30 : 0),
+                    Text(
+                      "${contactsList.length} contacts",
+                      style: AppTheme.darkThemeData.textTheme.displaySmall!
+                          .copyWith(
+                        color: AppPallete.greyColor,
+                      ),
+                    ),
+                    verticalSpacing(20),
                     Expanded(
                       child: RefreshIndicator(
                         backgroundColor: AppPallete.bottomSheetColor,
@@ -122,6 +134,9 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                         child: ListView.builder(
                           itemCount: contactsList.length,
                           itemBuilder: (context, index) {
+                            if (contactsList[index].uid == currentUserUid) {
+                              return const SizedBox.shrink();
+                            }
                             return GestureDetector(
                               onTap: () {
                                 context.push(
@@ -139,6 +154,7 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                                 displayName: contactsList[index].displayName,
                                 about: contactsList[index].about!,
                                 hasVerticalSpacing: true,
+                                radius: 50,
                               ),
                             );
                           },

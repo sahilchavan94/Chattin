@@ -3,20 +3,23 @@ import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class ContactWidget extends StatelessWidget {
+class ChatContactWidget extends StatelessWidget {
   final String imageUrl;
   final String displayName;
-  final String about;
+  final String lastMessage;
   final double? radius;
+  final DateTime timeSent;
   final bool? hasVerticalSpacing;
-  const ContactWidget({
+  const ChatContactWidget({
     super.key,
     required this.imageUrl,
     required this.displayName,
-    required this.about,
+    required this.lastMessage,
     this.hasVerticalSpacing,
     this.radius,
+    required this.timeSent,
   });
 
   @override
@@ -26,11 +29,12 @@ class ContactWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ImageWidget(
                 imagePath: imageUrl,
-                width: radius ?? 60,
-                height: radius ?? 60,
+                width: radius ?? 50,
+                height: radius ?? 50,
                 fit: BoxFit.cover,
                 radius: BorderRadius.circular(60),
               ),
@@ -49,16 +53,23 @@ class ContactWidget extends StatelessWidget {
                   ),
                   verticalSpacing(5),
                   Text(
-                    about.isEmpty
-                        ? "Hello everyone, I'm now on Chattin`!"
-                        : about,
+                    lastMessage,
                     style:
                         AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                       color: AppPallete.greyColor,
                     ),
                   )
                 ],
-              )
+              ),
+              const Spacer(),
+              Text(
+                "${DateFormat.jm().format(timeSent)} ${DateFormat('dd MM yyyy').format(timeSent)}",
+                style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+                  color: AppPallete.greyColor,
+                  fontSize: 11,
+                ),
+                overflow: TextOverflow.ellipsis, // Ensure text can overflow
+              ),
             ],
           ),
           hasVerticalSpacing == true

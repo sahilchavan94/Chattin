@@ -99,31 +99,30 @@ class _ChatViewState extends State<ChatView> {
             stream:
                 context.read<ChatCubit>().getChatStream(receiverId: widget.uid),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                final messages = snapshot.data!;
-                if (messages.isNotEmpty) {
-                  return ListView.builder(
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final userData =
-                          context.read<ProfileCubit>().state.userData!;
-                      final isMe = messages[index].senderId == userData.uid;
-                      return MessageWidget(
-                        text: messages[index].text,
-                        name: isMe ? userData.displayName : widget.displayName,
-                        isMe: isMe,
-                        imageUrl: isMe ? userData.imageUrl : widget.imageUrl,
-                        timeSent: messages[index].timeSent!,
-                      );
-                    },
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              } else {
+              if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
+              }
+              final messages = snapshot.data ?? [];
+              if (messages.isNotEmpty) {
+                return ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final userData =
+                        context.read<ProfileCubit>().state.userData!;
+                    final isMe = messages[index].senderId == userData.uid;
+                    return MessageWidget(
+                      text: messages[index].text,
+                      name: isMe ? userData.displayName : widget.displayName,
+                      isMe: isMe,
+                      imageUrl: isMe ? userData.imageUrl : widget.imageUrl,
+                      timeSent: messages[index].timeSent!,
+                    );
+                  },
+                );
+              } else {
+                return const SizedBox.shrink();
               }
             },
           ),
