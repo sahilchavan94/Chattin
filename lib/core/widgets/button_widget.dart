@@ -43,7 +43,9 @@ class ButtonWidget extends StatelessWidget {
                 ? const SizedBox(
                     height: 23,
                     width: 23,
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      color: AppPallete.blueColor,
+                    ),
                   )
                 : Text(
                     buttonText,
