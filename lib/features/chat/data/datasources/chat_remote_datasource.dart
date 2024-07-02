@@ -1,6 +1,8 @@
 import 'package:chattin/core/common/models/user_model.dart';
+import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/utils/constants.dart';
+import 'package:chattin/core/utils/helper_functions.dart';
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/features/chat/data/models/contact_model.dart';
 import 'package:chattin/features/chat/data/models/message_model.dart';
@@ -21,6 +23,11 @@ abstract interface class ChatRemoteDataSource {
     required String senderId,
   });
   Stream<List<ContactEntity>> getChatContacts(String uid);
+  Stream<Status> getChatStatus(String uid);
+  Future<void> setChatStatus({
+    required Status status,
+    required String uid,
+  });
 }
 
 class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
@@ -241,5 +248,47 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       return contacts;
     });
     return response;
+  }
+
+  @override
+  Stream<Status> getChatStatus(String uid) {
+    final response = firebaseFirestore
+        .collection(Constants.userCollection)
+        .doc(uid)
+        .snapshots()
+        .asyncMap(
+      (event) {
+        final data = event.data();
+        if (data == null) {
+          return Status.unavailable;
+        }
+        return HelperFunctions.parseStatusType(
+          data['status'] as String,
+        );
+      },
+    );
+
+    return response;
+  }
+
+  @override
+  Future<void> setChatStatus({
+    required Status status,
+    required String uid,
+  }) async {
+    try {
+      await firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(uid)
+          .update(
+        {
+          'status': status.toStringValue(),
+        },
+      );
+    } catch (e) {
+      throw ServerException(
+        error: e.toString(),
+      );
+    }
   }
 }

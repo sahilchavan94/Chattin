@@ -53,17 +53,21 @@ class ChatContactWidget extends StatelessWidget {
                   ),
                   verticalSpacing(5),
                   Text(
-                    lastMessage,
+                    lastMessage.length > 30
+                        ? "${lastMessage.substring(0, 30)} ..."
+                        : lastMessage,
                     style:
                         AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                       color: AppPallete.greyColor,
                     ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   )
                 ],
               ),
               const Spacer(),
               Text(
-                "${DateFormat.jm().format(timeSent)} ${DateFormat('dd MM yyyy').format(timeSent)}",
+                "${DateFormat.jm().format(timeSent)} ${DateFormat('dd MMMM yyyy').format(timeSent)}",
                 style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                   color: AppPallete.greyColor,
                   fontSize: 11,

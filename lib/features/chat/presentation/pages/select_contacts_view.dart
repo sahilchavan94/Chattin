@@ -71,7 +71,7 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                 icon: const Icon(
                   Icons.search,
                 ),
-                color: AppPallete.whiteColor,
+                color: AppPallete.blueColor,
               ),
             ],
           ),
@@ -117,7 +117,7 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                     ),
                     verticalSpacing(showSearch ? 30 : 0),
                     Text(
-                      "${contactsList.length} contacts",
+                      "${contactsList.length - 1} contacts",
                       style: AppTheme.darkThemeData.textTheme.displaySmall!
                           .copyWith(
                         color: AppPallete.greyColor,

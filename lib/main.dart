@@ -1,3 +1,4 @@
+import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/router/router.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
@@ -40,8 +41,56 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    final currentUserData = context.read<ProfileCubit>().state.userData;
+    if (currentUserData == null) {
+      return;
+    }
+    final chatCubit = context.read<ChatCubit>();
+    switch (state) {
+      case AppLifecycleState.resumed:
+        chatCubit.setChatStatus(
+          status: Status.online,
+          uid: currentUserData.uid,
+        );
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.paused:
+        chatCubit.setChatStatus(
+          status: Status.offline,
+          uid: currentUserData.uid,
+        );
+        break;
+      default:
+        chatCubit.setChatStatus(
+          status: Status.offline,
+          uid: currentUserData.uid,
+        );
+    }
+  }
 
   // This widget is the root of your application.
   @override

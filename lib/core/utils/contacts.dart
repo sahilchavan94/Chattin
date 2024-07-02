@@ -17,7 +17,7 @@ class Contacts {
         for (final contact in contacts) {
           final number = contact.phones.first.number.replaceAll(" ", "");
           if (number == selfNumber) {
-            break;
+            continue;
           }
           if (number.length > 10) {
             phoneNumbers.add(number.substring(number.length - 10));

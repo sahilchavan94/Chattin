@@ -1,22 +1,26 @@
+import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
+import 'package:chattin/core/utils/helper_functions.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
 
 class ContactWidget extends StatelessWidget {
   final String imageUrl;
   final String displayName;
-  final String about;
+  final String? about;
+  final String? status;
   final double? radius;
   final bool? hasVerticalSpacing;
   const ContactWidget({
     super.key,
     required this.imageUrl,
     required this.displayName,
-    required this.about,
+    this.about,
     this.hasVerticalSpacing,
     this.radius,
+    this.status,
   });
 
   @override
@@ -48,15 +52,27 @@ class ContactWidget extends StatelessWidget {
                     ),
                   ),
                   verticalSpacing(5),
-                  Text(
-                    about.isEmpty
-                        ? "Hello everyone, I'm now on Chattin`!"
-                        : about,
-                    style:
-                        AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                      color: AppPallete.greyColor,
+                  if (about != null)
+                    Text(
+                      about!.isEmpty
+                          ? "Hello everyone, I'm now on Chattin`!"
+                          : about!,
+                      style: AppTheme.darkThemeData.textTheme.displaySmall!
+                          .copyWith(
+                        color: AppPallete.greyColor,
+                      ),
                     ),
-                  )
+                  if (status != null)
+                    Text(
+                      status!,
+                      style: AppTheme.darkThemeData.textTheme.displaySmall!
+                          .copyWith(
+                        color: HelperFunctions.parseStatusType(status!) ==
+                                Status.online
+                            ? AppPallete.blueColor
+                            : AppPallete.errorColor,
+                      ),
+                    )
                 ],
               )
             ],

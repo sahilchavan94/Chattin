@@ -102,7 +102,7 @@ class _ChatContactsViewState extends State<ChatContactsView> {
               children: [
                 InputWidget(
                   height: 45,
-                  hintText: 'Search for contacts',
+                  hintText: 'Search your chats',
                   textEditingController: _searchController,
                   validator: (String val) {},
                   suffixIcon: const Icon(Icons.search),

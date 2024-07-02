@@ -1,5 +1,6 @@
 import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/core/common/models/user_model.dart';
+import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/errors/failure.dart';
 import 'package:chattin/features/chat/data/datasources/chat_remote_datasource.dart';
@@ -69,5 +70,31 @@ class ChatRepositoryImpl implements ChatRepository {
   Stream<List<ContactEntity>> getChatContacts(String uid) {
     final response = chatRemoteDataSourceImpl.getChatContacts(uid);
     return response;
+  }
+
+  @override
+  Stream<Status> getChatStatus(String uid) {
+    final response = chatRemoteDataSourceImpl.getChatStatus(uid);
+    return response;
+  }
+
+  @override
+  Future<Either<Failure, void>> setChatStatus({
+    required Status status,
+    required String uid,
+  }) async {
+    try {
+      final response = await chatRemoteDataSourceImpl.setChatStatus(
+        status: status,
+        uid: uid,
+      );
+      return Right(response);
+    } catch (e) {
+      return Left(
+        Failure(
+          e.toString(),
+        ),
+      );
+    }
   }
 }

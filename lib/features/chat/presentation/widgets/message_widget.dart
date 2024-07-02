@@ -88,7 +88,7 @@ class MessageWidget extends StatelessWidget {
                         ),
                         horizontalSpacing(5),
                         Text(
-                          "${DateFormat.jm().format(timeSent)} ${DateFormat('dd MM yyyy').format(timeSent)}",
+                          DateFormat.jm().format(timeSent),
                           style: AppTheme.darkThemeData.textTheme.displaySmall!
                               .copyWith(
                             color: AppPallete.greyColor,
