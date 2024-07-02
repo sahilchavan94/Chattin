@@ -78,6 +78,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         break;
       case AppLifecycleState.inactive:
       case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
       case AppLifecycleState.paused:
         chatCubit.setChatStatus(
           status: Status.offline,
