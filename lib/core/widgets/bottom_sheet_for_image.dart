@@ -3,8 +3,13 @@ import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 
-showBottomSheetForPickingImage(
-    BuildContext context, VoidCallback onClick1, VoidCallback onClick2) {
+showBottomSheetForPickingImage({
+  required BuildContext context,
+  required VoidCallback onClick1,
+  required VoidCallback onClick2,
+  String? title,
+  String? subTitle,
+}) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -24,13 +29,14 @@ showBottomSheetForPickingImage(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              "Select profile picture",
+              title ?? "Select profile picture",
               style: AppTheme.darkThemeData.textTheme.displayLarge!.copyWith(
                 color: AppPallete.blueColor,
               ),
             ),
             Text(
-              "This profile picture will be visible to everyone for now. You may change or remove it later",
+              subTitle ??
+                  "This profile picture will be visible to everyone for now. You may change or remove it later",
               style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                 color: AppPallete.whiteColor,
               ),

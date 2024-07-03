@@ -53,6 +53,35 @@ class ChatRepositoryImpl implements ChatRepository {
     }
   }
 
+  @override
+  Future<Either<Failure, String>> sendFileMessage({
+    required String downloadedUrl,
+    required String recieverId,
+    required UserEntity sender,
+    required String messageId,
+    required MessageType messageType,
+  }) async {
+    try {
+      final senderModel = UserModel(
+        uid: sender.uid,
+        displayName: sender.displayName,
+        imageUrl: sender.imageUrl,
+      );
+      final response = await chatRemoteDataSourceImpl.sendFileMessage(
+        downloadedUrl: downloadedUrl,
+        recieverId: recieverId,
+        messageId: messageId,
+        sender: senderModel,
+        messageType: messageType,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(e.toString()),
+      );
+    }
+  }
+
   //i need to know whether there I can use fpdart with streams : will research on it
   @override
   Stream<List<MessageEntity>> getChatStream({

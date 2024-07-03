@@ -18,6 +18,13 @@ abstract interface class ChatRemoteDataSource {
     required String recieverId,
     required UserModel sender,
   });
+  Future<String> sendFileMessage({
+    required String downloadedUrl,
+    required String recieverId,
+    required String messageId,
+    required UserModel sender,
+    required MessageType messageType,
+  });
   Stream<List<MessageEntity>> getChatStream({
     required String recieverId,
     required String senderId,
@@ -87,6 +94,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required String text,
     required String messageId,
     required DateTime timeSent,
+    required MessageType messageType,
   }) async {
     //create a message model representing a single message
     final MessageModel message = MessageModel(
@@ -96,6 +104,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       timeSent: timeSent,
       messageId: messageId,
       status: false,
+      messageType: messageType,
     );
 
     //store the message in both sender's and receiver's chats
@@ -195,10 +204,60 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         text: text,
         messageId: messageId,
         timeSent: timeSent,
+        messageType: MessageType.text,
       );
       return ToastMessages.welcomeSignInMessage; //change it later
     } catch (e) {
       throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> sendFileMessage({
+    required String downloadedUrl,
+    required String recieverId,
+    required String messageId,
+    required UserModel sender,
+    required MessageType messageType,
+  }) async {
+    try {
+      final timeSent = DateTime.now();
+
+      UserModel? receiver;
+
+      //get the receiver's data
+      final receiverData = await firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(recieverId)
+          .get();
+
+      //set the receiver data
+      receiver = UserModel.fromMap(
+        receiverData.data()!,
+      );
+
+      final String msgTypeString = messageType.toStringValue();
+
+      _saveDataToContactsSubcollection(
+        sender: sender,
+        receiver: receiver,
+        text: msgTypeString,
+        timeSent: timeSent,
+      );
+
+      _saveMessageToMessageSubcollection(
+        sender: sender,
+        receiver: receiver,
+        text: downloadedUrl,
+        messageId: messageId,
+        timeSent: timeSent,
+        messageType: MessageType.image,
+      );
+      return ToastMessages.welcomeSignInMessage; //change it later
+    } catch (e) {
+      throw ServerException(
+        error: e.toString(),
+      );
     }
   }
 

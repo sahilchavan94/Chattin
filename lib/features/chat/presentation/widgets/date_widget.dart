@@ -18,7 +18,7 @@ class DateWidget extends StatelessWidget {
         width: 130,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
-          color: AppPallete.blueColor.withOpacity(.1),
+          color: AppPallete.backgroundColor.withOpacity(.1),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
         margin: const EdgeInsets.symmetric(vertical: 30),

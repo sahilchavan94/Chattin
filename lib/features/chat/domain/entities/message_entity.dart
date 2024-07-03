@@ -1,3 +1,5 @@
+import 'package:chattin/core/enum/enums.dart';
+
 class MessageEntity {
   final String senderId;
   final String receiverId;
@@ -5,6 +7,7 @@ class MessageEntity {
   final DateTime? timeSent;
   final String messageId;
   final bool status;
+  final MessageType messageType;
 
   MessageEntity({
     required this.senderId,
@@ -13,5 +16,6 @@ class MessageEntity {
     required this.timeSent,
     required this.messageId,
     required this.status,
+    required this.messageType,
   });
 }

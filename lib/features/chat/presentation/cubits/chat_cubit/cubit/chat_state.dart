@@ -9,7 +9,6 @@ enum ChatStatus {
 
 class ChatState {
   ChatStatus chatStatus;
-
   String? message;
   ChatState({
     required this.chatStatus,

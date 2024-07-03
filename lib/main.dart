@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         break;
       default:
         chatCubit.setChatStatus(
-          status: Status.offline,
+          status: Status.unavailable,
           uid: currentUserData.uid,
         );
     }

@@ -23,6 +23,9 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   //method for getting the profile data
   Future<void> getProfileData() async {
+    if (firebaseAuth.currentUser == null) {
+      return;
+    }
     emit(state.copyWith(profileStatus: ProfileStatus.loading));
     final uid = firebaseAuth.currentUser!.uid;
     final response = await getProfileDataUseCase.call(uid);

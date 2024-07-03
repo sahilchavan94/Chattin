@@ -116,13 +116,14 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                           ),
                     ),
                     verticalSpacing(showSearch ? 30 : 0),
-                    Text(
-                      "${contactsList.length - 1} contacts",
-                      style: AppTheme.darkThemeData.textTheme.displaySmall!
-                          .copyWith(
-                        color: AppPallete.greyColor,
+                    if (contactsList.isNotEmpty)
+                      Text(
+                        "${contactsList.length - 1} contacts",
+                        style: AppTheme.darkThemeData.textTheme.displaySmall!
+                            .copyWith(
+                          color: AppPallete.greyColor,
+                        ),
                       ),
-                    ),
                     verticalSpacing(20),
                     Expanded(
                       child: RefreshIndicator(

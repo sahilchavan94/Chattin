@@ -54,7 +54,7 @@ class ChatContactWidget extends StatelessWidget {
                   verticalSpacing(5),
                   Text(
                     lastMessage.length > 30
-                        ? "${lastMessage.substring(0, 30)} ..."
+                        ? "${lastMessage.substring(0, 25)}..."
                         : lastMessage,
                     style:
                         AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(

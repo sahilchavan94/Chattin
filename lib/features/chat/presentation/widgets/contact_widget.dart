@@ -70,7 +70,7 @@ class ContactWidget extends StatelessWidget {
                         color: HelperFunctions.parseStatusType(status!) ==
                                 Status.online
                             ? AppPallete.blueColor
-                            : AppPallete.errorColor,
+                            : AppPallete.redColor,
                       ),
                     )
                 ],

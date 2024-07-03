@@ -25,4 +25,11 @@ abstract interface class ChatRepository {
     required Status status,
     required String uid,
   });
+  Future<Either<Failure, String>> sendFileMessage({
+    required String downloadedUrl,
+    required String recieverId,
+    required UserEntity sender,
+    required String messageId,
+    required MessageType messageType,
+  });
 }

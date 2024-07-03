@@ -1,17 +1,18 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 
 class MessageModel extends MessageEntity {
-  MessageModel({
-    required super.senderId,
-    required super.receiverId,
-    required super.text,
-    required super.timeSent,
-    required super.messageId,
-    required super.status,
-  });
+  MessageModel(
+      {required super.senderId,
+      required super.receiverId,
+      required super.text,
+      required super.timeSent,
+      required super.messageId,
+      required super.status,
+      required super.messageType});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -21,6 +22,7 @@ class MessageModel extends MessageEntity {
       'timeSent': timeSent!.millisecondsSinceEpoch,
       'messageId': messageId,
       'status': status,
+      'messageType': messageType.toStringValue(),
     };
   }
 
@@ -38,6 +40,9 @@ class MessageModel extends MessageEntity {
               ? true
               : false
           : false,
+      messageType: map['messageType'] != null
+          ? (map['messageType'] as String).toStringValue()
+          : MessageType.text,
     );
   }
 

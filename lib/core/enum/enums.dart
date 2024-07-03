@@ -18,3 +18,38 @@ extension StatusExtension on Status {
     }
   }
 }
+
+enum MessageType {
+  text('text'),
+  image('image');
+
+  const MessageType(this.type);
+  final String type;
+}
+
+extension MessageTypeExtension on MessageType {
+  String toStringValue() {
+    switch (this) {
+      case MessageType.image:
+        return '📸 Photo';
+      case MessageType.text:
+        return '💬 Text';
+      default:
+        return 'Unavailable';
+    }
+  }
+}
+
+extension ConvertToMessageType on String {
+  MessageType toStringValue() {
+    switch (this) {
+      case '📸 Photo':
+        return MessageType.image;
+      case '💬 Text':
+        return MessageType.text;
+
+      default:
+        return MessageType.text;
+    }
+  }
+}

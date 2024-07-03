@@ -115,6 +115,9 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                   child: StreamBuilder(
                     stream: context.read<ChatCubit>().getChatContacts(),
                     builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return const FailureWidget();
+                      }
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
                           child: CircularProgressIndicator(),

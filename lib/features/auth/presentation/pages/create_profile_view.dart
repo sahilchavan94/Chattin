@@ -88,12 +88,12 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                         child: IconButton(
                           onPressed: () {
                             showBottomSheetForPickingImage(
-                              context,
-                              () {
+                              context: context,
+                              onClick1: () {
                                 context.pop();
                                 _selectImage(ImageSource.camera);
                               },
-                              () {
+                              onClick2: () {
                                 context.pop();
                                 _selectImage(ImageSource.gallery);
                               },

@@ -13,8 +13,8 @@ class UploadRemoteDataSourceImpl implements UploadRemoteDataSource {
     required this.firebaseStorage,
   });
   @override
-  Future<String> generalUpload(File media, String id) async {
-    final ref = firebaseStorage.ref().child('profileimages/$id');
+  Future<String> generalUpload(File media, String path) async {
+    final ref = firebaseStorage.ref().child(path);
 
     try {
       final response = await ref.putFile(media);
