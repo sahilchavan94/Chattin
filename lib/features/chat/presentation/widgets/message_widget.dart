@@ -48,10 +48,10 @@ class MessageWidget extends StatelessWidget {
               ],
               Container(
                 constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width - 110,
+                  maxWidth: MediaQuery.of(context).size.width - 120,
                 ),
                 decoration: BoxDecoration(
-                  color: !isMe
+                  color: isMe
                       ? AppPallete.bottomSheetColor
                       : AppPallete.blueColor.withOpacity(.15),
                   borderRadius: isMe
@@ -62,9 +62,9 @@ class MessageWidget extends StatelessWidget {
                           bottomLeft: const Radius.circular(0),
                         ),
                 ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 15,
-                  vertical: 9,
+                padding: EdgeInsets.symmetric(
+                  horizontal: messageType == MessageType.image ? 8 : 15,
+                  vertical: messageType == MessageType.image ? 1 : 9,
                 ),
                 child: Column(
                   crossAxisAlignment:
@@ -83,13 +83,14 @@ class MessageWidget extends StatelessWidget {
                       )
                     else
                       Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: ImageWidget(
-                          imagePath: imageUrl,
+                          imagePath: text,
+                          fit: BoxFit.cover,
                           radius: BorderRadius.circular(10),
                         ),
                       ),
-                    verticalSpacing(messageType == MessageType.image ? 10 : 4),
+                    verticalSpacing(messageType == MessageType.image ? 1 : 4),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -118,6 +119,7 @@ class MessageWidget extends StatelessWidget {
                         ),
                       ],
                     ),
+                    if (messageType == MessageType.image) verticalSpacing(6)
                   ],
                 ),
               ),

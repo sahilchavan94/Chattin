@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:chattin/core/enum/enums.dart';
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/picker.dart';
 import 'package:chattin/core/widgets/bottom_sheet_for_image.dart';
@@ -58,12 +59,20 @@ class _ChatViewState extends State<ChatView> {
     final pickedImage = await Picker.pickImage(imageSource);
     if (pickedImage != null) {
       final sender = context.read<ProfileCubit>().state.userData!;
-      context.read<ChatCubit>().sendFileMessage(
-            recieverId: widget.uid,
-            sender: sender,
-            messageType: MessageType.image,
-            file: pickedImage,
-          );
+      context.push(
+        RoutePath.imagePreview.path,
+        extra: {
+          'file': pickedImage,
+          'onPressed': () {
+            context.read<ChatCubit>().sendFileMessage(
+                  recieverId: widget.uid,
+                  sender: sender,
+                  messageType: MessageType.image,
+                  file: pickedImage,
+                );
+          }
+        },
+      );
     }
   }
 
@@ -116,7 +125,8 @@ class _ChatViewState extends State<ChatView> {
                         textEditingController: _messageController,
                         validator: (String val) {},
                         suffixIcon: const Icon(
-                          Icons.image,
+                          Icons.attach_file,
+                          size: 20,
                           color: AppPallete.whiteColor,
                         ),
                         onSuffixIconPressed: () {
@@ -142,16 +152,18 @@ class _ChatViewState extends State<ChatView> {
                     ),
                     FloatingActionButton(
                       onPressed: () {
-                        final text = _messageController.text;
-                        setState(() {
-                          _messageController.clear();
-                        });
+                        if (_messageController.text.isEmpty) {
+                          return;
+                        }
                         context.read<ChatCubit>().sendMessage(
-                              text: text,
+                              text: _messageController.text,
                               recieverId: widget.uid,
                               sender:
                                   context.read<ProfileCubit>().state.userData!,
                             );
+                        setState(() {
+                          _messageController.clear();
+                        });
                       },
                       mini: true,
                       backgroundColor:

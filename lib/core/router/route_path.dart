@@ -30,4 +30,9 @@ class RoutePath {
   static const RouteName profileScreen = RouteName(
     path: "/user_profile",
   );
+
+  //image view
+  static const RouteName imagePreview = RouteName(
+    path: "/image_preview",
+  );
 }

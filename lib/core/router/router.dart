@@ -1,5 +1,6 @@
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/constants.dart';
+import 'package:chattin/core/widgets/selected_image_view.dart';
 import 'package:chattin/features/auth/presentation/pages/check_verification_status.dart';
 import 'package:chattin/features/auth/presentation/pages/create_profile_view.dart';
 import 'package:chattin/features/auth/presentation/pages/email_auth_view.dart';
@@ -139,6 +140,20 @@ class MyRouter {
             context: context,
             state: state,
             child: const ProfileView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.imagePreview.path,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: ImagePreview(
+              file: data['file'],
+              onPressed: data['onPressed'],
+            ),
           );
         },
       )
