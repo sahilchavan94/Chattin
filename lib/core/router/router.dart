@@ -1,6 +1,6 @@
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/constants.dart';
-import 'package:chattin/core/widgets/selected_image_view.dart';
+import 'package:chattin/core/widgets/send_image_widget.dart';
 import 'package:chattin/features/auth/presentation/pages/check_verification_status.dart';
 import 'package:chattin/features/auth/presentation/pages/create_profile_view.dart';
 import 'package:chattin/features/auth/presentation/pages/email_auth_view.dart';
