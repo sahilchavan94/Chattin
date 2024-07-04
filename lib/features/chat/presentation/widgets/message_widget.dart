@@ -13,6 +13,7 @@ class MessageWidget extends StatelessWidget {
   final String name;
   final DateTime timeSent;
   final bool isMe;
+  final bool status;
   final MessageType messageType;
   const MessageWidget({
     super.key,
@@ -22,6 +23,7 @@ class MessageWidget extends StatelessWidget {
     required this.timeSent,
     required this.name,
     required this.messageType,
+    required this.status,
   });
 
   @override
@@ -122,6 +124,15 @@ class MessageWidget extends StatelessWidget {
                           overflow:
                               TextOverflow.ellipsis, // Ensure text can overflow
                         ),
+                        horizontalSpacing(6),
+                        if (isMe)
+                          Icon(
+                            status ? Icons.done_all : Icons.done,
+                            color: status
+                                ? AppPallete.blueColor
+                                : AppPallete.greyColor,
+                            size: 15,
+                          ),
                       ],
                     ),
                     if (messageType == MessageType.image) verticalSpacing(6)

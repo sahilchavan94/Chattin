@@ -12,6 +12,7 @@ import 'package:chattin/features/chat/domain/usecases/get_chat_stream.dart';
 import 'package:chattin/features/chat/domain/usecases/send_file_message.dart';
 import 'package:chattin/features/chat/domain/usecases/send_message.dart';
 import 'package:chattin/features/chat/domain/usecases/set_chat_status.dart';
+import 'package:chattin/features/chat/domain/usecases/set_message_status.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
@@ -25,6 +26,7 @@ class ChatCubit extends Cubit<ChatState> {
   final SetChatStatusUseCase _setChatStatusUseCase;
   final GeneralUploadUseCase _generalUploadUseCase;
   final SendFileMessageUseCase _sendFileMessageUseCase;
+  final SetMessageStatusUseCase _setMessageStatusUseCase;
   final FirebaseAuth _firebaseAuth;
   ChatCubit(
     this._sendMessageUseCase,
@@ -35,6 +37,7 @@ class ChatCubit extends Cubit<ChatState> {
     this._setChatStatusUseCase,
     this._generalUploadUseCase,
     this._sendFileMessageUseCase,
+    this._setMessageStatusUseCase,
   ) : super(ChatState.initial());
 
   //method to send a chat message
@@ -118,13 +121,22 @@ class ChatCubit extends Cubit<ChatState> {
     required Status status,
     required String uid,
   }) async {
-    final response = await _setChatStatusUseCase.call(
+    await _setChatStatusUseCase.call(
       status: status,
       uid: uid,
     );
-    response.fold(
-      (l) {},
-      (r) {},
+  }
+
+  //function to set the message status
+  Future<void> setMessageStatus({
+    required String receiverId,
+    required String senderId,
+    required String messageId,
+  }) async {
+    await _setMessageStatusUseCase.call(
+      receiverId: receiverId,
+      senderId: senderId,
+      messageId: messageId,
     );
   }
 }

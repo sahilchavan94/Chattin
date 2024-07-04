@@ -126,4 +126,26 @@ class ChatRepositoryImpl implements ChatRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, void>> setMessageStatus({
+    required String receiverUserId,
+    required String messageId,
+    required String senderId,
+  }) async {
+    try {
+      final response = await chatRemoteDataSourceImpl.setMessageStatus(
+        receiverUserId: receiverUserId,
+        messageId: messageId,
+        senderId: senderId,
+      );
+      return Right(response);
+    } catch (e) {
+      return Left(
+        Failure(
+          e.toString(),
+        ),
+      );
+    }
+  }
 }

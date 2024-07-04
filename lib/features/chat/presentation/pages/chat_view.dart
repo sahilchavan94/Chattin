@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
-
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
@@ -240,7 +239,6 @@ class _ChatViewState extends State<ChatView> {
                   });
 
                   return ListView.builder(
-                    shrinkWrap: true,
                     controller: _scrollController,
                     physics: const BouncingScrollPhysics(
                       decelerationRate: ScrollDecelerationRate.normal,
@@ -250,6 +248,13 @@ class _ChatViewState extends State<ChatView> {
                       final userData =
                           context.read<ProfileCubit>().state.userData!;
                       final isMe = messages[index].senderId == userData.uid;
+                      if (!messages[index].status && !isMe) {
+                        context.read<ChatCubit>().setMessageStatus(
+                              receiverId: messages[index].receiverId,
+                              senderId: messages[index].senderId,
+                              messageId: messages[index].messageId,
+                            );
+                      }
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -270,6 +275,7 @@ class _ChatViewState extends State<ChatView> {
                             imageUrl:
                                 isMe ? userData.imageUrl : widget.imageUrl,
                             timeSent: messages[index].timeSent!,
+                            status: messages[index].status,
                           ),
                         ],
                       );

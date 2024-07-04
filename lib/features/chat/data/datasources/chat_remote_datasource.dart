@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chattin/core/common/models/user_model.dart';
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/errors/exceptions.dart';
@@ -34,6 +36,11 @@ abstract interface class ChatRemoteDataSource {
   Future<void> setChatStatus({
     required Status status,
     required String uid,
+  });
+  Future<void> setMessageStatus({
+    required String receiverUserId,
+    required String messageId,
+    required String senderId,
   });
 }
 
@@ -343,6 +350,30 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         {
           'status': status.toStringValue(),
         },
+      );
+    } catch (e) {
+      throw ServerException(
+        error: e.toString(),
+      );
+    }
+  }
+
+  @override
+  Future<void> setMessageStatus({
+    required String receiverUserId,
+    required String messageId,
+    required String senderId,
+  }) async {
+    try {
+      await firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(senderId)
+          .collection(Constants.chatsSubCollection)
+          .doc(receiverUserId)
+          .collection(Constants.messagesSubCollection)
+          .doc(messageId)
+          .update(
+        {'status': true},
       );
     } catch (e) {
       throw ServerException(

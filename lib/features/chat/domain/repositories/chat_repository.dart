@@ -32,4 +32,9 @@ abstract interface class ChatRepository {
     required String messageId,
     required MessageType messageType,
   });
+  Future<Either<Failure, void>> setMessageStatus({
+    required String receiverUserId,
+    required String messageId,
+    required String senderId,
+  });
 }

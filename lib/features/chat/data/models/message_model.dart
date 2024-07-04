@@ -35,11 +35,7 @@ class MessageModel extends MessageEntity {
           ? DateTime.fromMillisecondsSinceEpoch(map['timeSent'] as int)
           : null,
       messageId: map['messageId'] != null ? map['messageId'] as String : "",
-      status: map['status'] != null
-          ? map['status'] == 'true'
-              ? true
-              : false
-          : false,
+      status: map['status'] ?? false,
       messageType: map['messageType'] != null
           ? (map['messageType'] as String).toStringValue()
           : MessageType.text,
