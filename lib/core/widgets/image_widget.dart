@@ -104,18 +104,18 @@ class ImageWidget extends StatelessWidget {
                 ? "https://www.gokulagro.com/wp-content/uploads/2023/01/no-images.png"
                 : imagePath!,
             color: color,
-            placeholder: (context, url) => SizedBox(
-              height: 30,
-              width: 30,
-              child: LinearProgressIndicator(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.black12
-                    : Colors.grey.shade900,
-                backgroundColor: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.grey.shade900
-                    : Colors.grey.shade800,
-              ),
-            ),
+            progressIndicatorBuilder: (context, url, progress) {
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: SizedBox(
+                  width: 23,
+                  height: 23,
+                  child: CircularProgressIndicator(
+                    value: progress.progress,
+                  ),
+                ),
+              );
+            },
             errorWidget: (context, url, error) => Container(
               height: height,
               width: width,

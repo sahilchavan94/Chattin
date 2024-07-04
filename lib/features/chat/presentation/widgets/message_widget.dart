@@ -4,6 +4,7 @@ import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 class MessageWidget extends StatelessWidget {
@@ -40,7 +41,6 @@ class MessageWidget extends StatelessWidget {
                   imagePath: imageUrl,
                   width: 26,
                   height: 26,
-                  //16 16 26 26
                   fit: BoxFit.fill,
                   radius: BorderRadius.circular(20),
                 ),
@@ -82,12 +82,17 @@ class MessageWidget extends StatelessWidget {
                             TextOverflow.visible, // Ensure text can overflow
                       )
                     else
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ImageWidget(
-                          imagePath: text,
-                          fit: BoxFit.cover,
-                          radius: BorderRadius.circular(10),
+                      Container(
+                        constraints: BoxConstraints(
+                          maxHeight: MediaQuery.of(context).size.height * .45,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ImageWidget(
+                            imagePath: text,
+                            fit: BoxFit.cover,
+                            radius: BorderRadius.circular(10),
+                          ),
                         ),
                       ),
                     verticalSpacing(messageType == MessageType.image ? 1 : 4),

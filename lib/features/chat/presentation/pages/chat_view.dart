@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
@@ -39,6 +41,7 @@ class _ChatViewState extends State<ChatView> {
   final ScrollController _scrollController = ScrollController();
   late Stream<List<MessageEntity>> _chatStream;
   late Stream<Status> _statusStream;
+  bool initialLoadCompleted = false;
 
   @override
   void initState() {
@@ -127,7 +130,7 @@ class _ChatViewState extends State<ChatView> {
                         suffixIcon: const Icon(
                           Icons.attach_file,
                           size: 20,
-                          color: AppPallete.whiteColor,
+                          color: AppPallete.blueColor,
                         ),
                         onSuffixIconPressed: () {
                           showBottomSheetForPickingImage(
@@ -152,7 +155,9 @@ class _ChatViewState extends State<ChatView> {
                     ),
                     FloatingActionButton(
                       onPressed: () {
-                        if (_messageController.text.isEmpty) {
+                        if (_messageController.text
+                            .replaceAll(" ", "")
+                            .isEmpty) {
                           return;
                         }
                         context.read<ChatCubit>().sendMessage(
@@ -225,15 +230,17 @@ class _ChatViewState extends State<ChatView> {
                     child: CircularProgressIndicator(),
                   );
                 }
-
                 final messages = snapshot.data ?? [];
+
                 if (messages.isNotEmpty) {
                   SchedulerBinding.instance.addPostFrameCallback((_) {
                     _scrollController.jumpTo(
                       _scrollController.position.maxScrollExtent,
                     );
                   });
+
                   return ListView.builder(
+                    shrinkWrap: true,
                     controller: _scrollController,
                     physics: const BouncingScrollPhysics(
                       decelerationRate: ScrollDecelerationRate.normal,
