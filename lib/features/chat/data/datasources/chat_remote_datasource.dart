@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chattin/core/common/models/user_model.dart';
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/errors/exceptions.dart';
@@ -17,6 +19,13 @@ abstract interface class ChatRemoteDataSource {
     required String text,
     required String recieverId,
     required UserModel sender,
+  });
+  Future<String> sendReplyMessage({
+    required String text,
+    required String repliedTo,
+    required MessageType repliedToType,
+    required String recieverId,
+    required String senderId,
   });
   Future<String> sendFileMessage({
     required String downloadedUrl,
@@ -100,19 +109,37 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required String messageId,
     required DateTime timeSent,
     required MessageType messageType,
+    required bool isReply,
+    String? repliedTo,
+    MessageType? repliedToType,
   }) async {
     //create a message model representing a single message
-    final MessageModel message = MessageModel(
-      senderId: sender.uid,
-      receiverId: receiver!.uid,
-      text: text,
-      timeSent: timeSent,
-      messageId: messageId,
-      status: false,
-      messageType: messageType,
-    );
-
-    //store the message in both sender's and receiver's chats
+    MessageModel message;
+    if (isReply) {
+      message = MessageModel(
+        senderId: sender.uid,
+        receiverId: receiver!.uid,
+        text: text,
+        timeSent: timeSent,
+        messageId: messageId,
+        status: false,
+        messageType: messageType,
+        isReply: isReply,
+        repliedTo: repliedTo,
+        repliedToType: repliedToType,
+      );
+    } else {
+      message = MessageModel(
+        senderId: sender.uid,
+        receiverId: receiver!.uid,
+        text: text,
+        timeSent: timeSent,
+        messageId: messageId,
+        status: false,
+        messageType: messageType,
+        isReply: false,
+      );
+    }
 
     //sender's document
     await firebaseFirestore
@@ -210,6 +237,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         messageId: messageId,
         timeSent: timeSent,
         messageType: MessageType.text,
+        isReply: false,
       );
       return ToastMessages.welcomeSignInMessage; //change it later
     } catch (e) {
@@ -257,6 +285,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         messageId: messageId,
         timeSent: timeSent,
         messageType: MessageType.image,
+        isReply: false,
       );
       return ToastMessages.welcomeSignInMessage; //change it later
     } catch (e) {
@@ -377,6 +406,69 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       throw ServerException(
         error: e.toString(),
       );
+    }
+  }
+
+  @override
+  Future<String> sendReplyMessage({
+    required String text,
+    required String repliedTo,
+    required MessageType repliedToType,
+    required String recieverId,
+    required String senderId,
+  }) async {
+    try {
+      final timeSent = DateTime.now();
+      final messageId = const Uuid().v1();
+      UserModel? sender;
+      UserModel? receiver;
+
+      //get the sender's data
+      final senderData = await firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(senderId)
+          .get();
+
+      //get the receiver's data
+      final receiverData = await firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(recieverId)
+          .get();
+
+      //set the sender data
+      sender = UserModel.fromMap(
+        senderData.data()!,
+      );
+
+      //set the receiver data
+      receiver = UserModel.fromMap(
+        receiverData.data()!,
+      );
+
+      //save the data to the contacts sub collection
+      _saveDataToContactsSubcollection(
+        sender: sender,
+        receiver: receiver,
+        text: text,
+        timeSent: timeSent,
+      );
+
+      //save the message in sender and the receiver's collection
+      _saveMessageToMessageSubcollection(
+        sender: sender,
+        receiver: receiver,
+        text: text,
+        messageId: messageId,
+        timeSent: timeSent,
+        messageType: MessageType.text,
+        isReply: true,
+        repliedTo: repliedTo,
+        repliedToType: repliedToType,
+      );
+      return ToastMessages.welcomeSignInMessage; //change it later
+    } catch (e) {
+      log("error is ${e.toString()}");
+      throw ServerException(error: e.toString());
     }
   }
 }

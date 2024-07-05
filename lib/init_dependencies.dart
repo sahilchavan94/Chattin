@@ -20,6 +20,7 @@ import 'package:chattin/features/chat/domain/usecases/get_chat_status.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_stream.dart';
 import 'package:chattin/features/chat/domain/usecases/send_file_message.dart';
 import 'package:chattin/features/chat/domain/usecases/send_message.dart';
+import 'package:chattin/features/chat/domain/usecases/send_reply_message.dart';
 import 'package:chattin/features/chat/domain/usecases/set_chat_status.dart';
 import 'package:chattin/features/chat/domain/usecases/set_message_status.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
@@ -180,8 +181,14 @@ void initChat() {
         chatRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<SendReplyUseCase>(
+      () => SendReplyUseCase(
+        chatRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton(
       () => ChatCubit(
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
+import 'dart:developer';
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
@@ -8,6 +9,7 @@ import 'package:chattin/core/utils/picker.dart';
 import 'package:chattin/core/widgets/bottom_sheet_for_image.dart';
 import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
+import 'package:chattin/core/widgets/reply_dialog_widget.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
 import 'package:chattin/features/chat/presentation/widgets/contact_widget.dart';
@@ -19,6 +21,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:swipe_to/swipe_to.dart';
 
 class ChatView extends StatefulWidget {
   final String uid;
@@ -222,6 +225,7 @@ class _ChatViewState extends State<ChatView> {
               stream: _chatStream,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
+                  log("error is ${snapshot.error}");
                   return const FailureWidget();
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -265,17 +269,55 @@ class _ChatViewState extends State<ChatView> {
                             DateWidget(
                               timeSent: messages[index].timeSent!,
                             ),
-                          MessageWidget(
-                            messageType: messages[index].messageType,
-                            text: messages[index].text,
-                            name: isMe
-                                ? userData.displayName
-                                : widget.displayName,
-                            isMe: isMe,
-                            imageUrl:
-                                isMe ? userData.imageUrl : widget.imageUrl,
-                            timeSent: messages[index].timeSent!,
-                            status: messages[index].status,
+                          SwipeTo(
+                            iconColor: AppPallete.whiteColor,
+                            iconOnLeftSwipe: Icons.arrow_forward,
+                            iconOnRightSwipe: Icons.arrow_back,
+                            onRightSwipe: (details) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return ReplyDialogWidget(
+                                    messageType: messages[index].messageType,
+                                    senderId: userData.uid,
+                                    receiverId: isMe
+                                        ? messages[index].receiverId
+                                        : messages[index].senderId,
+                                    repliedTo: messages[index].text,
+                                  );
+                                },
+                              );
+                            },
+                            onLeftSwipe: (details) {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return ReplyDialogWidget(
+                                    messageType: messages[index].messageType,
+                                    senderId: userData.uid,
+                                    receiverId: isMe
+                                        ? messages[index].receiverId
+                                        : messages[index].senderId,
+                                    repliedTo: messages[index].text,
+                                  );
+                                },
+                              );
+                            },
+                            child: MessageWidget(
+                              isReply: messages[index].isReply,
+                              repliedTo: messages[index].repliedTo,
+                              repliedToType: messages[index].repliedToType,
+                              messageType: messages[index].messageType,
+                              text: messages[index].text,
+                              name: isMe
+                                  ? userData.displayName
+                                  : widget.displayName,
+                              isMe: isMe,
+                              imageUrl:
+                                  isMe ? userData.imageUrl : widget.imageUrl,
+                              timeSent: messages[index].timeSent!,
+                              status: messages[index].status,
+                            ),
                           ),
                         ],
                       );

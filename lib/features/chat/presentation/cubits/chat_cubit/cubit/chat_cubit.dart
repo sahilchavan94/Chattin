@@ -11,6 +11,7 @@ import 'package:chattin/features/chat/domain/usecases/get_chat_status.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_stream.dart';
 import 'package:chattin/features/chat/domain/usecases/send_file_message.dart';
 import 'package:chattin/features/chat/domain/usecases/send_message.dart';
+import 'package:chattin/features/chat/domain/usecases/send_reply_message.dart';
 import 'package:chattin/features/chat/domain/usecases/set_chat_status.dart';
 import 'package:chattin/features/chat/domain/usecases/set_message_status.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,6 +28,7 @@ class ChatCubit extends Cubit<ChatState> {
   final GeneralUploadUseCase _generalUploadUseCase;
   final SendFileMessageUseCase _sendFileMessageUseCase;
   final SetMessageStatusUseCase _setMessageStatusUseCase;
+  final SendReplyUseCase _sendReplyUseCase;
   final FirebaseAuth _firebaseAuth;
   ChatCubit(
     this._sendMessageUseCase,
@@ -38,6 +40,7 @@ class ChatCubit extends Cubit<ChatState> {
     this._generalUploadUseCase,
     this._sendFileMessageUseCase,
     this._setMessageStatusUseCase,
+    this._sendReplyUseCase,
   ) : super(ChatState.initial());
 
   //method to send a chat message
@@ -137,6 +140,32 @@ class ChatCubit extends Cubit<ChatState> {
       receiverId: receiverId,
       senderId: senderId,
       messageId: messageId,
+    );
+  }
+
+  //sending reply to a message
+  Future<void> sendReply({
+    required String text,
+    required String repliedTo,
+    required String recieverId,
+    required MessageType repliedToType,
+    required String senderId,
+  }) async {
+    emit(state.copyWith(chatStatus: ChatStatus.loading));
+    final response = await _sendReplyUseCase.call(
+      text: text,
+      repliedTo: repliedTo,
+      recieverId: recieverId,
+      repliedToType: repliedToType,
+      senderId: senderId,
+    );
+    response.fold(
+      (l) {
+        emit(state.copyWith(chatStatus: ChatStatus.failure));
+      },
+      (r) {
+        emit(state.copyWith(chatStatus: ChatStatus.success));
+      },
     );
   }
 }

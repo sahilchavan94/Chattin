@@ -5,16 +5,34 @@ import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 
 class MessageModel extends MessageEntity {
-  MessageModel(
-      {required super.senderId,
-      required super.receiverId,
-      required super.text,
-      required super.timeSent,
-      required super.messageId,
-      required super.status,
-      required super.messageType});
+  MessageModel({
+    required super.senderId,
+    required super.receiverId,
+    required super.text,
+    required super.timeSent,
+    required super.messageId,
+    required super.status,
+    required super.messageType,
+    required super.isReply,
+    super.repliedTo,
+    super.repliedToType,
+  });
 
   Map<String, dynamic> toMap() {
+    if (isReply) {
+      return <String, dynamic>{
+        'senderId': senderId,
+        'receiverId': receiverId,
+        'text': text,
+        'timeSent': timeSent!.millisecondsSinceEpoch,
+        'messageId': messageId,
+        'status': status,
+        'messageType': messageType.toStringValue(),
+        'repliedTo': repliedTo,
+        'repliedToType': repliedToType!.toStringValue(),
+        'isReply': true,
+      };
+    }
     return <String, dynamic>{
       'senderId': senderId,
       'receiverId': receiverId,
@@ -38,6 +56,11 @@ class MessageModel extends MessageEntity {
       status: map['status'] ?? false,
       messageType: map['messageType'] != null
           ? (map['messageType'] as String).toStringValue()
+          : MessageType.text,
+      isReply: map['isReply'] ?? false,
+      repliedTo: map['repliedTo'] != null ? map['repliedTo'] as String : "",
+      repliedToType: map['repliedToType'] != null
+          ? (map['repliedToType'] as String).toStringValue()
           : MessageType.text,
     );
   }

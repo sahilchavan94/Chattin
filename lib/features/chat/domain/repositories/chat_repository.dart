@@ -37,4 +37,11 @@ abstract interface class ChatRepository {
     required String messageId,
     required String senderId,
   });
+  Future<Either<Failure, void>> sendReplyMessage({
+    required String text,
+    required String repliedTo,
+    required String recieverId,
+    required String senderId,
+    required MessageType repliedToType,
+  });
 }

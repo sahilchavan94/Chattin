@@ -1,3 +1,5 @@
+// ignore_for_file: void_checks
+
 import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/core/common/models/user_model.dart';
 import 'package:chattin/core/enum/enums.dart';
@@ -145,6 +147,30 @@ class ChatRepositoryImpl implements ChatRepository {
         Failure(
           e.toString(),
         ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> sendReplyMessage({
+    required String text,
+    required String repliedTo,
+    required String recieverId,
+    required MessageType repliedToType,
+    required String senderId,
+  }) async {
+    try {
+      final response = await chatRemoteDataSourceImpl.sendReplyMessage(
+        repliedTo: repliedTo,
+        text: text,
+        recieverId: recieverId,
+        senderId: senderId,
+        repliedToType: repliedToType,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(e.toString()),
       );
     }
   }
