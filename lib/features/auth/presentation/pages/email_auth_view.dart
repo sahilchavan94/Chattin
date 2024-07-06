@@ -83,7 +83,6 @@ class _PhoneAuthViewState extends State<PhoneAuthView> {
                   style:
                       AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                     color: AppPallete.greyColor,
-                    fontSize: 14,
                   ),
                 ),
                 verticalSpacing(40),

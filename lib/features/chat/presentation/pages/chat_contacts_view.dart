@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
@@ -26,6 +28,8 @@ class _ChatContactsViewState extends State<ChatContactsView> {
   @override
   void initState() {
     context.read<AuthCubit>().checkTheAccountDetailsIfTheEmailIsVerified();
+    context.read<ProfileCubit>().getProfileData();
+
     super.initState();
   }
 
@@ -54,17 +58,47 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                 if (state.profileStatus != ProfileStatus.success) {
                   return const SizedBox.shrink();
                 }
-                return GestureDetector(
-                  onTap: () {
-                    context.push(RoutePath.profileScreen.path);
-                  },
-                  child: ImageWidget(
-                    imagePath: state.userData!.imageUrl,
-                    radius: BorderRadius.circular(30),
-                    width: 25,
-                    height: 25,
-                    fit: BoxFit.fill,
-                  ),
+                return Row(
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        context.push(RoutePath.storyView.path);
+                        // final pickedImages = await Picker.pickMultipleImages();
+                        // if (pickedImages != null && pickedImages.isNotEmpty) {
+                        //   final userData = state.userData!;
+                        //   final List<File> selectedFiles = [];
+                        //   selectedFiles.addAll(pickedImages);
+                        //   context.push(
+                        //     RoutePath.storyPreview.path,
+                        //     extra: {
+                        //       'selectedFiles': selectedFiles,
+                        //       'displayName': userData.displayName,
+                        //       'phoneNumber': userData.phoneNumber,
+                        //     },
+                        //   );
+                        // }
+                        return;
+                      },
+                      icon: const Icon(
+                        Icons.add_photo_alternate_outlined,
+                      ),
+                      color: AppPallete.blueColor,
+                      iconSize: 23,
+                    ),
+                    horizontalSpacing(10),
+                    GestureDetector(
+                      onTap: () {
+                        context.push(RoutePath.profileScreen.path);
+                      },
+                      child: ImageWidget(
+                        imagePath: state.userData!.imageUrl,
+                        radius: BorderRadius.circular(30),
+                        width: 25,
+                        height: 25,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
@@ -97,7 +131,7 @@ class _ChatContactsViewState extends State<ChatContactsView> {
             return const FailureWidget();
           }
           return Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               children: [
                 InputWidget(
@@ -105,12 +139,14 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                   hintText: 'Search your chats',
                   textEditingController: _searchController,
                   validator: (String val) {},
-                  suffixIcon: const Icon(Icons.search),
+                  suffixIcon: const Icon(
+                    Icons.search,
+                    color: AppPallete.greyColor,
+                  ),
                   fillColor: AppPallete.bottomSheetColor,
                   borderRadius: 60,
                   showBorder: false,
                 ),
-                verticalSpacing(30),
                 Expanded(
                   child: StreamBuilder(
                     stream: context.read<ChatCubit>().getChatContacts(),
@@ -124,31 +160,52 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                         );
                       }
                       final chatsList = snapshot.data ?? [];
+                      if (chatsList.isEmpty) {
+                        return Center(
+                          child: Text(
+                            "No chats found!",
+                            style: AppTheme
+                                .darkThemeData.textTheme.displaySmall!
+                                .copyWith(
+                              color: AppPallete.greyColor,
+                            ),
+                          ),
+                        );
+                      }
                       if (chatsList.isNotEmpty) {
-                        return ListView.builder(
-                          itemCount: chatsList.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                context.push(
-                                  RoutePath.chatScreen.path,
-                                  extra: {
-                                    'uid': chatsList[index].uid,
-                                    'displayName': chatsList[index].displayName,
-                                    'imageUrl': chatsList[index].imageUrl,
-                                  },
-                                );
-                              },
-                              child: ChatContactWidget(
-                                imageUrl: chatsList[index].imageUrl,
-                                displayName: chatsList[index].displayName,
-                                lastMessage: chatsList[index].lastMessage ??
-                                    'This message was not available due to some error',
-                                timeSent: chatsList[index].timeSent!,
-                                hasVerticalSpacing: true,
+                        return Column(
+                          children: [
+                            verticalSpacing(30),
+                            Expanded(
+                              child: ListView.builder(
+                                itemCount: chatsList.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      context.push(
+                                        RoutePath.chatScreen.path,
+                                        extra: {
+                                          'uid': chatsList[index].uid,
+                                          'displayName':
+                                              chatsList[index].displayName,
+                                          'imageUrl': chatsList[index].imageUrl,
+                                        },
+                                      );
+                                    },
+                                    child: ChatContactWidget(
+                                      imageUrl: chatsList[index].imageUrl,
+                                      displayName: chatsList[index].displayName,
+                                      lastMessage: chatsList[index]
+                                              .lastMessage ??
+                                          'This message was not available due to some error',
+                                      timeSent: chatsList[index].timeSent!,
+                                      hasVerticalSpacing: true,
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
+                            ),
+                          ],
                         );
                       } else {
                         return const SizedBox.shrink();

@@ -467,7 +467,6 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       );
       return ToastMessages.welcomeSignInMessage; //change it later
     } catch (e) {
-      log("error is ${e.toString()}");
       throw ServerException(error: e.toString());
     }
   }

@@ -34,4 +34,10 @@ class ToastMessages {
   //profile cubit
   static const String profileFailure =
       "Something unexpected happened while fetching the profile data";
+
+  //stories cubit
+  static const String storyUploadLimitFailure =
+      "You can't choose more than three images";
+  static const String storyUploadSuccess = "Successfully added story";
+  static const String storyInProgress = "Uploading your stories";
 }

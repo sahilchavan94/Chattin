@@ -17,4 +17,15 @@ class Picker {
       return null;
     }
   }
+
+  static Future<List<File>?> pickMultipleImages() async {
+    try {
+      final xFile = await ImagePicker().pickMultiImage(
+        limit: 3,
+      );
+      return xFile.map((e) => File(e.path)).toList();
+    } catch (e) {
+      return null;
+    }
+  }
 }

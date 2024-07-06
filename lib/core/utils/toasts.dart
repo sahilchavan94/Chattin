@@ -43,16 +43,22 @@ void showToast({
             Icons.check_circle_outline,
             color: AppPallete.whiteColor,
           )
-        : const Icon(
-            Icons.cancel_outlined,
-            color: AppPallete.whiteColor,
-          ),
+        : type == ToastificationType.info
+            ? const Icon(Icons.info)
+            : const Icon(
+                Icons.cancel_outlined,
+                color: AppPallete.whiteColor,
+              ),
     primaryColor: type == ToastificationType.success
         ? AppPallete.successColor
-        : AppPallete.errorColor,
+        : type == ToastificationType.info
+            ? AppPallete.infoColor
+            : AppPallete.errorColor,
     backgroundColor: type == ToastificationType.success
         ? AppPallete.successColor
-        : AppPallete.errorColor,
+        : type == ToastificationType.info
+            ? AppPallete.infoColor
+            : AppPallete.errorColor,
 
     foregroundColor: Colors.white,
     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),

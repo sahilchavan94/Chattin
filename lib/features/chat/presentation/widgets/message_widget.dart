@@ -62,13 +62,13 @@ class MessageWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isMe
                           ? AppPallete.bottomSheetColor
-                          : AppPallete.blueColor.withOpacity(.15),
+                          : AppPallete.blueColor.withOpacity(.175),
                       borderRadius: isMe
-                          ? BorderRadius.circular(10).copyWith(
-                              bottomRight: const Radius.circular(0),
+                          ? BorderRadius.circular(12).copyWith(
+                              bottomRight: const Radius.circular(3),
                             )
-                          : BorderRadius.circular(10).copyWith(
-                              bottomLeft: const Radius.circular(0),
+                          : BorderRadius.circular(12).copyWith(
+                              bottomLeft: const Radius.circular(3),
                             ),
                     ),
                     padding: EdgeInsets.symmetric(
@@ -83,7 +83,7 @@ class MessageWidget extends StatelessWidget {
                         if (isReply)
                           Container(
                             padding: EdgeInsets.all(
-                                repliedToType == MessageType.text ? 12 : 6),
+                                repliedToType == MessageType.text ? 10 : 6),
                             decoration: BoxDecoration(
                               color: AppPallete.backgroundColor.withOpacity(.5),
                               borderRadius: BorderRadius.circular(10),

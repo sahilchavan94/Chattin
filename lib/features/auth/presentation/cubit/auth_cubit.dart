@@ -166,6 +166,7 @@ class AuthCubit extends Cubit<AuthState> {
     required String phoneNumber,
     required String phoneCode,
     required File imageFile,
+    bool toast = true,
   }) async {
     emit(state.copyWith(authStatus: AuthStatus.loading));
 

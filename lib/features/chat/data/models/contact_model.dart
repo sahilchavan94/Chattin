@@ -12,6 +12,7 @@ class ContactModel extends ContactEntity {
     required super.imageUrl,
     super.lastMessage,
     super.timeSent,
+    super.phoneNumber,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +30,8 @@ class ContactModel extends ContactEntity {
       uid: map['uid'] != null ? map['uid'] as String : "",
       displayName:
           map['displayName'] != null ? map['displayName'] as String : "",
+      phoneNumber:
+          map['phoneNumber'] != null ? map['phoneNumber'] as String : "",
       about: map['about'] != null ? map['about'] as String : "",
       imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : "",
       lastMessage:

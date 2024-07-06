@@ -9,7 +9,9 @@ part 'contacts_state.dart';
 
 class ContactsCubit extends Cubit<ContactsState> {
   final GetContactsUseCase _getContactsUseCase;
-  ContactsCubit(this._getContactsUseCase) : super(ContactsState.initial());
+  ContactsCubit(
+    this._getContactsUseCase,
+  ) : super(ContactsState.initial());
 
   //method to get the app contacts
   Future<void> getAppContacts(List<String> phoneNumbers,

@@ -1,0 +1,163 @@
+import 'dart:io';
+import 'package:chattin/core/utils/app_pallete.dart';
+import 'package:chattin/core/widgets/input_widget.dart';
+import 'package:chattin/features/stories/presentation/cubit/stories_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+class StoryPreView extends StatefulWidget {
+  final List<File> selectedFiles;
+  final String displayName;
+  final String phoneNumber;
+  const StoryPreView({
+    super.key,
+    required this.selectedFiles,
+    required this.displayName,
+    required this.phoneNumber,
+  });
+
+  @override
+  State<StoryPreView> createState() => _StoryPreViewState();
+}
+
+class _StoryPreViewState extends State<StoryPreView> {
+  late File currentFile;
+  final List<TextEditingController> _textEditingControllerlist = [];
+
+  @override
+  void initState() {
+    currentFile = widget.selectedFiles.first;
+    for (int i = 0; i < widget.selectedFiles.length; i++) {
+      _textEditingControllerlist.add(TextEditingController());
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Upload your story"),
+        centerTitle: true,
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ...widget.selectedFiles.map(
+                      (e) => GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            currentFile = e;
+                          });
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            border: e.path == currentFile.path
+                                ? Border.all(
+                                    color: AppPallete.blueColor,
+                                    width: 2,
+                                  )
+                                : Border.all(
+                                    color: AppPallete.transparent,
+                                  ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Image.file(
+                              e,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: InputWidget(
+                      height: 45,
+                      fillColor: AppPallete.bottomSheetColor,
+                      showBorder: false,
+                      hintText: 'Add a caption',
+                      textEditingController: _textEditingControllerlist[
+                          widget.selectedFiles.indexOf(currentFile)],
+                      validator: (String val) {},
+                      suffixIcon: const Icon(
+                        Icons.add_photo_alternate,
+                        color: AppPallete.greyColor,
+                      ),
+                    ),
+                  ),
+                  FloatingActionButton(
+                    onPressed: () {
+                      context.read<StoriesCubit>().uploadStory(
+                            displayName: widget.displayName,
+                            phoneNumber: widget.phoneNumber,
+                            imageFiles: widget.selectedFiles,
+                            captions: _textEditingControllerlist.map(
+                              (e) {
+                                if (e.text.replaceAll(" ", "").isEmpty) {
+                                  return "";
+                                } else {
+                                  return e.text;
+                                }
+                              },
+                            ).toList(),
+                          );
+                      context.pop();
+                    },
+                    backgroundColor: AppPallete.blueColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    mini: true,
+                    child: const Icon(
+                      Icons.check,
+                      color: AppPallete.whiteColor,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * .65,
+            width: double.maxFinite,
+            child: Align(
+              alignment: Alignment.center,
+              child: Image.file(
+                currentFile,
+                alignment: Alignment.center,
+                width: double.infinity,
+                height: double.maxFinite,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

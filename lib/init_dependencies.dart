@@ -30,6 +30,12 @@ import 'package:chattin/features/profile/data/repsotories/profile_repositoy_impl
 import 'package:chattin/features/profile/domain/repositories/profile_repository.dart';
 import 'package:chattin/features/profile/domain/usecases/get_profile.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:chattin/features/stories/data/datasources/stories_remote_datasource.dart';
+import 'package:chattin/features/stories/data/repositories/stories_repository_impl.dart';
+import 'package:chattin/features/stories/domain/repositories/stories_repository.dart';
+import 'package:chattin/features/stories/domain/usecases/get_stories.dart';
+import 'package:chattin/features/stories/domain/usecases/upload_story.dart';
+import 'package:chattin/features/stories/presentation/cubit/stories_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -62,6 +68,7 @@ Future<void> initDependencies() async {
   initContacts();
   initProfile();
   initChat();
+  initStories();
 }
 
 void initAuth() {
@@ -221,6 +228,38 @@ void initProfile() {
     )
     ..registerLazySingleton(
       () => ProfileCubit(
+        serviceLocator(),
+        serviceLocator(),
+      ),
+    );
+}
+
+void initStories() {
+  serviceLocator
+    ..registerFactory(
+      () => StoriesRemoteDataSourceImpl(
+        firebaseFirestore: serviceLocator(),
+      ),
+    )
+    ..registerFactory<StoriesRepository>(
+      () => StoriesRepositoryImpl(
+        storiesRemoteDataSourceImpl: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<UploadStoryUseCase>(
+      () => UploadStoryUseCase(
+        storiesRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<GetStoriesUseCase>(
+      () => GetStoriesUseCase(
+        storiesRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton(
+      () => StoriesCubit(
+        serviceLocator(),
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
       ),

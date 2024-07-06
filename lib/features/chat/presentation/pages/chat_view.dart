@@ -225,7 +225,6 @@ class _ChatViewState extends State<ChatView> {
               stream: _chatStream,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
-                  log("error is ${snapshot.error}");
                   return const FailureWidget();
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {

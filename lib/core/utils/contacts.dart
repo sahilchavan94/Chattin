@@ -1,7 +1,7 @@
 import 'package:flutter_contacts/flutter_contacts.dart';
 
 class Contacts {
-  static Future<List<String>> getContacts({required String selfNumber}) async {
+  static Future<List<String>> getContacts({required String? selfNumber}) async {
     final persimission = await FlutterContacts.requestPermission();
     if (persimission) {
       try {

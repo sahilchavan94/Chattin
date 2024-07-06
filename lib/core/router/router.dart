@@ -9,6 +9,8 @@ import 'package:chattin/features/chat/presentation/pages/chat_contacts_view.dart
 import 'package:chattin/features/chat/presentation/pages/chat_view.dart';
 import 'package:chattin/features/chat/presentation/pages/select_contacts_view.dart';
 import 'package:chattin/features/profile/presentation/pages/profile_view.dart';
+import 'package:chattin/features/stories/presentation/pages/story_preview.dart';
+import 'package:chattin/features/stories/presentation/pages/story_view.dart';
 import 'package:chattin/init_dependencies.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -154,6 +156,31 @@ class MyRouter {
               file: data['file'],
               onPressed: data['onPressed'],
             ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.storyPreview.path,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: StoryPreView(
+              selectedFiles: data['selectedFiles'],
+              displayName: data['displayName'],
+              phoneNumber: data['phoneNumber'],
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.storyView.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const StoryView(),
           );
         },
       )
