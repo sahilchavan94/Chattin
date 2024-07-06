@@ -1,8 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
-
-import 'package:chattin/core/errors/failure.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/contacts.dart';
 import 'package:chattin/core/widgets/failure_widget.dart';
