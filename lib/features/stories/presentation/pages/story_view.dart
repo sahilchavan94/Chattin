@@ -137,7 +137,7 @@ class _StorySeeViewState extends State<StorySeeView> {
                         alignment: Alignment.bottomCenter,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: AppPallete.backgroundColor.withOpacity(.6),
+                            color: AppPallete.backgroundColor.withOpacity(.4),
                           ),
                           width: double.maxFinite,
                           height: MediaQuery.of(context).size.height * .1,
