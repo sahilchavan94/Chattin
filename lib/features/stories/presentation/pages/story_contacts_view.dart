@@ -180,28 +180,39 @@ class _StoryContactsViewState extends State<StoryContactsView> {
                     ),
 
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: stories.length,
-                        itemBuilder: (context, index) {
-                          final story = stories[index];
-                          return GestureDetector(
-                            onTap: () {
-                              context.push(
-                                RoutePath.storyView.path,
-                                extra: stories,
-                              );
-                            },
-                            child: StoryWidget(
-                              displayName: story.displayName,
-                              firstStoryImageUrl:
-                                  story.imageUrlList.first['url'],
-                              firestStoryUploadTime:
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                story.imageUrlList.first['uploadedAt'],
-                              ),
-                            ),
-                          );
+                      child: RefreshIndicator(
+                        backgroundColor: AppPallete.bottomSheetColor,
+                        color: AppPallete.blueColor,
+                        triggerMode: RefreshIndicatorTriggerMode.anywhere,
+                        onRefresh: () async {
+                          _getContactsFromPhone(isRefreshed: true);
                         },
+                        child: ListView.builder(
+                          itemCount: stories.length,
+                          itemBuilder: (context, index) {
+                            final story = stories[index];
+                            return GestureDetector(
+                              onTap: () {
+                                context.push(
+                                  RoutePath.storyView.path,
+                                  extra: stories.sublist(
+                                    index,
+                                    stories.length,
+                                  ),
+                                );
+                              },
+                              child: StoryWidget(
+                                displayName: story.displayName,
+                                firstStoryImageUrl:
+                                    story.imageUrlList.first['url'],
+                                firestStoryUploadTime:
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                  story.imageUrlList.first['uploadedAt'],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],

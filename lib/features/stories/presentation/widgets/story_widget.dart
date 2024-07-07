@@ -22,22 +22,12 @@ class StoryWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: AppPallete.blueColor.withOpacity(.8),
-                width: 1.5,
-              ),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: ImageWidget(
-              imagePath: firstStoryImageUrl,
-              width: 46,
-              height: 46,
-              radius: BorderRadius.circular(50),
-              fit: BoxFit.cover,
-            ),
+          ImageWidget(
+            imagePath: firstStoryImageUrl,
+            width: 46,
+            height: 46,
+            radius: BorderRadius.circular(50),
+            fit: BoxFit.cover,
           ),
           horizontalSpacing(10),
           Column(
