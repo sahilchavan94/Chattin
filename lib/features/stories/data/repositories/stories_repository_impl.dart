@@ -14,6 +14,7 @@ class StoriesRepositoryImpl implements StoriesRepository {
   Future<Either<Failure, void>> uploadStory({
     required String displayName,
     required String phoneNumber,
+    required String imageUrl,
     required List imageUrlList,
     required String uid,
   }) async {
@@ -22,6 +23,7 @@ class StoriesRepositoryImpl implements StoriesRepository {
         displayName: displayName,
         phoneNumber: phoneNumber,
         imageUrlList: imageUrlList,
+        imageUrl: imageUrl,
         uid: uid,
       );
       return Right(response);

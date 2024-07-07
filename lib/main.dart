@@ -5,12 +5,13 @@ import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
 import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contacts_cubit.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
-import 'package:chattin/features/stories/presentation/cubit/stories_cubit.dart';
+import 'package:chattin/features/stories/presentation/cubit/story_cubit.dart';
 import 'package:chattin/firebase_options.dart';
 import 'package:chattin/init_dependencies.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
@@ -19,7 +20,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await FlutterContacts.requestPermission(
+    readonly: true,
+  );
+
   await initDependencies();
+
   runApp(
     MultiBlocProvider(
       providers: [
@@ -38,7 +44,7 @@ void main() async {
           lazy: false,
         ),
         BlocProvider(
-          create: (_) => serviceLocator<StoriesCubit>(),
+          create: (_) => serviceLocator<StoryCubit>(),
           lazy: false,
         ),
       ],

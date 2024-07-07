@@ -9,7 +9,9 @@ import 'package:chattin/features/chat/presentation/pages/chat_contacts_view.dart
 import 'package:chattin/features/chat/presentation/pages/chat_view.dart';
 import 'package:chattin/features/chat/presentation/pages/select_contacts_view.dart';
 import 'package:chattin/features/profile/presentation/pages/profile_view.dart';
+import 'package:chattin/features/stories/domain/entities/story_entity.dart';
 import 'package:chattin/features/stories/presentation/pages/story_preview.dart';
+import 'package:chattin/features/stories/presentation/pages/story_contacts_view.dart';
 import 'package:chattin/features/stories/presentation/pages/story_view.dart';
 import 'package:chattin/init_dependencies.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -168,6 +170,7 @@ class MyRouter {
             state: state,
             child: StoryPreView(
               selectedFiles: data['selectedFiles'],
+              imageUrl: data['imageUrl'],
               displayName: data['displayName'],
               phoneNumber: data['phoneNumber'],
             ),
@@ -175,12 +178,25 @@ class MyRouter {
         },
       ),
       GoRoute(
-        path: RoutePath.storyView.path,
+        path: RoutePath.storyContactsView.path,
         pageBuilder: (context, state) {
           return buildPageWithSlideTransition(
             context: context,
             state: state,
-            child: const StoryView(),
+            child: const StoryContactsView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.storyView.path,
+        pageBuilder: (context, state) {
+          final storyList = state.extra as List<StoryEntity>;
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: StorySeeView(
+              storyList: storyList,
+            ),
           );
         },
       )

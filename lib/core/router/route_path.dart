@@ -37,10 +37,13 @@ class RoutePath {
   );
 
   //story
-  static const RouteName storyView = RouteName(
-    path: "/story_view",
+  static const RouteName storyContactsView = RouteName(
+    path: "/story_contacts_view",
   );
   static const RouteName storyPreview = RouteName(
     path: "/story_preview",
+  );
+  static const RouteName storyView = RouteName(
+    path: "/story_view",
   );
 }

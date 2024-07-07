@@ -7,6 +7,7 @@ class StoryModel extends StoryEntity {
   StoryModel({
     required super.displayName,
     required super.phoneNumber,
+    required super.imageUrl,
     required super.imageUrlList,
     required super.uid,
   });
@@ -20,6 +21,7 @@ class StoryModel extends StoryEntity {
         .toList();
     return <String, dynamic>{
       'displayName': displayName,
+      'imageUrl': imageUrl,
       'phoneNumber': phoneNumber,
       'imageUrlList': FieldValue.arrayUnion(urlList),
       'uid': uid,
@@ -33,6 +35,7 @@ class StoryModel extends StoryEntity {
           map['displayName'] != null ? map['displayName'] as String : "",
       phoneNumber:
           map['phoneNumber'] != null ? map['phoneNumber'] as String : "",
+      imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : "",
       imageUrlList:
           map["imageUrlList"] != null ? map['imageUrlList'] as List : [],
     );

@@ -9,31 +9,32 @@ import 'package:chattin/features/stories/domain/usecases/upload_story.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:toastification/toastification.dart';
 import 'package:uuid/uuid.dart';
-part 'stories_state.dart';
+part 'story_state.dart';
 
-class StoriesCubit extends Cubit<StoriesState> {
+class StoryCubit extends Cubit<StoryState> {
   final UploadStoryUseCase _uploadStoryUseCase;
   final GeneralUploadUseCase _generalUploadUseCase;
   final GetStoriesUseCase _getStoriesUseCase;
   final FirebaseAuth _firebaseAuth;
-  StoriesCubit(
+  StoryCubit(
     this._uploadStoryUseCase,
     this._firebaseAuth,
     this._generalUploadUseCase,
     this._getStoriesUseCase,
-  ) : super(StoriesState.initial());
+  ) : super(StoryState.initial());
 
   //method to upload story
   Future<void> uploadStory({
     required String displayName,
     required String phoneNumber,
+    required String imageUrl,
     required List<File> imageFiles,
     required List<String> captions,
   }) async {
     final List<Map<String, dynamic>> imageUrlList = [];
     final uid = _firebaseAuth.currentUser!.uid;
     //upload your images to firebase storage
-    if (imageFiles.length > 3) {
+    if (imageFiles.length > 5) {
       showToast(
         content: ToastMessages.storyUploadLimitFailure,
         type: ToastificationType.error,
@@ -75,13 +76,14 @@ class StoriesCubit extends Cubit<StoriesState> {
       displayName: displayName,
       phoneNumber: phoneNumber,
       imageUrlList: imageUrlList,
+      imageUrl: imageUrl,
       uid: uid,
     );
 
     response.fold(
       (l) {
         showToast(
-          content: l.message ?? ToastMessages.defaultFailureDescription,
+          content: ToastMessages.defaultFailureMessage,
           description: ToastMessages.defaultFailureDescription,
           type: ToastificationType.error,
         );
@@ -96,8 +98,11 @@ class StoriesCubit extends Cubit<StoriesState> {
   }
 
   //method to fetch all the stories from your contacts including yours
-  Future<void> getStories({required List<String> phoneNumbers}) async {
-    emit(state.copyWith(storiesStatus: StoriesStatus.loading));
+  Future<void> getStories({
+    required List<String> phoneNumbers,
+    required String selfNumber,
+  }) async {
+    emit(state.copyWith(storyStatus: StoryStatus.loading));
     final response = await _getStoriesUseCase.call(
       phoneNumbers: phoneNumbers,
     );
@@ -105,14 +110,24 @@ class StoriesCubit extends Cubit<StoriesState> {
       (l) {
         emit(
           state.copyWith(
-            storiesStatus: StoriesStatus.failure,
+            storyStatus: StoryStatus.failure,
           ),
         );
       },
       (r) {
+        //get your own story from the fetched stories
+        StoryEntity? myStory;
+        for (var i = 0; i < r.length; i++) {
+          if (r[i].phoneNumber == selfNumber) {
+            myStory = r[i];
+            r.removeAt(i);
+            break;
+          }
+        }
         emit(state.copyWith(
-          storiesStatus: StoriesStatus.success,
+          storyStatus: StoryStatus.success,
           stories: r,
+          myStory: myStory,
         ));
       },
     );

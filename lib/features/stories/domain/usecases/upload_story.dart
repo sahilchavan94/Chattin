@@ -12,12 +12,14 @@ class UploadStoryUseCase {
     required String displayName,
     required String phoneNumber,
     required List imageUrlList,
+    required String imageUrl,
     required String uid,
   }) async {
     return await storiesRepository.uploadStory(
       displayName: displayName,
       phoneNumber: phoneNumber,
       imageUrlList: imageUrlList,
+      imageUrl: imageUrl,
       uid: uid,
     );
   }

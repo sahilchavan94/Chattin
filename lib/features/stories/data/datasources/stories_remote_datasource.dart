@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/utils/constants.dart';
 import 'package:chattin/features/stories/data/models/story_model.dart';
@@ -8,6 +10,7 @@ abstract interface class StoriesRemoteDataSource {
   Future<void> uploadStory({
     required String displayName,
     required String phoneNumber,
+    required String imageUrl,
     required List imageUrlList,
     required String uid,
   });
@@ -25,6 +28,7 @@ class StoriesRemoteDataSourceImpl implements StoriesRemoteDataSource {
   Future<void> uploadStory({
     required String displayName,
     required String phoneNumber,
+    required String imageUrl,
     required List imageUrlList,
     required String uid,
   }) async {
@@ -33,15 +37,27 @@ class StoriesRemoteDataSourceImpl implements StoriesRemoteDataSource {
         displayName: displayName,
         phoneNumber: phoneNumber,
         imageUrlList: imageUrlList,
+        imageUrl: imageUrl,
         uid: uid,
       );
-      await firebaseFirestore
+      //get the stautus which is previously uploaded
+      final previousStatus = await firebaseFirestore
           .collection(Constants.storyCollection)
           .doc(uid)
-          .update(
-            story.toMap(),
-          );
+          .get();
+      if (previousStatus.exists) {
+        await firebaseFirestore
+            .collection(Constants.storyCollection)
+            .doc(uid)
+            .update(story.toMap());
+      } else {
+        await firebaseFirestore
+            .collection(Constants.storyCollection)
+            .doc(uid)
+            .set(story.toMap());
+      }
     } catch (e) {
+      log(e.toString());
       throw ServerException(
         error: e.toString(),
       );

@@ -120,7 +120,7 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                       Column(
                         children: [
                           Text(
-                            "${contactsList.length - 1} contacts",
+                            "${contactsList.length} contacts",
                             style: AppTheme
                                 .darkThemeData.textTheme.displaySmall!
                                 .copyWith(

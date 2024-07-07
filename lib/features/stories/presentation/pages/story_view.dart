@@ -1,120 +1,167 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:chattin/core/utils/app_pallete.dart';
-import 'package:chattin/core/utils/contacts.dart';
-import 'package:chattin/core/widgets/failure_widget.dart';
-import 'package:chattin/core/widgets/input_widget.dart';
-import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contacts_cubit.dart';
-import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:chattin/core/utils/app_theme.dart';
+import 'package:chattin/features/chat/presentation/widgets/contact_widget.dart';
 import 'package:chattin/features/stories/domain/entities/story_entity.dart';
-import 'package:chattin/features/stories/presentation/cubit/stories_cubit.dart';
-import 'package:chattin/features/stories/presentation/widgets/story_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:story_view/controller/story_controller.dart';
+import 'package:story_view/utils.dart';
+import 'package:story_view/widgets/story_view.dart';
 
-class StoryView extends StatefulWidget {
-  const StoryView({super.key});
+class StorySeeView extends StatefulWidget {
+  final List<StoryEntity> storyList;
+  const StorySeeView({
+    super.key,
+    required this.storyList,
+  });
 
   @override
-  State<StoryView> createState() => _StoryViewState();
+  State<StorySeeView> createState() => _StorySeeViewState();
 }
 
-class _StoryViewState extends State<StoryView> {
-  final TextEditingController _searchController = TextEditingController();
+class _StorySeeViewState extends State<StorySeeView> {
+  final StoryController _storyController = StoryController();
+  final PageController _pageController = PageController();
+  late List<List<StoryItem>> storyItems;
+  String uploadedAt = "";
+  int currentIndex = 0;
+  String currentCaption = "";
 
   @override
   void initState() {
-    _getContactsFromPhone(isRefreshed: false);
     super.initState();
+    storyItems = List.filled(widget.storyList.length, []);
+    initStoryPageItems();
   }
 
-  _getContactsFromPhone({bool isRefreshed = false}) async {
-    String phoneNumber =
-        context.read<ProfileCubit>().state.userData!.phoneNumber!;
-    List<String> contactsList = await Contacts.getContacts(
-      selfNumber: phoneNumber,
-    );
-    await context.read<ContactsCubit>().getAppContacts(
-      [...contactsList, phoneNumber],
-      isRefreshed: isRefreshed,
-    );
-
-    final phoneNumbers = context.read<ContactsCubit>().state.contactList;
-
-    await context.read<StoriesCubit>().getStories(
-          phoneNumbers: phoneNumbers!.map((e) => e.phoneNumber!).toList(),
+  void initStoryPageItems() {
+    final stories = widget.storyList;
+    for (int i = 0; i < stories.length; i++) {
+      storyItems[i] = [];
+      for (int j = 0; j < stories[i].imageUrlList.length; j++) {
+        storyItems[i].add(
+          StoryItem.pageImage(
+            url: stories[i].imageUrlList[j]['url'],
+            controller: _storyController,
+          ),
         );
+      }
+    }
+    final temp = DateTime.fromMillisecondsSinceEpoch(
+      widget.storyList.first.imageUrlList.first['uploadedAt'],
+    );
+
+    uploadedAt =
+        "${DateFormat('dd MMM yyyy').format(temp)} ${DateFormat.jm().format(temp)}";
+    currentCaption = widget.storyList.first.imageUrlList.first['caption'];
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Stories'),
-        centerTitle: true,
-      ),
-      body: BlocBuilder<ContactsCubit, ContactsState>(
-        builder: (context, state) {
-          if (state.contactsStatus == ContactsStatus.loading) {
-            return const Center(
+      // bottomNavigationBar:
+      body: storyItems.isEmpty
+          ? const Center(
               child: CircularProgressIndicator(),
-            );
-          }
-          if (state.contactsStatus == ContactsStatus.failure) {
-            return const FailureWidget();
-          }
-          return BlocBuilder<StoriesCubit, StoriesState>(
-            builder: (context, storiesState) {
-              if (storiesState.storiesStatus == StoriesStatus.loading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (storiesState.storiesStatus == StoriesStatus.failure) {
-                return const FailureWidget();
-              }
+            )
+          : Center(
+              child: PageView.builder(
+                controller: _pageController,
+                scrollDirection: Axis.vertical,
+                itemCount: storyItems.length,
+                onPageChanged: (value) {
+                  setState(() {
+                    currentIndex = value;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: StoryView(
+                          storyItems: storyItems[index],
+                          controller: _storyController,
+                          progressPosition: ProgressPosition.top,
+                          onVerticalSwipeComplete: (dir) {
+                            if (dir == Direction.down) {
+                              context.pop();
+                            }
+                          },
+                          onComplete: () {
+                            if (currentIndex + 1 == widget.storyList.length) {
+                              context.pop();
+                            }
+                            _pageController.nextPage(
+                              duration: const Duration(
+                                seconds: 1,
+                              ),
+                              curve: Curves.fastEaseInToSlowEaseOut,
+                            );
+                          },
+                          indicatorHeight: IndicatorHeight.small,
+                          indicatorColor: AppPallete.whiteColor,
+                          indicatorForegroundColor: AppPallete.blueColor,
+                          onStoryShow: (storyItem, pos) {
+                            final temp = DateTime.fromMillisecondsSinceEpoch(
+                                widget.storyList[index].imageUrlList[pos]
+                                    ['uploadedAt']);
+                            if (pos > 0) {
+                              setState(
+                                () {
+                                  currentCaption = widget.storyList[index]
+                                      .imageUrlList[pos]['caption'];
 
-              final List<StoryEntity> stories = storiesState.stories ?? [];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  children: [
-                    InputWidget(
-                      height: 45,
-                      hintText: 'Search for stories',
-                      textEditingController: _searchController,
-                      validator: (String val) {},
-                      suffixIcon: const Icon(
-                        Icons.search,
-                        color: AppPallete.greyColor,
+                                  uploadedAt =
+                                      "${DateFormat('dd MMM yyyy').format(temp)} ${DateFormat.jm().format(temp)}";
+                                },
+                              );
+                            }
+                          },
+                        ),
                       ),
-                      fillColor: AppPallete.bottomSheetColor,
-                      borderRadius: 60,
-                      showBorder: false,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: stories.length,
-                        itemBuilder: (context, index) {
-                          final story = stories[index];
-                          return StoryWidget(
-                            displayName: story.displayName,
-                            firstStoryImageUrl: story.imageUrlList.first['url'],
-                            firestStoryUploadTime:
-                                DateTime.fromMillisecondsSinceEpoch(
-                              story.imageUrlList.first['uploadedAt'],
+                      Positioned(
+                        top: MediaQuery.of(context).size.height * .06,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: ContactWidget(
+                            imageUrl: widget.storyList[index].imageUrl,
+                            radius: 50,
+                            displayName: widget.storyList[index].displayName,
+                            about: uploadedAt,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppPallete.backgroundColor.withOpacity(.6),
+                          ),
+                          width: double.maxFinite,
+                          height: MediaQuery.of(context).size.height * .1,
+                          child: Center(
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              currentCaption,
+                              style: AppTheme
+                                  .darkThemeData.textTheme.displaySmall!
+                                  .copyWith(
+                                color: AppPallete.whiteColor,
+                                fontSize: 16,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 3,
                             ),
-                          );
-                        },
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
-        },
-      ),
+                    ],
+                  );
+                },
+              ),
+            ),
     );
   }
 }

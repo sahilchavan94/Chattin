@@ -35,7 +35,7 @@ import 'package:chattin/features/stories/data/repositories/stories_repository_im
 import 'package:chattin/features/stories/domain/repositories/stories_repository.dart';
 import 'package:chattin/features/stories/domain/usecases/get_stories.dart';
 import 'package:chattin/features/stories/domain/usecases/upload_story.dart';
-import 'package:chattin/features/stories/presentation/cubit/stories_cubit.dart';
+import 'package:chattin/features/stories/presentation/cubit/story_cubit.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -257,7 +257,7 @@ void initStories() {
       ),
     )
     ..registerLazySingleton(
-      () => StoriesCubit(
+      () => StoryCubit(
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),

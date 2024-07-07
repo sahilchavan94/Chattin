@@ -38,14 +38,10 @@ class InputWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         labelText != null
-            ? Padding(
-                padding: const EdgeInsets.only(left: 4.0),
-                child: Text(
-                  labelText!,
-                  style:
-                      AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                    color: AppPallete.whiteColor,
-                  ),
+            ? Text(
+                labelText!,
+                style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+                  color: AppPallete.whiteColor,
                 ),
               )
             : horizontalSpacing(0),

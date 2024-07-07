@@ -6,6 +6,7 @@ abstract interface class StoriesRepository {
   Future<Either<Failure, void>> uploadStory({
     required String displayName,
     required String phoneNumber,
+    required String imageUrl,
     required List imageUrlList,
     required String uid,
   });

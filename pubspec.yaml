@@ -53,6 +53,7 @@ dependencies:
   palette_generator: ^0.3.3+3
   intl:
   swipe_to: ^1.0.6
+  story_view:
 
 dev_dependencies:
   flutter_lints: ^3.0.0

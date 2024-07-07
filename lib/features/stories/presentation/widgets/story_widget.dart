@@ -22,12 +22,22 @@ class StoryWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         children: [
-          ImageWidget(
-            imagePath: firstStoryImageUrl,
-            width: 50,
-            height: 50,
-            radius: BorderRadius.circular(50),
-            fit: BoxFit.cover,
+          Container(
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: AppPallete.blueColor.withOpacity(.8),
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: ImageWidget(
+              imagePath: firstStoryImageUrl,
+              width: 46,
+              height: 46,
+              radius: BorderRadius.circular(50),
+              fit: BoxFit.cover,
+            ),
           ),
           horizontalSpacing(10),
           Column(
@@ -36,15 +46,15 @@ class StoryWidget extends StatelessWidget {
               Text(
                 displayName,
                 style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                  color: AppPallete.whiteColor,
+                  color: AppPallete.blueColor,
+                  fontSize: 16,
                 ),
               ),
-              verticalSpacing(10),
+              verticalSpacing(5),
               Text(
                 "${DateFormat('dd MMM yyy').format(firestStoryUploadTime)} ${DateFormat.jm().format(firestStoryUploadTime)}",
                 style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                   color: AppPallete.greyColor,
-                  fontSize: 10,
                 ),
               ),
             ],

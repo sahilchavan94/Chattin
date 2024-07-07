@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
-import 'package:chattin/features/stories/presentation/cubit/stories_cubit.dart';
+import 'package:chattin/features/stories/presentation/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,11 +10,13 @@ class StoryPreView extends StatefulWidget {
   final List<File> selectedFiles;
   final String displayName;
   final String phoneNumber;
+  final String imageUrl;
   const StoryPreView({
     super.key,
     required this.selectedFiles,
     required this.displayName,
     required this.phoneNumber,
+    required this.imageUrl,
   });
 
   @override
@@ -108,7 +109,8 @@ class _StoryPreViewState extends State<StoryPreView> {
                   ),
                   FloatingActionButton(
                     onPressed: () {
-                      context.read<StoriesCubit>().uploadStory(
+                      context.read<StoryCubit>().uploadStory(
+                            imageUrl: widget.imageUrl,
                             displayName: widget.displayName,
                             phoneNumber: widget.phoneNumber,
                             imageFiles: widget.selectedFiles,

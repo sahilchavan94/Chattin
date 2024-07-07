@@ -106,7 +106,7 @@ class ImageWidget extends StatelessWidget {
             color: color,
             progressIndicatorBuilder: (context, url, progress) {
               return Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5.0),
                 child: SizedBox(
                   width: 23,
                   height: 23,

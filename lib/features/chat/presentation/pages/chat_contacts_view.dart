@@ -62,21 +62,7 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                   children: [
                     IconButton(
                       onPressed: () async {
-                        context.push(RoutePath.storyView.path);
-                        // final pickedImages = await Picker.pickMultipleImages();
-                        // if (pickedImages != null && pickedImages.isNotEmpty) {
-                        //   final userData = state.userData!;
-                        //   final List<File> selectedFiles = [];
-                        //   selectedFiles.addAll(pickedImages);
-                        //   context.push(
-                        //     RoutePath.storyPreview.path,
-                        //     extra: {
-                        //       'selectedFiles': selectedFiles,
-                        //       'displayName': userData.displayName,
-                        //       'phoneNumber': userData.phoneNumber,
-                        //     },
-                        //   );
-                        // }
+                        context.push(RoutePath.storyContactsView.path);
                         return;
                       },
                       icon: const Icon(
