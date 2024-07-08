@@ -13,12 +13,12 @@ class Contacts {
       );
 
       for (final contact in contacts) {
-        final number = contact.phones.first.number.replaceAll(" ", "");
+        String number = contact.phones.first.number.replaceAll(" ", "");
+        if (number.length > 10) {
+          number = number.substring(number.length - 10);
+        }
         if (number == selfNumber) {
           continue;
-        }
-        if (number.length > 10) {
-          phoneNumbers.add(number.substring(number.length - 10));
         } else {
           phoneNumbers.add(number);
         }

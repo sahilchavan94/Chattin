@@ -24,6 +24,11 @@ void main() async {
     readonly: true,
   );
 
+  // await FirebaseAuth.instance.signInWithEmailAndPassword(
+  //   email: "fs21co032.sahilsatishchavan@gmail.com",
+  //   password: "sahil@32",
+  // );
+
   await initDependencies();
 
   runApp(

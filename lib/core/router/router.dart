@@ -1,5 +1,6 @@
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/constants.dart';
+import 'package:chattin/core/widgets/image_view.dart';
 import 'package:chattin/core/widgets/send_image_widget.dart';
 import 'package:chattin/features/auth/presentation/pages/check_verification_status.dart';
 import 'package:chattin/features/auth/presentation/pages/create_profile_view.dart';
@@ -196,6 +197,21 @@ class MyRouter {
             state: state,
             child: StorySeeView(
               storyList: storyList,
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.imageView.path,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: ProfileImageView(
+              imageUrl: data['imageUrl'] as String,
+              displayName: data['displayName'] as String,
+              isAnImageFromChat: data['isAnImageFromChat'] as bool?,
             ),
           );
         },

@@ -1,10 +1,14 @@
 import 'package:chattin/core/enum/enums.dart';
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/utils/helper_functions.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 
 class ContactWidget extends StatelessWidget {
   final String imageUrl;
@@ -31,12 +35,21 @@ class ContactWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              ImageWidget(
-                imagePath: imageUrl,
-                width: radius ?? 60,
-                height: radius ?? 60,
-                fit: BoxFit.cover,
-                radius: BorderRadius.circular(60),
+              GestureDetector(
+                onTap: () => context.push(
+                  RoutePath.imageView.path,
+                  extra: {
+                    'imageUrl': imageUrl,
+                    "displayName": displayName,
+                  },
+                ),
+                child: ImageWidget(
+                  imagePath: imageUrl,
+                  width: radius ?? 60,
+                  height: radius ?? 60,
+                  fit: BoxFit.cover,
+                  radius: BorderRadius.circular(60),
+                ),
               ),
               horizontalSpacing(16),
               Column(

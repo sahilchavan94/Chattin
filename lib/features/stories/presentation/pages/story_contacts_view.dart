@@ -38,7 +38,7 @@ class _StoryContactsViewState extends State<StoryContactsView> {
     super.initState();
   }
 
-  _getContactsFromPhone({bool isRefreshed = false}) async {
+  Future<void> _getContactsFromPhone({bool isRefreshed = false}) async {
     List<String> contactsList = await Contacts.getContacts(
       selfNumber: userData.phoneNumber!,
     );
@@ -53,7 +53,7 @@ class _StoryContactsViewState extends State<StoryContactsView> {
         );
   }
 
-  _callUseCaseToUploadStoryImages() async {
+  Future<void> _callUseCaseToUploadStoryImages() async {
     final pickedImages = await Picker.pickMultipleImages();
     if (pickedImages != null && pickedImages.isNotEmpty) {
       final List<File> selectedFiles = [];
@@ -100,94 +100,93 @@ class _StoryContactsViewState extends State<StoryContactsView> {
 
               final List<StoryEntity> stories = storiesState.stories ?? [];
               final StoryEntity? myStory = storiesState.myStory;
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InputWidget(
-                      height: 45,
-                      hintText: 'Search for stories',
-                      textEditingController: _searchController,
-                      validator: (String val) {},
-                      suffixIcon: const Icon(
-                        Icons.search,
-                        color: AppPallete.greyColor,
-                      ),
-                      fillColor: AppPallete.bottomSheetColor,
-                      borderRadius: 60,
-                      showBorder: false,
-                    ),
-                    verticalSpacing(30),
-                    //show the information of your story
-                    Text(
-                      "Explore stories",
-                      style: AppTheme.darkThemeData.textTheme.displaySmall!
-                          .copyWith(
-                        color: AppPallete.whiteColor,
-                        fontSize: 16,
-                      ),
-                    ),
-
-                    if (myStory == null)
-                      Column(
-                        children: [
-                          verticalSpacing(20),
-                          _NoStoryWidget(
-                            userData: userData,
-                            onPressed: _callUseCaseToUploadStoryImages,
+              return RefreshIndicator(
+                backgroundColor: AppPallete.bottomSheetColor,
+                triggerMode: RefreshIndicatorTriggerMode.anywhere,
+                color: AppPallete.blueColor,
+                onRefresh: () => _getContactsFromPhone(isRefreshed: true),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InputWidget(
+                          height: 45,
+                          hintText: 'Search for stories',
+                          textEditingController: _searchController,
+                          validator: (String val) {},
+                          suffixIcon: const Icon(
+                            Icons.search,
+                            color: AppPallete.greyColor,
                           ),
-                          verticalSpacing(20),
-                        ],
-                      )
-                    else
-                      GestureDetector(
-                        onTap: () {
-                          context.push(
-                            RoutePath.storyView.path,
-                            extra: [myStory],
-                          );
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            StoryWidget(
-                              displayName: "Your Story",
-                              firstStoryImageUrl:
-                                  myStory.imageUrlList.first['url'],
-                              firestStoryUploadTime:
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                myStory.imageUrlList.first['uploadedAt'],
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () async {
-                                await _callUseCaseToUploadStoryImages();
-                              },
-                              icon: const Icon(
-                                Icons.add_photo_alternate_outlined,
-                              ),
-                              color: AppPallete.blueColor,
-                              iconSize: 23,
-                            ),
-                          ],
+                          fillColor: AppPallete.bottomSheetColor,
+                          borderRadius: 60,
+                          showBorder: false,
                         ),
-                      ),
-                    const Divider(
-                      color: AppPallete.greyColor,
-                      thickness: .15,
-                      height: 1,
-                    ),
-
-                    Expanded(
-                      child: RefreshIndicator(
-                        backgroundColor: AppPallete.bottomSheetColor,
-                        color: AppPallete.blueColor,
-                        triggerMode: RefreshIndicatorTriggerMode.anywhere,
-                        onRefresh: () async {
-                          _getContactsFromPhone(isRefreshed: true);
-                        },
-                        child: ListView.builder(
+                        verticalSpacing(30),
+                        // Show the information of your story
+                        Text(
+                          "Explore stories",
+                          style: AppTheme.darkThemeData.textTheme.displaySmall!
+                              .copyWith(
+                            color: AppPallete.whiteColor,
+                            fontSize: 16,
+                          ),
+                        ),
+                        if (myStory == null)
+                          Column(
+                            children: [
+                              verticalSpacing(20),
+                              _NoStoryWidget(
+                                userData: userData,
+                                onPressed: _callUseCaseToUploadStoryImages,
+                              ),
+                              verticalSpacing(20),
+                            ],
+                          )
+                        else
+                          GestureDetector(
+                            onTap: () {
+                              context.push(
+                                RoutePath.storyView.path,
+                                extra: [myStory],
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                StoryWidget(
+                                  displayName: "Your Story",
+                                  firstStoryImageUrl:
+                                      myStory.imageUrlList.first['url'],
+                                  firestStoryUploadTime:
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                    myStory.imageUrlList.first['uploadedAt'],
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () async {
+                                    await _callUseCaseToUploadStoryImages();
+                                  },
+                                  icon: const Icon(
+                                    Icons.add_photo_alternate_outlined,
+                                  ),
+                                  color: AppPallete.blueColor,
+                                  iconSize: 23,
+                                ),
+                              ],
+                            ),
+                          ),
+                        const Divider(
+                          color: AppPallete.greyColor,
+                          thickness: .15,
+                          height: 1,
+                        ),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
                           itemCount: stories.length,
                           itemBuilder: (context, index) {
                             final story = stories[index];
@@ -213,9 +212,9 @@ class _StoryContactsViewState extends State<StoryContactsView> {
                             );
                           },
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               );
             },

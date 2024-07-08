@@ -1,8 +1,11 @@
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class ChatContactWidget extends StatelessWidget {
@@ -31,12 +34,23 @@ class ChatContactWidget extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ImageWidget(
-                imagePath: imageUrl,
-                width: radius ?? 50,
-                height: radius ?? 50,
-                fit: BoxFit.cover,
-                radius: BorderRadius.circular(60),
+              GestureDetector(
+                onTap: () {
+                  context.push(
+                    RoutePath.imageView.path,
+                    extra: {
+                      'displayName': displayName,
+                      'imageUrl': imageUrl,
+                    },
+                  );
+                },
+                child: ImageWidget(
+                  imagePath: imageUrl,
+                  width: radius ?? 50,
+                  height: radius ?? 50,
+                  fit: BoxFit.cover,
+                  radius: BorderRadius.circular(60),
+                ),
               ),
               horizontalSpacing(16),
               Column(

@@ -1,9 +1,13 @@
 import 'package:chattin/core/enum/enums.dart';
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class MessageWidget extends StatelessWidget {
@@ -62,18 +66,22 @@ class MessageWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isMe
                           ? AppPallete.bottomSheetColor
-                          : AppPallete.blueColor.withOpacity(.175),
+                          : AppPallete.backgroundColor,
                       borderRadius: isMe
                           ? BorderRadius.circular(12).copyWith(
-                              bottomRight: const Radius.circular(3),
+                              bottomRight: Radius.circular(
+                                messageType == MessageType.image ? 10 : 5,
+                              ),
                             )
                           : BorderRadius.circular(12).copyWith(
-                              bottomLeft: const Radius.circular(3),
+                              bottomLeft: Radius.circular(
+                                messageType == MessageType.image ? 10 : 5,
+                              ),
                             ),
                     ),
                     padding: EdgeInsets.symmetric(
-                      horizontal: messageType == MessageType.image ? 8 : 15,
-                      vertical: messageType == MessageType.image ? 1 : 9,
+                      horizontal: messageType == MessageType.image ? 4 : 15,
+                      vertical: messageType == MessageType.image ? 4 : 9,
                     ),
                     child: Column(
                       crossAxisAlignment: isMe
@@ -83,7 +91,8 @@ class MessageWidget extends StatelessWidget {
                         if (isReply)
                           Container(
                             padding: EdgeInsets.all(
-                                repliedToType == MessageType.text ? 10 : 6),
+                              repliedToType == MessageType.text ? 10 : 6,
+                            ),
                             decoration: BoxDecoration(
                               color: AppPallete.backgroundColor.withOpacity(.5),
                               borderRadius: BorderRadius.circular(10),
@@ -121,63 +130,49 @@ class MessageWidget extends StatelessWidget {
                                 .visible, // Ensure text can overflow
                           )
                         else
-                          Container(
-                            constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.of(context).size.height * .45,
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: ImageWidget(
-                                imagePath: text,
-                                fit: BoxFit.cover,
-                                radius: BorderRadius.circular(10),
-                              ),
+                          GestureDetector(
+                            onTap: () {
+                              context.push(
+                                RoutePath.imageView.path,
+                                extra: {
+                                  'displayName': "Photo",
+                                  "imageUrl": text,
+                                  "isAnImageFromChat": true,
+                                },
+                              );
+                            },
+                            child: Stack(
+                              children: [
+                                ImageWidget(
+                                  imagePath: text,
+                                  fit: BoxFit.cover,
+                                  radius: BorderRadius.circular(10),
+                                ),
+                                Positioned(
+                                  bottom: 5,
+                                  right: 5,
+                                  child: _messageDataWidget(
+                                    isMe: isMe,
+                                    name: name,
+                                    timeSent: timeSent,
+                                    status: status,
+                                    messageType: messageType,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         verticalSpacing(
-                            messageType == MessageType.image ? 1 : 4),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              isMe ? "You" : name,
-                              style: AppTheme
-                                  .darkThemeData.textTheme.displaySmall!
-                                  .copyWith(
-                                color: isMe
-                                    ? AppPallete.blueColor
-                                    : AppPallete.redColor,
-                                fontSize: 11,
-                              ),
-                              overflow: TextOverflow
-                                  .ellipsis, // Ensure text can overflow
-                            ),
-                            horizontalSpacing(7.5),
-                            Text(
-                              DateFormat.jm().format(timeSent),
-                              style: AppTheme
-                                  .darkThemeData.textTheme.displaySmall!
-                                  .copyWith(
-                                color: AppPallete.greyColor,
-                                fontSize: 11,
-                              ),
-                              overflow: TextOverflow
-                                  .ellipsis, // Ensure text can overflow
-                            ),
-                            horizontalSpacing(6),
-                            if (isMe)
-                              Icon(
-                                status ? Icons.done_all : Icons.done,
-                                color: status
-                                    ? AppPallete.blueColor
-                                    : AppPallete.greyColor,
-                                size: 15,
-                              ),
-                          ],
+                          messageType == MessageType.image ? 0 : 4,
                         ),
-                        if (messageType == MessageType.image) verticalSpacing(6)
+                        if (messageType == MessageType.text)
+                          _messageDataWidget(
+                            isMe: isMe,
+                            name: name,
+                            timeSent: timeSent,
+                            messageType: messageType,
+                            status: status,
+                          ),
                       ],
                     ),
                   ),
@@ -200,4 +195,42 @@ class MessageWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _messageDataWidget({
+  required bool isMe,
+  required String name,
+  required MessageType messageType,
+  required DateTime timeSent,
+  required bool status,
+}) {
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Text(
+        isMe ? "You" : name,
+        style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+          color: isMe ? AppPallete.blueColor : AppPallete.redColor,
+          fontSize: 11,
+        ),
+        overflow: TextOverflow.ellipsis, // Ensure text can overflow
+      ),
+      horizontalSpacing(7.5),
+      Text(
+        DateFormat.jm().format(timeSent),
+        style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+          color: AppPallete.whiteColor.withOpacity(.7),
+          fontSize: 11,
+        ),
+        overflow: TextOverflow.ellipsis, // Ensure text can overflow
+      ),
+      horizontalSpacing(6),
+      if (isMe)
+        Icon(
+          status ? Icons.done_all : Icons.done,
+          color: status ? AppPallete.blueColor : AppPallete.greyColor,
+          size: 15,
+        ),
+    ],
+  );
 }

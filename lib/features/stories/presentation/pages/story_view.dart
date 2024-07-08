@@ -105,8 +105,9 @@ class _StorySeeViewState extends State<StorySeeView> {
                           indicatorForegroundColor: AppPallete.blueColor,
                           onStoryShow: (storyItem, pos) {
                             final temp = DateTime.fromMillisecondsSinceEpoch(
-                                widget.storyList[index].imageUrlList[pos]
-                                    ['uploadedAt']);
+                              widget.storyList[index].imageUrlList[pos]
+                                  ['uploadedAt'],
+                            );
                             if (pos > 0) {
                               setState(
                                 () {

@@ -110,8 +110,10 @@ class ImageWidget extends StatelessWidget {
                 child: SizedBox(
                   width: 23,
                   height: 23,
-                  child: CircularProgressIndicator(
-                    value: progress.progress,
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      value: progress.progress,
+                    ),
                   ),
                 ),
               );
@@ -124,8 +126,8 @@ class ImageWidget extends StatelessWidget {
                 color: Colors.grey.shade200,
               ),
               child: const Icon(
-                Icons.image,
-                size: 30,
+                Icons.question_mark,
+                size: 17,
               ),
             ),
           );

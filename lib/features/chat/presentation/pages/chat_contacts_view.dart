@@ -76,12 +76,18 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                       onTap: () {
                         context.push(RoutePath.profileScreen.path);
                       },
-                      child: ImageWidget(
-                        imagePath: state.userData!.imageUrl,
-                        radius: BorderRadius.circular(30),
-                        width: 25,
-                        height: 25,
-                        fit: BoxFit.fill,
+                      child: Hero(
+                        tag: state.userData!.imageUrl,
+                        child: Material(
+                          type: MaterialType.transparency,
+                          child: ImageWidget(
+                            imagePath: state.userData!.imageUrl,
+                            radius: BorderRadius.circular(30),
+                            width: 25,
+                            height: 25,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                       ),
                     ),
                   ],

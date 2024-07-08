@@ -85,7 +85,9 @@ class _ChatViewState extends State<ChatView> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: AppPallete.bottomSheetColor,
+        elevation: 10,
+        shadowColor: AppPallete.bottomSheetColor,
+        backgroundColor: AppPallete.backgroundColor,
         title: StreamBuilder<Status>(
           stream: _statusStream,
           builder: (context, snapshot) {
@@ -149,7 +151,7 @@ class _ChatViewState extends State<ChatView> {
                                 "Sending images to each other is now easy 📸",
                           );
                         },
-                        fillColor: AppPallete.bottomSheetColor,
+                        fillColor: AppPallete.backgroundColor,
                         showBorder: false,
                         borderRadius: 60,
                       ),

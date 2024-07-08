@@ -1,3 +1,4 @@
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
@@ -7,6 +8,7 @@ import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:chattin/features/profile/presentation/widgets/profile_details_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -71,12 +73,29 @@ class _ProfileViewState extends State<ProfileView> {
                         verticalSpacing(15),
                         Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: ImageWidget(
-                            imagePath: userData.imageUrl,
-                            width: 100,
-                            height: 100,
-                            radius: BorderRadius.circular(100),
-                            fit: BoxFit.cover,
+                          child: GestureDetector(
+                            onTap: () {
+                              context.push(
+                                RoutePath.imageView.path,
+                                extra: {
+                                  'imageUrl': state.userData!.imageUrl,
+                                  'displayName': 'Your Profile',
+                                },
+                              );
+                            },
+                            child: Hero(
+                              tag: userData.imageUrl,
+                              child: Material(
+                                type: MaterialType.transparency,
+                                child: ImageWidget(
+                                  imagePath: userData.imageUrl,
+                                  width: 100,
+                                  height: 100,
+                                  radius: BorderRadius.circular(100),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                         verticalSpacing(10),

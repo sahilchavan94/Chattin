@@ -32,6 +32,9 @@ class RoutePath {
   );
 
   //image view
+  static const RouteName imageView = RouteName(
+    path: "/image_view",
+  );
   static const RouteName imagePreview = RouteName(
     path: "/image_preview",
   );
