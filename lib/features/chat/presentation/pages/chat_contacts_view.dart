@@ -29,7 +29,6 @@ class _ChatContactsViewState extends State<ChatContactsView> {
   void initState() {
     context.read<AuthCubit>().checkTheAccountDetailsIfTheEmailIsVerified();
     context.read<ProfileCubit>().getProfileData();
-
     super.initState();
   }
 

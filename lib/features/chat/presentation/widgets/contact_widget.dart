@@ -63,10 +63,11 @@ class ContactWidget extends StatelessWidget {
                               child: ImageWidget(
                                 imagePath: imageUrl,
                                 fit: BoxFit.cover,
-                                width: MediaQuery.of(context).size.width * .5,
+                                width: MediaQuery.of(context).size.width * .45,
                                 height:
                                     MediaQuery.of(context).size.height * .32,
                                 radius: BorderRadius.circular(20),
+                                isImageFromChat: true,
                               ),
                             ),
                           ),

@@ -67,6 +67,7 @@ class ChatContactWidget extends StatelessWidget {
                                 height:
                                     MediaQuery.of(context).size.height * .32,
                                 radius: BorderRadius.circular(20),
+                                isImageFromChat: true,
                               ),
                             ),
                           ),

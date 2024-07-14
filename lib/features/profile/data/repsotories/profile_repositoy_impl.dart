@@ -1,4 +1,5 @@
 import 'package:chattin/core/common/entities/user_entity.dart';
+import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/errors/failure.dart';
 import 'package:chattin/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:chattin/features/profile/domain/repositories/profile_repository.dart';
@@ -13,9 +14,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
     try {
       final response = await profileRemoteDataSourceImpl.getProfileData(uid);
       return Right(response);
-    } catch (e) {
+    } on ServerException catch (e) {
       return Left(
-        Failure(e.toString()),
+        Failure(e.error),
       );
     }
   }

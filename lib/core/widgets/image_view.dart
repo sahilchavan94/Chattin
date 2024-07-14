@@ -111,6 +111,7 @@ class _ProfileImageViewState extends State<ProfileImageView> {
                 child: ImageWidget(
                   imagePath: widget.imageUrl,
                   fit: BoxFit.cover,
+                  isImageFromChat: true,
                 ),
               ),
       ),

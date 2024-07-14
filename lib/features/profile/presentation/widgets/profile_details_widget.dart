@@ -3,6 +3,7 @@ import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ProfileDetailsWidget extends StatelessWidget {
   final String title;
@@ -72,7 +73,7 @@ class ProfileDetailsWidget extends StatelessWidget {
         ),
         userInfo(
           'Joined on',
-          '24 Oct 2023',
+          DateFormat("dd MMM yyyy").format(userData.joinedOn!),
           const Icon(
             Icons.calendar_month,
             color: AppPallete.greyColor,

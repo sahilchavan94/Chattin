@@ -1,7 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:chattin/core/common/entities/user_entity.dart';
+import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/features/profile/domain/usecases/get_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:toastification/toastification.dart';
+
+import '../../../../core/utils/toasts.dart';
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
@@ -33,11 +37,11 @@ class ProfileCubit extends Cubit<ProfileState> {
             profileStatus: ProfileStatus.failure,
           ),
         );
-        // showToast(
-        //   content: ToastMessages.defaultFailureMessage,
-        //   description: ToastMessages.profileFailure,
-        //   type: ToastificationType.error,
-        // );
+        showToast(
+          content: l.message ?? ToastMessages.defaultFailureMessage,
+          description: ToastMessages.profileFailure,
+          type: ToastificationType.error,
+        );
       },
       (r) {
         emit(

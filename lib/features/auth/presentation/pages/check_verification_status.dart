@@ -71,6 +71,7 @@ class _ChackVerificationViewState extends State<CheckVerificationView> {
                   color: AppPallete.blueColor,
                   decoration: TextDecoration.underline,
                   decorationColor: AppPallete.blueColor,
+                  fontSize: 14,
                 ),
               ),
             ),

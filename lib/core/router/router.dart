@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/constants.dart';
 import 'package:chattin/core/widgets/image_view.dart';
