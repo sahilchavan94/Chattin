@@ -1,36 +1,32 @@
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/utils/validators.dart';
 import 'package:chattin/core/widgets/button_widget.dart';
-import 'package:chattin/core/widgets/dialog_box.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class EmailAuthView extends StatefulWidget {
-  const EmailAuthView({super.key});
+class EmailPassLoginView extends StatefulWidget {
+  const EmailPassLoginView({super.key});
 
   @override
-  State<EmailAuthView> createState() => _EmailAuthViewState();
+  State<EmailPassLoginView> createState() => _EmailPassLoginViewState();
 }
 
-class _EmailAuthViewState extends State<EmailAuthView> {
+class _EmailPassLoginViewState extends State<EmailPassLoginView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   bool _validateEmailAndPassword() {
     if (_formKey.currentState!.validate()) {
       return true;
     }
-    if (_passwordController.text != _confirmPasswordController.text) {
-      return true;
-    }
+
     return false;
   }
 
@@ -38,14 +34,12 @@ class _EmailAuthViewState extends State<EmailAuthView> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -54,22 +48,14 @@ class _EmailAuthViewState extends State<EmailAuthView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                verticalSpacing(30),
+                verticalSpacing(110),
                 Row(
                   children: [
                     Text(
-                      "Chattin",
+                      "Sign In",
                       style: AppTheme.darkThemeData.textTheme.displayLarge!
                           .copyWith(
                         color: AppPallete.blueColor,
-                      ),
-                    ),
-                    Text(
-                      "`",
-                      style: AppTheme.darkThemeData.textTheme.displayLarge!
-                          .copyWith(
-                        color: AppPallete.whiteColor,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     horizontalSpacing(5),
@@ -80,7 +66,7 @@ class _EmailAuthViewState extends State<EmailAuthView> {
                   ],
                 ),
                 Text(
-                  "Get started easily with 3 simple steps 😌",
+                  "Sign In into your account just with your email with ease ❗️",
                   style:
                       AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                     color: AppPallete.greyColor,
@@ -108,47 +94,40 @@ class _EmailAuthViewState extends State<EmailAuthView> {
                   ),
                   validator: Validators.validatePassword,
                 ),
-                verticalSpacing(12),
-                InputWidget(
-                  labelText: 'Confirm password',
-                  fillColor: AppPallete.transparent,
-                  textEditingController: _confirmPasswordController,
-                  hintText: "Confirm your password",
-                  passwordController: _passwordController,
-                  suffixIcon: const Icon(
-                    Icons.lock,
-                  ),
-                  validator: Validators.validatePassword,
-                ),
                 verticalSpacing(20),
                 ButtonWidget(
-                  buttonText: 'Continue',
+                  buttonText: 'Sign In',
                   isLoading: context.watch<AuthCubit>().state.authStatus ==
                       AuthStatus.loading,
                   onPressed: () {
                     if (!_validateEmailAndPassword()) {
                       return;
                     }
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return DialogWidget(
-                          onPressed: () {
-                            context.pop();
-                            context
-                                .read<AuthCubit>()
-                                .createAccountWithEmailAndPassword(
-                                  _emailController.text.trim(),
-                                  _passwordController.text.trim(),
-                                );
-                          },
-                          title: 'Recheck Email',
-                          approvalText: 'Continue',
-                          rejectionText: 'Cancel',
+                    context.read<AuthCubit>().signInWithEmailAndPassword(
+                          _emailController.text,
+                          _passwordController.text,
                         );
-                      },
-                    );
                   },
+                ),
+                verticalSpacing(20),
+                TextButton(
+                  onPressed: () {
+                    context.push(RoutePath.emailAuth.path);
+                  },
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Don't have an account ?",
+                      style: AppTheme.darkThemeData.textTheme.displaySmall!
+                          .copyWith(
+                        color: AppPallete.blueColor,
+                        fontSize: 14,
+                        decoration: TextDecoration.underline,
+                        decorationStyle: TextDecorationStyle.solid,
+                        decorationColor: AppPallete.blueColor,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

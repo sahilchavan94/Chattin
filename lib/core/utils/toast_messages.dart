@@ -20,6 +20,7 @@ class ToastMessages {
   //auth remote datasource
   static const String accountCreatedSuccessfully =
       "Account created successfully";
+  static const String signedInSuccessfully = "Signed in successfully";
   static const String sentEmailVerficationMail =
       "Sent verification link to your email";
   static const String emailVerificationSuccessful =

@@ -12,6 +12,7 @@ import 'package:chattin/features/auth/domain/usecases/check_status.dart';
 import 'package:chattin/features/auth/domain/usecases/email_auth.dart';
 import 'package:chattin/features/auth/domain/usecases/email_verification.dart';
 import 'package:chattin/features/auth/domain/usecases/set_account_details.dart';
+import 'package:chattin/features/auth/domain/usecases/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +22,7 @@ part 'auth_state.dart';
 class AuthCubit extends Cubit<AuthState> {
   final CreateAccountWithEmailAndPasswordUseCase
       _createAccountWithEmailAndPasswordUseCase;
+  final SignInUseCase _signInUseCase;
   final SendEmailVerificationLinkUseCase _sendEmailVerificationLinkUseCase;
   final CheckVerificationStatusUseCase _checkVerificationStatusUseCase;
   final CheckTheAccountDetailsIfTheEmailIsVerifiedUseCase
@@ -36,11 +38,14 @@ class AuthCubit extends Cubit<AuthState> {
     this._generalUploadUseCase,
     this._firebaseAuth,
     this._checkTheAccountDetailsIfTheEmailIsVerifiedUseCase,
+    this._signInUseCase,
   ) : super(AuthState.initial());
 
-  //method for sending otp
+  //method for creating account
   Future<void> createAccountWithEmailAndPassword(
-      String email, String password) async {
+    String email,
+    String password,
+  ) async {
     emit(state.copyWith(authStatus: AuthStatus.loading));
     final response = await _createAccountWithEmailAndPasswordUseCase.call(
       email,
@@ -67,6 +72,41 @@ class AuthCubit extends Cubit<AuthState> {
         );
         Constants.navigatorKey.currentContext!.pushReplacement(
           RoutePath.verifyEmail.path,
+        );
+      },
+    );
+  }
+
+  Future<void> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    emit(state.copyWith(authStatus: AuthStatus.loading));
+    final response = await _signInUseCase.call(
+      email: email,
+      password: password,
+    );
+    response.fold(
+      (l) {
+        emit(
+          state.copyWith(
+            authStatus: AuthStatus.failure,
+          ),
+        );
+        showToast(
+          content: l.message ?? ToastMessages.defaultFailureMessage,
+          description: ToastMessages.defaultFailureDescription,
+          type: ToastificationType.error,
+        );
+      },
+      (r) {
+        emit(
+          state.copyWith(
+            authStatus: AuthStatus.success,
+          ),
+        );
+        Constants.navigatorKey.currentContext!.pushReplacement(
+          RoutePath.chatContacts.path,
         );
       },
     );
@@ -245,6 +285,22 @@ class AuthCubit extends Cubit<AuthState> {
       },
       (r) {
         //no need to do anything here
+        if (r.isEmpty) {
+          emit(
+            state.copyWith(
+              authStatus: AuthStatus.failure,
+            ),
+          );
+          //only navigate to profile creation page if the data is not added by the user
+          Constants.navigatorKey.currentContext!.pushReplacement(
+            RoutePath.createProfile.path,
+          );
+          showToast(
+            content: ToastMessages.completeProfileMessage,
+            description: ToastMessages.completeProfileDescription,
+            type: ToastificationType.error,
+          );
+        }
         emit(
           state.copyWith(
             authStatus: AuthStatus.success,

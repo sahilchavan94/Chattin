@@ -13,6 +13,10 @@ abstract interface class AuthRemoteDataSource {
     String email,
     String password,
   );
+  Future<String> signInWithEmailAndPassword(
+    String email,
+    String password,
+  );
   //for sending the email verfication link
   Future<String> sendEmailVerificationLink();
   //for checking the email verification status
@@ -113,6 +117,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         "phoneCode": phoneCode,
         "imageUrl": imageUrl,
         "status": Status.online.toStringValue(),
+        "joinedOn": DateTime.now().millisecondsSinceEpoch.toString(),
       });
       return ToastMessages.welcomeSignInMessage;
     } catch (e) {
@@ -129,16 +134,31 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .doc(uid)
           .get();
 
-      //if the user data not exists, this means the user is logged in but sign up process is still not done
+      //if the user data not exists -->
+      //this means the user is logged in but sign up process is still not done
 
       if (response.exists) {
-        return "";
+        return "User Exists";
       }
-      throw const ServerException();
-    } catch (e) {
+      return "";
+    } on Exception catch (e) {
       throw ServerException(
         error: e.toString(),
       );
+    }
+  }
+
+  @override
+  Future<String> signInWithEmailAndPassword(
+      String email, String password) async {
+    try {
+      await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return ToastMessages.signedInSuccessfully;
+    } catch (e) {
+      throw ServerException(error: e.toString());
     }
   }
 }

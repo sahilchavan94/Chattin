@@ -33,6 +33,27 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<Either<Failure, String>> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final response =
+          await authRemoteDataSourceImpl.signInWithEmailAndPassword(
+        email,
+        password,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(
+          e.error,
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Either<Failure, String>> sendEmailVerificationLink() async {
     try {
       final response =

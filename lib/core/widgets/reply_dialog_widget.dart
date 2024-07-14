@@ -29,17 +29,6 @@ class ReplyDialogWidget extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return AlertDialog(
-      icon: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.cancel),
-            onPressed: () => context.pop(),
-          ),
-        ],
-      ),
-      iconPadding: const EdgeInsets.all(5),
-      iconColor: AppPallete.greyColor,
       backgroundColor: AppPallete.backgroundColor,
       surfaceTintColor: AppPallete.backgroundColor,
       shape: RoundedRectangleBorder(
@@ -50,19 +39,35 @@ class ReplyDialogWidget extends StatelessWidget {
       content: SizedBox(
         width: (size.width) * .9,
         height: messageType == MessageType.image
-            ? (size.height * .27)
+            ? (size.height * .20)
             : (size.height * .17),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "Replying to ",
-              style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                color: AppPallete.blueColor,
-              ),
-              textAlign: TextAlign.center,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Replying to ",
+                  style:
+                      AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+                    color: AppPallete.blueColor,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    context.pop();
+                  },
+                  child: const Icon(
+                    Icons.cancel,
+                    color: AppPallete.greyColor,
+                    size: 20,
+                  ),
+                ),
+              ],
             ),
             verticalSpacing(15),
             if (messageType == MessageType.text)
@@ -77,20 +82,24 @@ class ReplyDialogWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               )
             else
-              ImageWidget(
-                imagePath: repliedTo,
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-                radius: BorderRadius.circular(6),
+              Padding(
+                padding: const EdgeInsets.only(left: 5.0),
+                child: ImageWidget(
+                  imagePath: repliedTo,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.cover,
+                  radius: BorderRadius.circular(6),
+                ),
               ),
             verticalSpacing(size.width * .03),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: InputWidget(
                     maxLines: 1,
-                    height: 45,
+                    height: 42,
                     hintText: "Reply to this message",
                     textEditingController: _replyController,
                     validator: (String val) {},
@@ -136,7 +145,6 @@ class ReplyDialogWidget extends StatelessWidget {
                 )
               ],
             ),
-            verticalSpacing(10),
             // ButtonWidget(
             //   height: 40,
             //   buttonText: "Send Reply",

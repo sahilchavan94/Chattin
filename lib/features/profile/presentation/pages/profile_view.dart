@@ -83,18 +83,14 @@ class _ProfileViewState extends State<ProfileView> {
                                 },
                               );
                             },
-                            child: Hero(
-                              tag: userData.imageUrl,
-                              child: Material(
-                                type: MaterialType.transparency,
-                                child: ImageWidget(
-                                  imagePath: userData.imageUrl,
-                                  width: 100,
-                                  height: 100,
-                                  radius: BorderRadius.circular(100),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                            child: ImageWidget(
+                              imagePath: userData.imageUrl,
+                              width: 100,
+                              height: 100,
+                              radius: BorderRadius.circular(100),
+                              fit: BoxFit.cover,
+                              isImageFromChat:
+                                  true, //intentionally marked as true to show the loading bar
                             ),
                           ),
                         ),

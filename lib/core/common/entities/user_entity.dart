@@ -10,6 +10,7 @@ class UserEntity {
   final String? phoneCode;
   final String? about;
   final Status? status;
+  final DateTime? joinedOn;
   UserEntity({
     required this.uid,
     required this.displayName,
@@ -18,6 +19,7 @@ class UserEntity {
     required this.phoneNumber,
     required this.phoneCode,
     required this.about,
+    required this.joinedOn,
     required this.status,
   });
 }

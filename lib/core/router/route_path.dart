@@ -5,6 +5,9 @@ class RoutePath {
   static const RouteName emailAuth = RouteName(
     path: '/email_auth',
   );
+  static const RouteName emailPassLogin = RouteName(
+    path: '/email_pass_login',
+  );
   static const RouteName verifyEmail = RouteName(
     path: '/verify_email',
   );

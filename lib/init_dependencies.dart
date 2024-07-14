@@ -10,6 +10,7 @@ import 'package:chattin/features/auth/domain/usecases/check_status.dart';
 import 'package:chattin/features/auth/domain/usecases/email_auth.dart';
 import 'package:chattin/features/auth/domain/usecases/email_verification.dart';
 import 'package:chattin/features/auth/domain/usecases/set_account_details.dart';
+import 'package:chattin/features/auth/domain/usecases/sign_in.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chattin/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:chattin/features/chat/data/repositories/chat_repository_impl.dart';
@@ -114,8 +115,14 @@ void initAuth() {
         uploadRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<SignInUseCase>(
+      () => SignInUseCase(
+        authRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton<AuthCubit>(
       () => AuthCubit(
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),

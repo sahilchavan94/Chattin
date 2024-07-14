@@ -1,15 +1,13 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/core/utils/toasts.dart';
-import 'package:chattin/core/widgets/failure_widget.dart';
+import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:toastification/toastification.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
@@ -108,22 +106,11 @@ class _ProfileImageViewState extends State<ProfileImageView> {
       ),
       body: Center(
         child: isDownloading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : PhotoView(
-                backgroundDecoration: const BoxDecoration(
-                  color: AppPallete.backgroundColor,
-                ),
-                loadingBuilder: (context, event) {
-                  return const CircularProgressIndicator();
-                },
-                errorBuilder: (context, error, stackTrace) {
-                  return const FailureWidget();
-                },
-                enableRotation: true,
-                imageProvider: CachedNetworkImageProvider(
-                  widget.imageUrl,
+            ? const CircularProgressIndicator()
+            : InteractiveViewer(
+                child: ImageWidget(
+                  imagePath: widget.imageUrl,
+                  fit: BoxFit.cover,
                 ),
               ),
       ),

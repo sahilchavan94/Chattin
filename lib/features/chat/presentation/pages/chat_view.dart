@@ -275,6 +275,7 @@ class _ChatViewState extends State<ChatView> {
                             iconOnRightSwipe: Icons.arrow_back,
                             onRightSwipe: (details) {
                               showDialog(
+                                barrierDismissible: false,
                                 context: context,
                                 builder: (context) {
                                   return ReplyDialogWidget(

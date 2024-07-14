@@ -97,13 +97,13 @@ class _StoryPreViewState extends State<StoryPreView> {
                       height: 45,
                       fillColor: AppPallete.bottomSheetColor,
                       showBorder: false,
-                      hintText: 'Add a caption',
+                      hintText: 'Add a caption ',
                       textEditingController: _textEditingControllerlist[
                           widget.selectedFiles.indexOf(currentFile)],
                       validator: (String val) {},
                       suffixIcon: const Icon(
-                        Icons.add_photo_alternate,
-                        color: AppPallete.greyColor,
+                        Icons.edit,
+                        color: AppPallete.transparent,
                       ),
                     ),
                   ),
@@ -145,7 +145,7 @@ class _StoryPreViewState extends State<StoryPreView> {
       body: Center(
         child: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height * .65,
+            height: MediaQuery.of(context).size.height * .7,
             width: double.maxFinite,
             child: Align(
               alignment: Alignment.center,
@@ -154,7 +154,7 @@ class _StoryPreViewState extends State<StoryPreView> {
                 alignment: Alignment.center,
                 width: double.infinity,
                 height: double.maxFinite,
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
               ),
             ),
           ),

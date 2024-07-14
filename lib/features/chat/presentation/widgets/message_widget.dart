@@ -4,9 +4,7 @@ import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -66,7 +64,7 @@ class MessageWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isMe
                           ? AppPallete.bottomSheetColor
-                          : AppPallete.backgroundColor,
+                          : AppPallete.blueColor.withOpacity(.175),
                       borderRadius: isMe
                           ? BorderRadius.circular(12).copyWith(
                               bottomRight: Radius.circular(
@@ -95,7 +93,7 @@ class MessageWidget extends StatelessWidget {
                             ),
                             decoration: BoxDecoration(
                               color: AppPallete.backgroundColor.withOpacity(.5),
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(5),
                             ),
                             child: repliedToType == MessageType.text
                                 ? Text(
@@ -111,9 +109,10 @@ class MessageWidget extends StatelessWidget {
                                 : ImageWidget(
                                     height: 55,
                                     width: 55,
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fill,
                                     imagePath: repliedTo!,
                                     radius: BorderRadius.circular(6),
+                                    isImageFromChat: true,
                                   ),
                           ),
                         if (isReply) verticalSpacing(10),
@@ -141,25 +140,32 @@ class MessageWidget extends StatelessWidget {
                                 },
                               );
                             },
-                            child: Stack(
-                              children: [
-                                ImageWidget(
-                                  imagePath: text,
-                                  fit: BoxFit.cover,
-                                  radius: BorderRadius.circular(10),
-                                ),
-                                Positioned(
-                                  bottom: 5,
-                                  right: 5,
-                                  child: _messageDataWidget(
-                                    isMe: isMe,
-                                    name: name,
-                                    timeSent: timeSent,
-                                    status: status,
-                                    messageType: messageType,
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxHeight:
+                                    MediaQuery.of(context).size.height * .5,
+                              ),
+                              child: Stack(
+                                children: [
+                                  ImageWidget(
+                                    imagePath: text,
+                                    fit: BoxFit.fill,
+                                    radius: BorderRadius.circular(10),
+                                    isImageFromChat: true,
                                   ),
-                                ),
-                              ],
+                                  Positioned(
+                                    bottom: 5,
+                                    right: 5,
+                                    child: _messageDataWidget(
+                                      isMe: isMe,
+                                      name: name,
+                                      timeSent: timeSent,
+                                      status: status,
+                                      messageType: messageType,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         verticalSpacing(
@@ -207,15 +213,6 @@ Widget _messageDataWidget({
   return Row(
     mainAxisSize: MainAxisSize.min,
     children: [
-      Text(
-        isMe ? "You" : name,
-        style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-          color: isMe ? AppPallete.blueColor : AppPallete.redColor,
-          fontSize: 11,
-        ),
-        overflow: TextOverflow.ellipsis, // Ensure text can overflow
-      ),
-      horizontalSpacing(7.5),
       Text(
         DateFormat.jm().format(timeSent),
         style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(

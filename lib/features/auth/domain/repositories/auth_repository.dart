@@ -6,6 +6,10 @@ abstract interface class AuthRepository {
     String email,
     String password,
   );
+  Future<Either<Failure, String>> signInWithEmailAndPassword(
+    String email,
+    String password,
+  );
   Future<Either<Failure, String>> sendEmailVerificationLink();
   Future<Either<Failure, String>> checkVerificationStatus();
   Future<Either<Failure, String>> setAccountDetails({

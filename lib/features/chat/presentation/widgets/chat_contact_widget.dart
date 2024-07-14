@@ -4,7 +4,7 @@ import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -35,12 +35,53 @@ class ChatContactWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
-                onTap: () {
-                  context.push(
-                    RoutePath.imageView.path,
-                    extra: {
-                      'displayName': displayName,
-                      'imageUrl': imageUrl,
+                onTapDown: (TapDownDetails details) {
+                  showDialog(
+                    useRootNavigator: true,
+                    traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
+                    context: context,
+                    builder: (context) {
+                      return GestureDetector(
+                        onTap: () {
+                          context.push(
+                            RoutePath.imageView.path,
+                            extra: {
+                              'displayName': displayName,
+                              'imageUrl': imageUrl,
+                            },
+                          );
+                        },
+                        child: Dialog(
+                          alignment: Alignment.topCenter,
+                          surfaceTintColor: AppPallete.transparent,
+                          elevation: 0,
+                          backgroundColor: AppPallete.transparent,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 100),
+                            child: Hero(
+                              tag: imageUrl,
+                              child: ImageWidget(
+                                imagePath: imageUrl,
+                                fit: BoxFit.cover,
+                                width: MediaQuery.of(context).size.width * .5,
+                                height:
+                                    MediaQuery.of(context).size.height * .32,
+                                radius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          ),
+                        )
+                            .animate()
+                            .scale(
+                              begin: const Offset(0.5, 0.5),
+                              end: const Offset(1, 1),
+                              curve: Curves.fastEaseInToSlowEaseOut,
+                            )
+                            .fadeIn()
+                            .slide(
+                              curve: Curves.fastEaseInToSlowEaseOut,
+                            ),
+                      );
                     },
                   );
                 },
@@ -48,7 +89,7 @@ class ChatContactWidget extends StatelessWidget {
                   imagePath: imageUrl,
                   width: radius ?? 50,
                   height: radius ?? 50,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   radius: BorderRadius.circular(60),
                 ),
               ),

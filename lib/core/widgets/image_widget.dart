@@ -19,6 +19,7 @@ class ImageWidget extends StatelessWidget {
   EdgeInsetsGeometry? margin;
   BorderRadius? radius;
   BoxBorder? border;
+  bool? isImageFromChat;
 
   ///a [ImageWidget] it can be used for showing any type of images
   /// it will shows the placeholder image if image is not found on network image
@@ -34,6 +35,7 @@ class ImageWidget extends StatelessWidget {
     this.radius,
     this.margin,
     this.border,
+    this.isImageFromChat,
     this.placeHolder = 'assets/images/image_not_found.png',
   });
 
@@ -105,19 +107,40 @@ class ImageWidget extends StatelessWidget {
                 : imagePath!,
             color: color,
             progressIndicatorBuilder: (context, url, progress) {
-              return Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: SizedBox(
-                  width: 23,
-                  height: 23,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: progress.progress,
+              if (isImageFromChat != null && isImageFromChat == true) {
+                return Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: SizedBox(
+                    width: 23,
+                    height: 23,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        value: progress.progress,
+                      ),
                     ),
                   ),
-                ),
-              );
+                );
+              } else {
+                return SizedBox(
+                  height: 23,
+                  width: 23,
+                  child: LinearProgressIndicator(
+                    color: Colors.grey.shade800,
+                    backgroundColor: Colors.grey.shade900,
+                  ),
+                );
+              }
             },
+            // placeholder: (context, url) {
+            //   return Container(
+            //     height: 30,
+            //     width: 30,
+            //     child: LinearProgressIndicator(
+            //       color: Colors.grey.shade900,
+            //       backgroundColor: Colors.grey.shade800,
+            //     ),
+            //   );
+            // },
             errorWidget: (context, url, error) => Container(
               height: height,
               width: width,

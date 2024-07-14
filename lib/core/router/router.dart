@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/constants.dart';
 import 'package:chattin/core/widgets/image_view.dart';
@@ -5,6 +7,7 @@ import 'package:chattin/core/widgets/send_image_widget.dart';
 import 'package:chattin/features/auth/presentation/pages/check_verification_status.dart';
 import 'package:chattin/features/auth/presentation/pages/create_profile_view.dart';
 import 'package:chattin/features/auth/presentation/pages/email_auth_view.dart';
+import 'package:chattin/features/auth/presentation/pages/email_pass_login_view.dart';
 import 'package:chattin/features/auth/presentation/pages/verify_email_view.dart';
 import 'package:chattin/features/chat/presentation/pages/chat_contacts_view.dart';
 import 'package:chattin/features/chat/presentation/pages/chat_view.dart';
@@ -43,15 +46,22 @@ CustomTransitionPage buildPageWithSlideTransition({
   );
 }
 
-class MyRouter {
+class AppRouter {
   static final router = GoRouter(
     redirect: (context, state) {
       final isLoggedIn = serviceLocator<FirebaseAuth>().currentUser;
       final isGoingToVerify = state.fullPath == RoutePath.emailAuth.path;
       final isGoingToChatContacts =
           state.fullPath == RoutePath.chatContacts.path;
+      final isGoingToEmailAuth = state.fullPath == RoutePath.emailAuth.path;
+      final isGoingToEmailLoginAuth =
+          state.fullPath == RoutePath.emailPassLogin.path;
+
       if (isLoggedIn == null) {
-        return RoutePath.emailAuth.path;
+        if (isGoingToEmailAuth || isGoingToEmailLoginAuth) {
+          return null; // Allow navigation to email auth and login pages
+        }
+        return RoutePath.emailPassLogin.path;
       } else if (!isLoggedIn.emailVerified && isGoingToVerify) {
         return RoutePath.verifyEmail.path;
       } else if (!isLoggedIn.emailVerified && isGoingToChatContacts) {
@@ -69,7 +79,17 @@ class MyRouter {
           return buildPageWithSlideTransition(
             context: context,
             state: state,
-            child: const PhoneAuthView(),
+            child: const EmailAuthView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.emailPassLogin.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const EmailPassLoginView(),
           );
         },
       ),
