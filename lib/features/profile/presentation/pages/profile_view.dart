@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
@@ -134,78 +133,94 @@ class _ProfileViewState extends State<ProfileView> {
                                   child: Stack(
                                     alignment: Alignment.bottomRight,
                                     children: [
-                                      userData.imageUrl.isEmpty
-                                          ? ImageWidget(
-                                              imagePath:
-                                                  'assets/images/default_profile.png',
-                                              width: 100,
-                                            )
-                                          : ImageWidget(
-                                              imagePath: userData.imageUrl,
+                                      state.isImageLoading == true
+                                          ? Container(
                                               width: 100,
                                               height: 100,
-                                              radius:
-                                                  BorderRadius.circular(100),
-                                              fit: BoxFit.cover,
-                                              isImageFromChat: true,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    AppPallete.bottomSheetColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(50),
+                                              ),
+                                              padding: const EdgeInsets.all(30),
+                                              child:
+                                                  const CircularProgressIndicator(),
+                                            )
+                                          : userData.imageUrl.isEmpty
+                                              ? ImageWidget(
+                                                  imagePath:
+                                                      'assets/images/default_profile.png',
+                                                  width: 100,
+                                                )
+                                              : ImageWidget(
+                                                  imagePath: userData.imageUrl,
+                                                  width: 100,
+                                                  height: 100,
+                                                  radius: BorderRadius.circular(
+                                                      100),
+                                                  fit: BoxFit.cover,
+                                                  isImageFromChat: true,
+                                                ),
+                                      if (state.isImageLoading != null &&
+                                          !state.isImageLoading!)
+                                        Positioned(
+                                          bottom: -15,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              showBottomSheetForPickingImage(
+                                                askForConfirmation: true,
+                                                context: context,
+                                                isRemovable: userData
+                                                    .imageUrl.isNotEmpty,
+                                                title: "Update profile picture",
+                                                subTitle:
+                                                    "You can update your profile picture in few easy steps",
+                                                onClick1: () {
+                                                  context.pop();
+                                                  _selectImage(
+                                                    ImageSource.camera,
+                                                  );
+                                                },
+                                                onClick2: () {
+                                                  context.pop();
+                                                  _selectImage(
+                                                    ImageSource.gallery,
+                                                  );
+                                                },
+                                                onClick3: () {
+                                                  context.pop();
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return DialogWidget(
+                                                        onPressed: () {
+                                                          context.pop();
+                                                          context
+                                                              .read<
+                                                                  ProfileCubit>()
+                                                              .setProfileImage();
+                                                        },
+                                                        approvalText: 'Remove',
+                                                        rejectionText: 'Cancel',
+                                                        title:
+                                                            'Remove profile image',
+                                                        description:
+                                                            'Continue if you are confirmed to remove your profile image',
+                                                      ).animate().fadeIn();
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            icon: const Icon(
+                                              Icons.camera_alt,
+                                              size: 25,
                                             ),
-                                      Positioned(
-                                        bottom: -15,
-                                        child: IconButton(
-                                          onPressed: () {
-                                            showBottomSheetForPickingImage(
-                                              askForConfirmation: true,
-                                              context: context,
-                                              isRemovable:
-                                                  userData.imageUrl.isNotEmpty,
-                                              title: "Update profile picture",
-                                              subTitle:
-                                                  "You can update your profile picture in few easy steps",
-                                              onClick1: () {
-                                                context.pop();
-                                                _selectImage(
-                                                  ImageSource.camera,
-                                                );
-                                              },
-                                              onClick2: () {
-                                                context.pop();
-                                                _selectImage(
-                                                  ImageSource.gallery,
-                                                );
-                                              },
-                                              onClick3: () {
-                                                context.pop();
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return DialogWidget(
-                                                      onPressed: () {
-                                                        context.pop();
-                                                        context
-                                                            .read<
-                                                                ProfileCubit>()
-                                                            .setProfileImage();
-                                                      },
-                                                      approvalText: 'Remove',
-                                                      rejectionText: 'Cancel',
-                                                      title:
-                                                          'Remove profile image',
-                                                      description:
-                                                          'Continue if you are confirmed to remove your profile image',
-                                                    ).animate().fadeIn();
-                                                  },
-                                                );
-                                              },
-                                            );
-                                          },
-                                          icon: const Icon(
-                                            Icons.camera_alt,
-                                            size: 25,
+                                            color: AppPallete.blueColor,
+                                            iconSize: 30,
                                           ),
-                                          color: AppPallete.blueColor,
-                                          iconSize: 30,
-                                        ),
-                                      )
+                                        )
                                     ],
                                   ),
                                 ),

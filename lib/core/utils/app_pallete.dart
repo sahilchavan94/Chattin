@@ -13,4 +13,8 @@ class AppPallete {
   static const Color errorColor = Color.fromARGB(255, 246, 73, 60);
   static const Color redColor = Color.fromARGB(255, 255, 107, 96);
   static const Color successColor = Color.fromARGB(255, 3, 86, 7);
+
+  //linear progress indicator colors
+  static Color linearProgressIndicatorColor = Colors.grey.shade800;
+  static Color linearProgressIndicatorBackgroundColor = Colors.grey.shade900;
 }

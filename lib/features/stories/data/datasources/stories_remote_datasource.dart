@@ -34,10 +34,8 @@ class StoriesRemoteDataSourceImpl implements StoriesRemoteDataSource {
   }) async {
     try {
       final StoryModel story = StoryModel(
-        displayName: displayName,
         phoneNumber: phoneNumber,
         imageUrlList: imageUrlList,
-        imageUrl: imageUrl,
         uid: uid,
       );
       //get the stautus which is previously uploaded
@@ -57,7 +55,6 @@ class StoriesRemoteDataSourceImpl implements StoriesRemoteDataSource {
             .set(story.toMap());
       }
     } catch (e) {
-      log(e.toString());
       throw ServerException(
         error: e.toString(),
       );
@@ -97,6 +94,13 @@ class StoriesRemoteDataSourceImpl implements StoriesRemoteDataSource {
             final imageUrlList = (data['imageUrlList'] as List)
                 .where((image) => image['uploadedAt'] >= yesterday)
                 .toList();
+            final userData = await firebaseFirestore
+                .collection(Constants.userCollection)
+                .doc(data['uid'])
+                .get();
+            if (userData.exists) {
+              data['userEntity'] = userData.data();
+            }
             if (imageUrlList.isNotEmpty) {
               data['imageUrlList'] = imageUrlList;
               contactsStories.add(StoryModel.fromMap(data));
@@ -106,6 +110,7 @@ class StoriesRemoteDataSourceImpl implements StoriesRemoteDataSource {
       }
       return contactsStories;
     } catch (e) {
+      log(e.toString());
       throw ServerException(
         error: e.toString(),
       );

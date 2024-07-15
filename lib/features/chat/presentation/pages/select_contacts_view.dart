@@ -61,6 +61,7 @@ class _SelectContactsViewState extends State<SelectContactsView> {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Select contact'),
+            centerTitle: true,
             actions: [
               IconButton(
                 onPressed: () {
@@ -100,7 +101,10 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                         hintText: 'Search for contacts',
                         textEditingController: _searchController,
                         validator: (String val) {},
-                        suffixIcon: const Icon(Icons.search),
+                        suffixIcon: const Icon(
+                          Icons.search,
+                          color: AppPallete.greyColor,
+                        ),
                         fillColor: AppPallete.bottomSheetColor,
                         borderRadius: 60,
                         showBorder: false,
@@ -115,12 +119,12 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                             duration: Durations.medium4,
                           ),
                     ),
-                    verticalSpacing(showSearch ? 30 : 0),
+                    verticalSpacing(showSearch ? 30 : 5),
                     if (contactsList.isNotEmpty)
                       Column(
                         children: [
                           Text(
-                            "${contactsList.length} contacts",
+                            "Your available contacts",
                             style: AppTheme
                                 .darkThemeData.textTheme.displaySmall!
                                 .copyWith(

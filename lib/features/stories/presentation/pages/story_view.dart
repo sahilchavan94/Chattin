@@ -25,8 +25,8 @@ class _StorySeeViewState extends State<StorySeeView> {
   final PageController _pageController = PageController();
   late List<List<StoryItem>> storyItems;
   String uploadedAt = "";
-  int currentIndex = 0;
   String currentCaption = "";
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -87,11 +87,13 @@ class _StorySeeViewState extends State<StorySeeView> {
                           onVerticalSwipeComplete: (dir) {
                             if (dir == Direction.down) {
                               context.pop();
+                              return;
                             }
                           },
                           onComplete: () {
                             if (currentIndex + 1 == widget.storyList.length) {
                               context.pop();
+                              return;
                             }
                             _pageController.nextPage(
                               duration: const Duration(
@@ -108,6 +110,7 @@ class _StorySeeViewState extends State<StorySeeView> {
                               widget.storyList[index].imageUrlList[pos]
                                   ['uploadedAt'],
                             );
+
                             if (pos > 0) {
                               setState(
                                 () {
@@ -127,9 +130,11 @@ class _StorySeeViewState extends State<StorySeeView> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: ContactWidget(
-                            imageUrl: widget.storyList[index].imageUrl,
+                            imageUrl:
+                                widget.storyList[index].userEntity!.imageUrl,
                             radius: 50,
-                            displayName: widget.storyList[index].displayName,
+                            displayName:
+                                widget.storyList[index].userEntity!.displayName,
                             about: uploadedAt,
                           ),
                         ),

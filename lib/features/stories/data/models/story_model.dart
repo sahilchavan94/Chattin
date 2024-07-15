@@ -1,15 +1,14 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chattin/core/common/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:chattin/features/stories/domain/entities/story_entity.dart';
 
 class StoryModel extends StoryEntity {
   StoryModel({
-    required super.displayName,
     required super.phoneNumber,
-    required super.imageUrl,
     required super.imageUrlList,
     required super.uid,
+    super.userEntity,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,8 +19,6 @@ class StoryModel extends StoryEntity {
             })
         .toList();
     return <String, dynamic>{
-      'displayName': displayName,
-      'imageUrl': imageUrl,
       'phoneNumber': phoneNumber,
       'imageUrlList': FieldValue.arrayUnion(urlList),
       'uid': uid,
@@ -31,13 +28,13 @@ class StoryModel extends StoryEntity {
   factory StoryModel.fromMap(Map<String, dynamic> map) {
     return StoryModel(
       uid: map['uid'] != null ? map['uid'] as String : "",
-      displayName:
-          map['displayName'] != null ? map['displayName'] as String : "",
       phoneNumber:
           map['phoneNumber'] != null ? map['phoneNumber'] as String : "",
-      imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : "",
       imageUrlList:
           map["imageUrlList"] != null ? map['imageUrlList'] as List : [],
+      userEntity: map['userEntity'] != null
+          ? UserModel.fromMap(map['userEntity'])
+          : null,
     );
   }
 }

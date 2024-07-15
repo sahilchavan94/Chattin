@@ -111,6 +111,7 @@ class _ChatViewState extends State<ChatView> {
           decoration: const BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,
+              colorFilter: ColorFilter.srgbToLinearGamma(),
               opacity: .3,
               image: AssetImage(
                 "assets/images/bg.png",
@@ -126,14 +127,16 @@ class _ChatViewState extends State<ChatView> {
                   children: [
                     Expanded(
                       child: InputWidget(
-                        hintText: 'Text message',
-                        height: 45,
+                        hintText: 'Message',
+                        height: 47.5,
                         textEditingController: _messageController,
                         validator: (String val) {},
-                        suffixIcon: const Icon(
-                          Icons.attach_file,
-                          size: 20,
-                          color: AppPallete.blueColor,
+                        suffixIcon: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Icon(
+                            Icons.photo_library,
+                            color: AppPallete.greyColor,
+                          ),
                         ),
                         onSuffixIconPressed: () {
                           showBottomSheetForPickingImage(
@@ -210,6 +213,7 @@ class _ChatViewState extends State<ChatView> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
+            colorFilter: ColorFilter.srgbToLinearGamma(),
             opacity: .3,
             image: AssetImage(
               "assets/images/bg.png",

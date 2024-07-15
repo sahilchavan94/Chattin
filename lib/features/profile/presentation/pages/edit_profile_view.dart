@@ -36,68 +36,71 @@ class _EditProfileViewState extends State<EditProfileView> {
         title: const Text("Edit Profile"),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              InputWidget(
-                labelText: 'Display Name',
-                hintText: "Edit displayname",
-                textEditingController: _displayNameController,
-                validator: Validators.validateDisplayName,
-                fillColor: AppPallete.backgroundColor,
-                suffixIcon: const Icon(
-                  Icons.person,
-                  size: 20,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                InputWidget(
+                  labelText: 'Display Name',
+                  hintText: "Edit displayname",
+                  textEditingController: _displayNameController,
+                  validator: Validators.validateDisplayName,
+                  fillColor: AppPallete.backgroundColor,
+                  suffixIcon: const Icon(
+                    Icons.person,
+                    size: 20,
+                  ),
                 ),
-              ),
-              verticalSpacing(12),
-              InputWidget(
-                labelText: "Phone",
-                hintText: "Edit phone",
-                textEditingController: _phoneNoController,
-                validator: Validators.validatePhoneNumber,
-                suffixIcon: const Icon(
-                  Icons.phone,
-                  size: 20,
+                verticalSpacing(12),
+                InputWidget(
+                  labelText: "Phone",
+                  hintText: "Edit phone",
+                  textEditingController: _phoneNoController,
+                  validator: Validators.validatePhoneNumber,
+                  suffixIcon: const Icon(
+                    Icons.phone,
+                    size: 20,
+                  ),
+                  fillColor: AppPallete.backgroundColor,
                 ),
-                fillColor: AppPallete.backgroundColor,
-              ),
-              verticalSpacing(12),
-              InputWidget(
-                hintText: "Edit about",
-                labelText: "About",
-                textEditingController: _aboutController,
-                fillColor: AppPallete.backgroundColor,
-                validator: (String val) {
-                  if (val.isEmpty) {
-                    return "About can't be empty";
-                  }
-                  return null;
-                },
-                suffixIcon: const Icon(
-                  Icons.info,
-                  size: 20,
+                verticalSpacing(12),
+                InputWidget(
+                  hintText: "Edit about",
+                  labelText: "About",
+                  textEditingController: _aboutController,
+                  fillColor: AppPallete.backgroundColor,
+                  validator: (String val) {
+                    if (val.isEmpty) {
+                      return "About can't be empty";
+                    }
+                    return null;
+                  },
+                  suffixIcon: const Icon(
+                    Icons.info,
+                    size: 20,
+                  ),
                 ),
-              ),
-              verticalSpacing(25),
-              ButtonWidget(
-                buttonText: "Update Details",
-                isLoading: context.watch<ProfileCubit>().state.profileStatus ==
-                    ProfileStatus.loading,
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    context.read<ProfileCubit>().setProfileData(
-                          displayName: _displayNameController.text,
-                          phoneNumber: _phoneNoController.text,
-                          about: _aboutController.text,
-                        );
-                  }
-                },
-              ),
-            ],
+                verticalSpacing(25),
+                ButtonWidget(
+                  buttonText: "Update Details",
+                  isLoading:
+                      context.watch<ProfileCubit>().state.profileStatus ==
+                          ProfileStatus.loading,
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      context.read<ProfileCubit>().setProfileData(
+                            displayName: _displayNameController.text,
+                            phoneNumber: _phoneNoController.text,
+                            about: _aboutController.text,
+                          );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),

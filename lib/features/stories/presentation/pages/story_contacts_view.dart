@@ -201,7 +201,7 @@ class _StoryContactsViewState extends State<StoryContactsView> {
                                 );
                               },
                               child: StoryWidget(
-                                displayName: story.displayName,
+                                displayName: story.userEntity!.displayName,
                                 firstStoryImageUrl:
                                     story.imageUrlList.first['url'],
                                 firestStoryUploadTime:

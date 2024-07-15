@@ -111,7 +111,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     String imageUrl = "";
     final String uid = firebaseAuth.currentUser!.uid;
 
-    emit(state.copyWith(profileStatus: ProfileStatus.loading));
+    emit(state.copyWith(isImageLoading: true));
 
     if (isRemoving != null && isRemoving == false) {
       final uploadResponse = await _generalUploadUseCase.call(
@@ -121,6 +121,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (uploadResponse.isRight()) {
         imageUrl = uploadResponse.getOrElse((l) => "");
       } else {
+        emit(state.copyWith(isImageLoading: false));
         showToast(
           content: ToastMessages.profileFailure,
           type: ToastificationType.error,
@@ -137,14 +138,17 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
     response.fold(
       (l) {
+        emit(state.copyWith(isImageLoading: false));
         showToast(
           content: ToastMessages.profileFailure,
           description: ToastMessages.defaultFailureDescription,
           type: ToastificationType.error,
         );
       },
-      (r) {},
+      (r) {
+        emit(state.copyWith(isImageLoading: false));
+        getProfileData();
+      },
     );
-    getProfileData();
   }
 }

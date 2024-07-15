@@ -10,11 +10,13 @@ enum ProfileStatus {
 
 class ProfileState {
   ProfileStatus profileStatus;
+  bool? isImageLoading;
   UserEntity? userData;
   String? message;
   ProfileState({
     required this.profileStatus,
     this.userData,
+    this.isImageLoading = false,
     this.message,
   });
 
@@ -23,10 +25,12 @@ class ProfileState {
   ProfileState copyWith({
     ProfileStatus? profileStatus,
     UserEntity? userData,
+    bool? isImageLoading,
     String? message,
   }) {
     return ProfileState(
       profileStatus: profileStatus ?? this.profileStatus,
+      isImageLoading: isImageLoading ?? this.isImageLoading,
       userData: userData ?? this.userData,
       message: message ?? this.message,
     );
@@ -37,11 +41,16 @@ class ProfileState {
     if (identical(this, other)) return true;
 
     return other.profileStatus == profileStatus &&
+        other.isImageLoading == isImageLoading &&
         other.userData == userData &&
         other.message == message;
   }
 
   @override
-  int get hashCode =>
-      profileStatus.hashCode ^ userData.hashCode ^ message.hashCode;
+  int get hashCode {
+    return profileStatus.hashCode ^
+        isImageLoading.hashCode ^
+        userData.hashCode ^
+        message.hashCode;
+  }
 }
