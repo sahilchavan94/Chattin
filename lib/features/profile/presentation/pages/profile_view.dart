@@ -56,7 +56,7 @@ class _ProfileViewState extends State<ProfileView> {
     }
   }
 
-  final customAppBarTheme = AppBarTheme(
+  final _customAppBarTheme = AppBarTheme(
     backgroundColor: AppPallete.bottomSheetColor.withOpacity(.5),
     surfaceTintColor: AppPallete.bottomSheetColor.withOpacity(.5),
     titleTextStyle: const TextStyle(
@@ -74,7 +74,7 @@ class _ProfileViewState extends State<ProfileView> {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-        appBarTheme: customAppBarTheme,
+        appBarTheme: _customAppBarTheme,
       ),
       child: Scaffold(
         appBar: AppBar(
