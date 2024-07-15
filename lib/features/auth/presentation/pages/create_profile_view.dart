@@ -72,14 +72,14 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                       selectedImage == null
                           ? ImageWidget(
                               imagePath: 'assets/images/default_profile.png',
-                              width: 120,
+                              width: 100,
                             )
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(60),
                               child: Image.file(
                                 selectedImage!,
-                                width: 120,
-                                height: 120,
+                                width: 100,
+                                height: 100,
                                 fit: BoxFit.cover,
                               ),
                             ),

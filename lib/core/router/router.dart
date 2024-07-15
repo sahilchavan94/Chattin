@@ -10,6 +10,7 @@ import 'package:chattin/features/auth/presentation/pages/verify_email_view.dart'
 import 'package:chattin/features/chat/presentation/pages/chat_contacts_view.dart';
 import 'package:chattin/features/chat/presentation/pages/chat_view.dart';
 import 'package:chattin/features/chat/presentation/pages/select_contacts_view.dart';
+import 'package:chattin/features/profile/presentation/pages/edit_profile_view.dart';
 import 'package:chattin/features/profile/presentation/pages/profile_view.dart';
 import 'package:chattin/features/stories/domain/entities/story_entity.dart';
 import 'package:chattin/features/stories/presentation/pages/story_preview.dart';
@@ -163,6 +164,16 @@ class AppRouter {
             context: context,
             state: state,
             child: const ProfileView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.editProfile.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const EditProfileView(),
           );
         },
       ),

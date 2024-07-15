@@ -56,8 +56,9 @@ class _ProfileImageViewState extends State<ProfileImageView> {
           isDownloading = false;
         });
         showToast(
-            content: ToastMessages.imageDownload,
-            type: ToastificationType.success);
+          content: ToastMessages.imageDownload,
+          type: ToastificationType.success,
+        );
       }
       setState(() {
         isDownloading = false;
@@ -108,6 +109,9 @@ class _ProfileImageViewState extends State<ProfileImageView> {
         child: isDownloading
             ? const CircularProgressIndicator()
             : InteractiveViewer(
+                minScale: 1,
+                boundaryMargin: EdgeInsets.zero,
+                constrained: true,
                 child: ImageWidget(
                   imagePath: widget.imageUrl,
                   fit: BoxFit.cover,

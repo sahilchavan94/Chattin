@@ -33,6 +33,9 @@ class RoutePath {
   static const RouteName profileScreen = RouteName(
     path: "/user_profile",
   );
+  static const RouteName editProfile = RouteName(
+    path: "/edit_profile",
+  );
 
   //image view
   static const RouteName imageView = RouteName(

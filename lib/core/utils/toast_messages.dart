@@ -35,6 +35,7 @@ class ToastMessages {
   //profile cubit
   static const String profileFailure =
       "Something unexpected happened while fetching the profile data";
+  static const String updateProfileSuccess = "Profile updated successfully";
 
   //stories cubit
   static const String storyUploadLimitFailure =

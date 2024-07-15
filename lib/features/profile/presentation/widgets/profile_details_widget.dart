@@ -1,8 +1,10 @@
 import 'package:chattin/core/common/entities/user_entity.dart';
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class ProfileDetailsWidget extends StatelessWidget {
@@ -27,10 +29,17 @@ class ProfileDetailsWidget extends StatelessWidget {
               title,
               style: AppTheme.darkThemeData.textTheme.displayLarge!.copyWith(
                 color: AppPallete.whiteColor,
+                fontSize: 16,
               ),
             ),
             icon != null
-                ? IconButton(onPressed: () {}, icon: icon!)
+                ? IconButton(
+                    onPressed: () {
+                      context.push(RoutePath.editProfile.path);
+                    },
+                    icon: icon!,
+                    iconSize: 19,
+                  )
                 : const SizedBox.shrink(),
           ],
         ),
@@ -41,6 +50,7 @@ class ProfileDetailsWidget extends StatelessWidget {
           const Icon(
             Icons.person,
             color: AppPallete.greyColor,
+            size: 20,
           ),
           null,
         ),
@@ -50,15 +60,17 @@ class ProfileDetailsWidget extends StatelessWidget {
           const Icon(
             Icons.email,
             color: AppPallete.greyColor,
+            size: 20,
           ),
           null,
         ),
         userInfo(
           'Phone no',
-          userData.phoneCode!,
+          "+${userData.phoneCode!}${userData.phoneNumber!}",
           const Icon(
             Icons.phone,
             color: AppPallete.greyColor,
+            size: 20,
           ),
           null,
         ),
@@ -68,6 +80,7 @@ class ProfileDetailsWidget extends StatelessWidget {
           const Icon(
             Icons.info,
             color: AppPallete.greyColor,
+            size: 20,
           ),
           null,
         ),
@@ -77,6 +90,7 @@ class ProfileDetailsWidget extends StatelessWidget {
           const Icon(
             Icons.calendar_month,
             color: AppPallete.greyColor,
+            size: 20,
           ),
           null,
         ),

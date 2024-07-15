@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 class DialogWidget extends StatelessWidget {
   final VoidCallback onPressed;
   final String title;
+  final String description;
   final String approvalText;
   final String rejectionText;
   const DialogWidget({
@@ -16,6 +17,7 @@ class DialogWidget extends StatelessWidget {
     required this.approvalText,
     required this.rejectionText,
     required this.title,
+    required this.description,
   });
 
   @override
@@ -44,7 +46,7 @@ class DialogWidget extends StatelessWidget {
             ),
             verticalSpacing(10),
             Text(
-              "Verify that the email you enter belongs to you and is in valid format to avoid any issues",
+              description,
               style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                 color: AppPallete.greyColor,
               ),

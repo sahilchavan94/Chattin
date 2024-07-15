@@ -20,4 +20,44 @@ class ProfileRepositoryImpl implements ProfileRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, String>> setProfileData({
+    required String uid,
+    required String displayName,
+    required String phoneNumber,
+    required String about,
+  }) async {
+    try {
+      final response = await profileRemoteDataSourceImpl.setProfileData(
+        uid: uid,
+        about: about,
+        displayName: displayName,
+        phoneNumber: phoneNumber,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(e.error),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> setProfileImage({
+    required String uid,
+    required String imageUrl,
+  }) async {
+    try {
+      final response = await profileRemoteDataSourceImpl.setProfileImage(
+        uid: uid,
+        imageUrl: imageUrl,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(e.error),
+      );
+    }
+  }
 }

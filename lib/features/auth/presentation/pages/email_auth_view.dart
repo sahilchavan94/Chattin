@@ -3,7 +3,7 @@ import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/utils/validators.dart';
 import 'package:chattin/core/widgets/button_widget.dart';
-import 'package:chattin/core/widgets/dialog_box.dart';
+import 'package:chattin/core/widgets/confirmation_dialog.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
@@ -143,6 +143,8 @@ class _EmailAuthViewState extends State<EmailAuthView> {
                                 );
                           },
                           title: 'Recheck Email',
+                          description:
+                              '"Verify that the email you enter belongs to you and is in valid format to avoid any issues",',
                           approvalText: 'Continue',
                           rejectionText: 'Cancel',
                         );

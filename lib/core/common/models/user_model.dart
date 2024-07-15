@@ -25,7 +25,7 @@ class UserModel extends UserEntity {
       email: map['email'] != null ? map['email'] as String : '',
       phoneNumber:
           map['phoneNumber'] != null ? map['phoneNumber'] as String : '',
-      phoneCode: map['phoneNumber'] != null ? map['phoneNumber'] as String : '',
+      phoneCode: map['phoneCode'] != null ? map['phoneCode'] as String : '',
       about: map['about'] != null
           ? map['about'] as String
           : 'Hello everyone, I\'m now on Chattin`!',

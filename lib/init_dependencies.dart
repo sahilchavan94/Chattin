@@ -30,6 +30,8 @@ import 'package:chattin/features/profile/data/datasources/profile_remote_datasou
 import 'package:chattin/features/profile/data/repsotories/profile_repositoy_impl.dart';
 import 'package:chattin/features/profile/domain/repositories/profile_repository.dart';
 import 'package:chattin/features/profile/domain/usecases/get_profile.dart';
+import 'package:chattin/features/profile/domain/usecases/set_profile.dart';
+import 'package:chattin/features/profile/domain/usecases/set_profile_image.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:chattin/features/stories/data/datasources/stories_remote_datasource.dart';
 import 'package:chattin/features/stories/data/repositories/stories_repository_impl.dart';
@@ -233,8 +235,21 @@ void initProfile() {
         profileRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<SetProfileDataUseCase>(
+      () => SetProfileDataUseCase(
+        profileRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<SetProfileImageUseCase>(
+      () => SetProfileImageUseCase(
+        profileRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton(
       () => ProfileCubit(
+        serviceLocator(),
+        serviceLocator(),
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
       ),

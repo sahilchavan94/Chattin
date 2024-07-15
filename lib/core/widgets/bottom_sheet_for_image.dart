@@ -7,6 +7,9 @@ showBottomSheetForPickingImage({
   required BuildContext context,
   required VoidCallback onClick1,
   required VoidCallback onClick2,
+  VoidCallback? onClick3,
+  bool? isRemovable,
+  bool? askForConfirmation,
   String? title,
   String? subTitle,
 }) {
@@ -52,7 +55,7 @@ showBottomSheetForPickingImage({
                     width: 60,
                   ),
                 ),
-                horizontalSpacing(20),
+                horizontalSpacing(12),
                 GestureDetector(
                   onTap: onClick2,
                   child: Image.asset(
@@ -60,6 +63,15 @@ showBottomSheetForPickingImage({
                     width: 66,
                   ),
                 ),
+                horizontalSpacing(12),
+                if (isRemovable != null && isRemovable == true)
+                  GestureDetector(
+                    onTap: onClick3 ?? () {},
+                    child: Image.asset(
+                      'assets/images/bin.png',
+                      width: 61,
+                    ),
+                  ),
               ],
             ),
           ],
