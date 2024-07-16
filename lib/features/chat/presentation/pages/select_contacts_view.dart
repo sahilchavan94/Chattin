@@ -8,6 +8,7 @@ import 'package:chattin/core/utils/contacts.dart';
 import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
 import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contacts_cubit.dart';
 import 'package:chattin/features/chat/presentation/widgets/contact_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
@@ -26,10 +27,12 @@ class SelectContactsView extends StatefulWidget {
 class _SelectContactsViewState extends State<SelectContactsView> {
   final TextEditingController _searchController = TextEditingController();
   bool showSearch = false;
+  String _searchQuery = '';
 
   @override
   void initState() {
     _getContactsFromPhone(isRefreshed: false);
+    _searchController.addListener(_onSearchChanged);
     super.initState();
   }
 
@@ -43,6 +46,28 @@ class _SelectContactsViewState extends State<SelectContactsView> {
           contactsList,
           isRefreshed: isRefreshed,
         );
+  }
+
+  void _onSearchChanged() {
+    setState(() {
+      _searchQuery = _searchController.text.toLowerCase();
+    });
+  }
+
+  List<ContactEntity> _filterContacts(List<ContactEntity> contacts) {
+    if (_searchQuery.isEmpty) {
+      return contacts;
+    }
+    return contacts.where((contact) {
+      return contact.displayName.toLowerCase().contains(_searchQuery);
+    }).toList();
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -86,7 +111,8 @@ class _SelectContactsViewState extends State<SelectContactsView> {
               if (contactsState.contactsStatus == ContactsStatus.failure) {
                 return const FailureWidget();
               }
-              final contactsList = contactsState.contactList ?? [];
+              final contactsList =
+                  _filterContacts(contactsState.contactList ?? []);
               final currentUserUid =
                   context.read<ProfileCubit>().state.userData!.uid;
               return Padding(
@@ -180,7 +206,7 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                             style: AppTheme
                                 .darkThemeData.textTheme.displaySmall!
                                 .copyWith(
-                              color: AppPallete.whiteColor,
+                              color: AppPallete.greyColor,
                             ),
                           ),
                         ),

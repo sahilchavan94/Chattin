@@ -30,11 +30,13 @@ class StoryContactsView extends StatefulWidget {
 class _StoryContactsViewState extends State<StoryContactsView> {
   final TextEditingController _searchController = TextEditingController();
   late UserEntity userData;
+  String _searchQuery = '';
 
   @override
   void initState() {
     userData = context.read<ProfileCubit>().state.userData!;
     _getContactsFromPhone(isRefreshed: false);
+    _searchController.addListener(_onSearchChanged);
     super.initState();
   }
 
@@ -70,6 +72,28 @@ class _StoryContactsViewState extends State<StoryContactsView> {
     }
   }
 
+  void _onSearchChanged() {
+    setState(() {
+      _searchQuery = _searchController.text.toLowerCase();
+    });
+  }
+
+  List<StoryEntity> _filterStories(List<StoryEntity> stories) {
+    if (_searchQuery.isEmpty) {
+      return stories;
+    }
+    return stories.where((story) {
+      return story.userEntity!.displayName.toLowerCase().contains(_searchQuery);
+    }).toList();
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +122,8 @@ class _StoryContactsViewState extends State<StoryContactsView> {
                 return const FailureWidget();
               }
 
-              final List<StoryEntity> stories = storiesState.stories ?? [];
+              final List<StoryEntity> stories =
+                  _filterStories(storiesState.stories ?? []);
               final StoryEntity? myStory = storiesState.myStory;
               return RefreshIndicator(
                 backgroundColor: AppPallete.bottomSheetColor,
@@ -184,34 +209,49 @@ class _StoryContactsViewState extends State<StoryContactsView> {
                           thickness: .15,
                           height: 1,
                         ),
-                        ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: stories.length,
-                          itemBuilder: (context, index) {
-                            final story = stories[index];
-                            return GestureDetector(
-                              onTap: () {
-                                context.push(
-                                  RoutePath.storyView.path,
-                                  extra: stories.sublist(
-                                    index,
-                                    stories.length,
-                                  ),
-                                );
-                              },
-                              child: StoryWidget(
-                                displayName: story.userEntity!.displayName,
-                                firstStoryImageUrl:
-                                    story.imageUrlList.first['url'],
-                                firestStoryUploadTime:
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                  story.imageUrlList.first['uploadedAt'],
+                        if (stories.isEmpty)
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 200),
+                              child: Text(
+                                "No Results Found",
+                                style: AppTheme
+                                    .darkThemeData.textTheme.displaySmall!
+                                    .copyWith(
+                                  color: AppPallete.greyColor,
                                 ),
                               ),
-                            );
-                          },
-                        ),
+                            ),
+                          )
+                        else
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: stories.length,
+                            itemBuilder: (context, index) {
+                              final story = stories[index];
+                              return GestureDetector(
+                                onTap: () {
+                                  context.push(
+                                    RoutePath.storyView.path,
+                                    extra: stories.sublist(
+                                      index,
+                                      stories.length,
+                                    ),
+                                  );
+                                },
+                                child: StoryWidget(
+                                  displayName: story.userEntity!.displayName,
+                                  firstStoryImageUrl:
+                                      story.imageUrlList.first['url'],
+                                  firestStoryUploadTime:
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                    story.imageUrlList.first['uploadedAt'],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                       ],
                     ),
                   ),
