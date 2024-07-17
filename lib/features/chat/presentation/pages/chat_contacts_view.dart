@@ -11,6 +11,7 @@ import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_
 import 'package:chattin/features/chat/presentation/widgets/chat_contact_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
@@ -81,18 +82,17 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                 }
                 return Row(
                   children: [
-                    IconButton(
-                      onPressed: () async {
+                    GestureDetector(
+                      onTap: () {
                         context.push(RoutePath.storyContactsView.path);
-                        return;
                       },
-                      icon: const Icon(
-                        Icons.add_photo_alternate_outlined,
+                      child: Image.asset(
+                        'assets/images/story.png',
+                        width: 22,
+                        height: 22,
                       ),
-                      color: AppPallete.blueColor,
-                      iconSize: 23,
                     ),
-                    horizontalSpacing(10),
+                    horizontalSpacing(23),
                     GestureDetector(
                       onTap: () {
                         context.push(RoutePath.profileScreen.path);
@@ -170,6 +170,7 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                       suffixIcon: const Icon(
                         Icons.search,
                         color: AppPallete.greyColor,
+                        size: 20,
                       ),
                       fillColor: AppPallete.bottomSheetColor,
                       borderRadius: 60,

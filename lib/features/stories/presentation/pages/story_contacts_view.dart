@@ -145,6 +145,7 @@ class _StoryContactsViewState extends State<StoryContactsView> {
                           suffixIcon: const Icon(
                             Icons.search,
                             color: AppPallete.greyColor,
+                            size: 20,
                           ),
                           fillColor: AppPallete.bottomSheetColor,
                           borderRadius: 60,
