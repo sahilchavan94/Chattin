@@ -53,7 +53,7 @@ showImageDialog({
                   child: ImageWidget(
                     imagePath: imageUrl,
                     fit: BoxFit.cover,
-                    width: MediaQuery.of(context).size.width * .675,
+                    width: 300,
                     height: MediaQuery.of(context).size.height * .3,
                     radius: BorderRadius.circular(6),
                     isImageFromChat: true,
