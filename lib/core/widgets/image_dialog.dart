@@ -24,7 +24,7 @@ showImageDialog({
         elevation: 0,
         backgroundColor: AppPallete.bottomSheetColor,
         child: Padding(
-          padding: const EdgeInsets.all(2),
+          padding: const EdgeInsets.all(2.12),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

@@ -41,7 +41,6 @@ void main() async {
         ),
         BlocProvider(
           create: (_) => serviceLocator<ChatCubit>(),
-          lazy: false,
         ),
         BlocProvider(
           create: (_) => serviceLocator<StoryCubit>(),

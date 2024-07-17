@@ -16,7 +16,6 @@ import 'package:chattin/features/chat/presentation/widgets/date_widget.dart';
 import 'package:chattin/features/chat/presentation/widgets/message_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -40,15 +39,11 @@ class ChatView extends StatefulWidget {
 class _ChatViewState extends State<ChatView> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  late Stream<List<MessageEntity>> _chatStream;
-  late Stream<Status> _statusStream;
-  bool initialLoadCompleted = false;
 
   @override
   void initState() {
-    _chatStream =
-        context.read<ChatCubit>().getChatStream(receiverId: widget.uid);
-    _statusStream = context.read<ChatCubit>().getChatStatus(widget.uid);
+    context.read<ChatCubit>().getChatStream(receiverId: widget.uid);
+    context.read<ChatCubit>().getChatStatus(widget.uid);
     super.initState();
   }
 
@@ -57,6 +52,14 @@ class _ChatViewState extends State<ChatView> {
     _messageController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(
+        _scrollController.position.maxScrollExtent,
+      );
+    }
   }
 
   Future<void> _selectImage(ImageSource imageSource) async {
@@ -88,21 +91,16 @@ class _ChatViewState extends State<ChatView> {
         elevation: 10,
         shadowColor: AppPallete.bottomSheetColor,
         backgroundColor: AppPallete.backgroundColor,
-        title: StreamBuilder<Status>(
-          stream: _statusStream,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const SizedBox.shrink();
-            }
-            final Status status = snapshot.data!;
-            return ContactWidget(
-              displayName: widget.displayName,
-              imageUrl: widget.imageUrl,
-              status: status.toStringValue(),
-              hasVerticalSpacing: false,
-              radius: 50,
-            );
-          },
+        title: ContactWidget(
+          displayName: widget.displayName,
+          imageUrl: widget.imageUrl,
+          status: context
+                  .read<ChatCubit>()
+                  .state
+                  .currentChatStatus
+                  ?.toStringValue() ??
+              Status.unavailable.toStringValue(),
+          radius: 50,
         ),
         titleSpacing: 0,
       ),
@@ -187,8 +185,8 @@ class _ChatViewState extends State<ChatView> {
                           50,
                         ),
                       ),
-                      child: context.watch<ChatCubit>().state.chatStatus ==
-                              ChatStatus.loading
+                      child: context.watch<ChatCubit>().state.sendingMessage ==
+                              true
                           ? const SizedBox(
                               height: 23,
                               width: 23,
@@ -209,132 +207,124 @@ class _ChatViewState extends State<ChatView> {
           ),
         ),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.srgbToLinearGamma(),
-            opacity: .3,
-            image: AssetImage(
-              "assets/images/bg.png",
-            ),
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16.0,
-              vertical: 0,
-            ),
-            child: StreamBuilder(
-              stream: _chatStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const FailureWidget();
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                final messages = snapshot.data ?? [];
+      body: BlocBuilder<ChatCubit, ChatState>(
+        builder: (context, state) {
+          if (state.chatStatus == ChatStatus.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (state.chatStatus == ChatStatus.failure) {
+            return const FailureWidget();
+          }
 
-                if (messages.isNotEmpty) {
-                  SchedulerBinding.instance.addPostFrameCallback((_) {
-                    _scrollController.jumpTo(
-                      _scrollController.position.maxScrollExtent,
-                    );
-                  });
-
-                  return ListView.builder(
-                    controller: _scrollController,
-                    physics: const BouncingScrollPhysics(
-                      decelerationRate: ScrollDecelerationRate.normal,
-                    ),
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
-                      final userData =
-                          context.read<ProfileCubit>().state.userData!;
-                      final isMe = messages[index].senderId == userData.uid;
-                      if (!messages[index].status && !isMe) {
-                        context.read<ChatCubit>().setMessageStatus(
-                              receiverId: messages[index].receiverId,
-                              senderId: messages[index].senderId,
-                              messageId: messages[index].messageId,
-                            );
-                      }
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (index == 0 ||
-                              index != messages.length - 1 &&
-                                  messages[index - 1].timeSent!.day !=
-                                      messages[index].timeSent!.day)
-                            DateWidget(
-                              timeSent: messages[index].timeSent!,
-                            ),
-                          SwipeTo(
-                            iconColor: AppPallete.whiteColor,
-                            iconOnLeftSwipe: Icons.arrow_forward,
-                            iconOnRightSwipe: Icons.arrow_back,
-                            onRightSwipe: (details) {
-                              showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) {
-                                  return ReplyDialogWidget(
-                                    messageType: messages[index].messageType,
-                                    senderId: userData.uid,
-                                    receiverId: isMe
-                                        ? messages[index].receiverId
-                                        : messages[index].senderId,
-                                    repliedTo: messages[index].text,
-                                  );
-                                },
-                              );
-                            },
-                            onLeftSwipe: (details) {
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return ReplyDialogWidget(
-                                    messageType: messages[index].messageType,
-                                    senderId: userData.uid,
-                                    receiverId: isMe
-                                        ? messages[index].receiverId
-                                        : messages[index].senderId,
-                                    repliedTo: messages[index].text,
-                                  );
-                                },
-                              );
-                            },
-                            child: MessageWidget(
-                              isReply: messages[index].isReply,
-                              repliedTo: messages[index].repliedTo,
-                              repliedToType: messages[index].repliedToType,
-                              messageType: messages[index].messageType,
-                              text: messages[index].text,
-                              name: isMe
-                                  ? userData.displayName
-                                  : widget.displayName,
-                              isMe: isMe,
-                              imageUrl:
-                                  isMe ? userData.imageUrl : widget.imageUrl,
-                              timeSent: messages[index].timeSent!,
-                              status: messages[index].status,
-                            ),
+          final List<MessageEntity> messages = state.currentChatMessages ?? [];
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _scrollToBottom();
+          });
+          return Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.srgbToLinearGamma(),
+                opacity: .3,
+                image: AssetImage(
+                  "assets/images/bg.png",
+                ),
+              ),
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 0,
+                ),
+                child: ListView.builder(
+                  controller: _scrollController,
+                  physics: const BouncingScrollPhysics(
+                    decelerationRate: ScrollDecelerationRate.normal,
+                  ),
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final userData =
+                        context.read<ProfileCubit>().state.userData!;
+                    final isMe = messages[index].senderId == userData.uid;
+                    if (!messages[index].status && !isMe) {
+                      context.read<ChatCubit>().setMessageStatus(
+                            receiverId: messages[index].receiverId,
+                            senderId: messages[index].senderId,
+                            messageId: messages[index].messageId,
+                          );
+                    }
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (index == 0 ||
+                            index != messages.length - 1 &&
+                                messages[index - 1].timeSent!.day !=
+                                    messages[index].timeSent!.day)
+                          DateWidget(
+                            timeSent: messages[index].timeSent!,
                           ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              },
+                        SwipeTo(
+                          iconColor: AppPallete.whiteColor,
+                          iconOnLeftSwipe: Icons.arrow_forward,
+                          iconOnRightSwipe: Icons.arrow_back,
+                          onRightSwipe: (details) {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) {
+                                return ReplyDialogWidget(
+                                  messageType: messages[index].messageType,
+                                  senderId: userData.uid,
+                                  receiverId: isMe
+                                      ? messages[index].receiverId
+                                      : messages[index].senderId,
+                                  repliedTo: messages[index].text,
+                                );
+                              },
+                            );
+                          },
+                          onLeftSwipe: (details) {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ReplyDialogWidget(
+                                  messageType: messages[index].messageType,
+                                  senderId: userData.uid,
+                                  receiverId: isMe
+                                      ? messages[index].receiverId
+                                      : messages[index].senderId,
+                                  repliedTo: messages[index].text,
+                                );
+                              },
+                            );
+                          },
+                          child: MessageWidget(
+                            isReply: messages[index].isReply,
+                            repliedTo: messages[index].repliedTo,
+                            repliedToType: messages[index].repliedToType,
+                            messageType: messages[index].messageType,
+                            text: messages[index].text,
+                            name: isMe
+                                ? userData.displayName
+                                : widget.displayName,
+                            isMe: isMe,
+                            imageUrl:
+                                isMe ? userData.imageUrl : widget.imageUrl,
+                            timeSent: messages[index].timeSent!,
+                            status: messages[index].status,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

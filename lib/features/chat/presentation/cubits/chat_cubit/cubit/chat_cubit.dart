@@ -1,5 +1,5 @@
+import 'dart:async';
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/core/common/features/upload/domain/usecases/general_upload.dart';
@@ -20,6 +20,7 @@ import 'package:uuid/uuid.dart';
 part 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
+  //use cases
   final SendMessageUseCase _sendMessageUseCase;
   final GetChatStreamUseCase _getChatStreamUseCase;
   final GetChatContactsUseCase _getChatContactsUseCase;
@@ -30,6 +31,12 @@ class ChatCubit extends Cubit<ChatState> {
   final SetMessageStatusUseCase _setMessageStatusUseCase;
   final SendReplyUseCase _sendReplyUseCase;
   final FirebaseAuth _firebaseAuth;
+
+  //stream subscription for the chat contacts
+  StreamSubscription<List<ContactEntity>>? _chatContactStreamSubscription;
+  StreamSubscription<List<MessageEntity>>? _chatMessagesStreamSubscription;
+  StreamSubscription<Status>? _chatStatusStreamSubscription;
+
   ChatCubit(
     this._sendMessageUseCase,
     this._getChatStreamUseCase,
@@ -41,7 +48,9 @@ class ChatCubit extends Cubit<ChatState> {
     this._sendFileMessageUseCase,
     this._setMessageStatusUseCase,
     this._sendReplyUseCase,
-  ) : super(ChatState.initial());
+  ) : super(ChatState.initial()) {
+    getChatContacts();
+  }
 
   //method to send a chat message
   Future<void> sendMessage({
@@ -49,7 +58,7 @@ class ChatCubit extends Cubit<ChatState> {
     required String recieverId,
     required UserEntity sender,
   }) async {
-    emit(state.copyWith(chatStatus: ChatStatus.loading));
+    emit(state.copyWith(sendingMessage: true));
     final response = await _sendMessageUseCase.call(
       text: text,
       recieverId: recieverId,
@@ -57,10 +66,10 @@ class ChatCubit extends Cubit<ChatState> {
     );
     response.fold(
       (l) {
-        emit(state.copyWith(chatStatus: ChatStatus.failure));
+        emit(state.copyWith(sendingMessage: false));
       },
       (r) {
-        emit(state.copyWith(chatStatus: ChatStatus.success));
+        emit(state.copyWith(sendingMessage: false));
       },
     );
   }
@@ -71,7 +80,7 @@ class ChatCubit extends Cubit<ChatState> {
     required MessageType messageType,
     required File file,
   }) async {
-    emit(state.copyWith(chatStatus: ChatStatus.loading));
+    emit(state.copyWith(sendingMessage: true));
     final messageId = const Uuid().v1();
     final uploadResponse = await _generalUploadUseCase.call(
       file,
@@ -88,35 +97,90 @@ class ChatCubit extends Cubit<ChatState> {
       );
       response.fold(
         (l) {
-          emit(state.copyWith(chatStatus: ChatStatus.failure));
+          emit(state.copyWith(sendingMessage: false));
         },
         (r) {
-          emit(state.copyWith(chatStatus: ChatStatus.success));
+          emit(state.copyWith(sendingMessage: false));
         },
       );
     }
   }
 
-  Stream<List<MessageEntity>> getChatStream({required String receiverId}) {
-    final currentUser = _firebaseAuth.currentUser!;
-    final response = _getChatStreamUseCase.call(
-      senderId: currentUser.uid,
-      receiver: receiverId,
-    );
-    return response;
+  void getChatStream({
+    required String receiverId,
+  }) {
+    final uid = _firebaseAuth.currentUser!.uid;
+    _chatMessagesStreamSubscription?.cancel();
+    try {
+      _chatMessagesStreamSubscription = _getChatStreamUseCase
+          .call(
+        receiver: receiverId,
+        senderId: uid,
+      )
+          .listen((currentChats) {
+        emit(
+          state.copyWith(
+            currentChatMessages: currentChats,
+            chatStatus: ChatStatus.success,
+          ),
+        );
+      });
+    } catch (e) {
+      emit(
+        state.copyWith(
+          chatStatus: ChatStatus.failure,
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
-  //function to get the chat contacts stream
-  Stream<List<ContactEntity>> getChatContacts() {
+  //method to get the chat contacts stream
+  void getChatContacts() {
     final currentUser = _firebaseAuth.currentUser!;
-    final response = _getChatContactsUseCase.call(currentUser.uid);
-    return response;
+    _chatContactStreamSubscription?.cancel();
+
+    try {
+      _chatContactStreamSubscription =
+          _getChatContactsUseCase.call(currentUser.uid).listen((contacts) {
+        emit(
+          state.copyWith(
+            chatContacts: contacts,
+            chatStatus: ChatStatus.success,
+          ),
+        );
+      });
+    } catch (e) {
+      emit(
+        state.copyWith(
+          chatStatus: ChatStatus.failure,
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
-  //function to get the chat status stream
-  Stream<Status> getChatStatus(String uid) {
-    final response = _getChatStatusUseCase.call(uid);
-    return response;
+  //method to get the current chat status stream
+  void getChatStatus(String uid) {
+    _chatStatusStreamSubscription?.cancel();
+    try {
+      _chatStatusStreamSubscription =
+          _getChatStatusUseCase.call(uid).listen((status) {
+        emit(
+          state.copyWith(
+            currentChatStatus: status,
+            chatStatus: ChatStatus.success,
+          ),
+        );
+      });
+    } catch (e) {
+      emit(
+        state.copyWith(
+          chatStatus: ChatStatus.failure,
+          message: e.toString(),
+        ),
+      );
+    }
   }
 
   //function to set the chat status
@@ -168,4 +232,8 @@ class ChatCubit extends Cubit<ChatState> {
       },
     );
   }
+
+  // void notifyNewMessage({required bool newMessageFlag}) {
+  //   emit(state.copyWith(isNewMessage: newMessageFlag));
+  // }
 }

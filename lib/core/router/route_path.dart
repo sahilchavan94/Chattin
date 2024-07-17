@@ -17,6 +17,9 @@ class RoutePath {
   static const RouteName createProfile = RouteName(
     path: '/create_profile',
   );
+  static const RouteName accountSettings = RouteName(
+    path: '/account_settings',
+  );
 
   //chat path ( main features )
   static const RouteName chatContacts = RouteName(

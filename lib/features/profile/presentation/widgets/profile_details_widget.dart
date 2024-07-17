@@ -46,60 +46,84 @@ class ProfileDetailsWidget extends StatelessWidget {
         verticalSpacing(25),
         userInfo(
           'Display Name',
-          userData.displayName,
           const Icon(
             Icons.person,
             color: AppPallete.greyColor,
             size: 20,
           ),
-          null,
+          Text(
+            userData.displayName,
+            style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+              color: AppPallete.whiteColor,
+            ),
+          ),
         ),
         userInfo(
           'Email',
-          userData.email!,
           const Icon(
             Icons.email,
             color: AppPallete.greyColor,
             size: 20,
           ),
-          null,
+          Text(
+            userData.email!,
+            style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+              color: AppPallete.whiteColor,
+            ),
+          ),
         ),
         userInfo(
           'Phone no',
-          "+${userData.phoneCode!}${userData.phoneNumber!}",
           const Icon(
             Icons.phone,
             color: AppPallete.greyColor,
             size: 20,
           ),
-          null,
+          Text(
+            "+${userData.phoneCode!}${userData.phoneNumber!}",
+            style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+              color: AppPallete.whiteColor,
+            ),
+          ),
         ),
         userInfo(
           'About',
-          userData.about!,
           const Icon(
             Icons.info,
             color: AppPallete.greyColor,
             size: 20,
           ),
-          null,
+          Text(
+            userData.about!,
+            style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+              color: AppPallete.whiteColor,
+            ),
+          ),
         ),
         userInfo(
           'Joined on',
-          DateFormat("dd MMM yyyy").format(userData.joinedOn!),
           const Icon(
             Icons.calendar_month,
             color: AppPallete.greyColor,
             size: 20,
           ),
-          null,
+          Text(
+            DateFormat("dd MMM yyyy").format(userData.joinedOn!),
+            style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+              color: AppPallete.whiteColor,
+            ),
+          ),
         ),
       ],
     );
   }
 }
 
-Widget userInfo(String title, String value, Icon icon, Icon? suffix) {
+Widget userInfo(
+  String title,
+  Icon icon,
+  Widget value,
+) {
   return Column(
     children: [
       Row(
@@ -117,13 +141,7 @@ Widget userInfo(String title, String value, Icon icon, Icon? suffix) {
               )
             ],
           ),
-          suffix ??
-              Text(
-                value,
-                style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                  color: AppPallete.whiteColor,
-                ),
-              )
+          value,
         ],
       ),
       verticalSpacing(20)

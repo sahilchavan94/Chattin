@@ -276,28 +276,40 @@ class _ProfileViewState extends State<ProfileView> {
                           verticalSpacing(25),
                           userInfo(
                             'Theme mode',
-                            'Dark',
                             const Icon(
                               Icons.dark_mode,
                               color: AppPallete.greyColor,
                               size: 20,
                             ),
-                            null,
+                            IconButton(
+                              onPressed: () {
+                                context.push(RoutePath.accountSettings.path);
+                              },
+                              iconSize: 20,
+                              icon: const Icon(
+                                Icons.arrow_forward,
+                                color: AppPallete.greyColor,
+                              ),
+                            ),
                           ),
                           userInfo(
                             'Account settings',
-                            '',
                             const Icon(
                               Icons.settings,
                               color: AppPallete.greyColor,
                               size: 20,
                             ),
-                            const Icon(
-                              Icons.arrow_forward,
-                              weight: .1,
-                              color: AppPallete.whiteColor,
+                            IconButton(
+                              onPressed: () {
+                                context.push(RoutePath.accountSettings.path);
+                              },
+                              iconSize: 20,
+                              icon: const Icon(
+                                Icons.arrow_forward,
+                                color: AppPallete.whiteColor,
+                              ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
