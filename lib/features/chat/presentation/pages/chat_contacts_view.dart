@@ -11,7 +11,6 @@ import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_
 import 'package:chattin/features/chat/presentation/widgets/chat_contact_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
@@ -187,6 +186,20 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                             );
                           }
                           final filteredContacts = snapshot.data!;
+                          if (filteredContacts.isEmpty) {
+                            return Expanded(
+                              child: Center(
+                                child: Text(
+                                  "No Results Found",
+                                  style: AppTheme
+                                      .darkThemeData.textTheme.displaySmall!
+                                      .copyWith(
+                                    color: AppPallete.greyColor,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
                           return ListView.builder(
                             itemCount: filteredContacts.length,
                             itemBuilder: (context, index) {
