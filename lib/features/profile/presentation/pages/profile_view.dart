@@ -24,12 +24,6 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  @override
-  void initState() {
-    context.read<ProfileCubit>().getProfileData();
-    super.initState();
-  }
-
   Future<void> _selectImage(ImageSource imageSource) async {
     final pickedImage = await Picker.pickImage(imageSource);
     if (pickedImage != null) {
