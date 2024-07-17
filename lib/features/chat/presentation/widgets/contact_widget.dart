@@ -8,18 +8,22 @@ import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
 
 class ContactWidget extends StatelessWidget {
+  final String uid;
   final String imageUrl;
   final String displayName;
   final String? about;
   final String? status;
   final double? radius;
   final bool? hasVerticalSpacing;
+  final bool? isViewingStory;
   const ContactWidget({
     super.key,
     required this.imageUrl,
+    required this.uid,
     required this.displayName,
     this.about,
     this.hasVerticalSpacing,
+    this.isViewingStory,
     this.radius,
     this.status,
   });
@@ -34,7 +38,11 @@ class ContactWidget extends StatelessWidget {
             children: [
               GestureDetector(
                 onTapDown: (TapDownDetails details) {
+                  if (isViewingStory != null && isViewingStory == true) {
+                    return;
+                  }
                   showImageDialog(
+                    uid: uid,
                     context: context,
                     displayName: displayName,
                     imageUrl: imageUrl,

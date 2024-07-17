@@ -6,6 +6,7 @@ import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,7 +41,7 @@ class ReplyDialogWidget extends StatelessWidget {
         width: (size.width) * .9,
         height: messageType == MessageType.image
             ? (size.height * .20)
-            : (size.height * .17),
+            : (size.height * .19),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +51,7 @@ class ReplyDialogWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Replying to ",
+                  "Replying to this message",
                   style:
                       AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                     color: AppPallete.blueColor,
@@ -61,25 +62,42 @@ class ReplyDialogWidget extends StatelessWidget {
                   onTap: () {
                     context.pop();
                   },
-                  child: const Icon(
-                    Icons.cancel,
-                    color: AppPallete.greyColor,
-                    size: 20,
+                  child: Text(
+                    'Discard',
+                    style:
+                        AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+                      color: AppPallete.errorColor,
+                    ),
                   ),
                 ),
               ],
             ),
             verticalSpacing(15),
             if (messageType == MessageType.text)
-              Text(
-                repliedTo.length > 45
-                    ? "${repliedTo.substring(0, 45)}..."
-                    : repliedTo,
-                style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                  color: AppPallete.greyColor,
+              Chip(
+                backgroundColor: AppPallete.blackColor,
+                surfaceTintColor: AppPallete.blackColor,
+                visualDensity: VisualDensity.comfortable,
+                padding: const EdgeInsets.all(6),
+                side: const BorderSide(
+                  color: AppPallete.blackColor,
                 ),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    8,
+                  ),
+                  side: BorderSide.none,
+                ),
+                label: Text(
+                  repliedTo,
+                  style:
+                      AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+                    color: AppPallete.greyColor,
+                  ),
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
               )
             else
               Padding(
@@ -100,7 +118,7 @@ class ReplyDialogWidget extends StatelessWidget {
                   child: InputWidget(
                     maxLines: 1,
                     height: 42,
-                    hintText: "Reply to this message",
+                    hintText: "Reply ",
                     textEditingController: _replyController,
                     validator: (String val) {},
                     showBorder: false,
@@ -164,10 +182,16 @@ class ReplyDialogWidget extends StatelessWidget {
             //         );
             //   },
             // ),
-            verticalSpacing(10),
           ],
         ),
       ),
-    );
+    )
+        .animate()
+        .fadeIn(
+          curve: Curves.fastEaseInToSlowEaseOut,
+        )
+        .scale(
+          curve: Curves.fastEaseInToSlowEaseOut,
+        );
   }
 }

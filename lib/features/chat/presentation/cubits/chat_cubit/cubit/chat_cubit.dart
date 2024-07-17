@@ -109,6 +109,7 @@ class ChatCubit extends Cubit<ChatState> {
   void getChatStream({
     required String receiverId,
   }) {
+    emit(state.copyWith(chatStatus: ChatStatus.loading));
     final uid = _firebaseAuth.currentUser!.uid;
     _chatMessagesStreamSubscription?.cancel();
     try {

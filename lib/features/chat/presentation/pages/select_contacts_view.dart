@@ -188,6 +188,7 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                                   );
                                 },
                                 child: ContactWidget(
+                                  uid: contactsList[index].uid!,
                                   imageUrl: contactsList[index].imageUrl,
                                   displayName: contactsList[index].displayName,
                                   about: contactsList[index].about!,

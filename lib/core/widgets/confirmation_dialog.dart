@@ -3,6 +3,7 @@ import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 class DialogWidget extends StatelessWidget {
@@ -77,6 +78,13 @@ class DialogWidget extends StatelessWidget {
           ],
         ),
       ),
-    );
+    )
+        .animate()
+        .fadeIn(
+          curve: Curves.fastEaseInToSlowEaseOut,
+        )
+        .scale(
+          curve: Curves.fastEaseInToSlowEaseOut,
+        );
   }
 }

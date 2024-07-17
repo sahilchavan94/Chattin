@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ChatContactWidget extends StatelessWidget {
+  final String uid;
   final String imageUrl;
   final String displayName;
   final String lastMessage;
@@ -15,6 +16,7 @@ class ChatContactWidget extends StatelessWidget {
   final bool? hasVerticalSpacing;
   const ChatContactWidget({
     super.key,
+    required this.uid,
     required this.imageUrl,
     required this.displayName,
     required this.lastMessage,
@@ -38,6 +40,7 @@ class ChatContactWidget extends StatelessWidget {
                     context: context,
                     displayName: displayName,
                     imageUrl: imageUrl,
+                    uid: uid,
                   );
                 },
                 child: ImageWidget(

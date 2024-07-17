@@ -17,6 +17,7 @@ import 'package:chattin/features/stories/domain/entities/story_entity.dart';
 import 'package:chattin/features/stories/presentation/cubit/story_cubit.dart';
 import 'package:chattin/features/stories/presentation/widgets/story_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -192,15 +193,15 @@ class _StoryContactsViewState extends State<StoryContactsView> {
                                     myStory.imageUrlList.first['uploadedAt'],
                                   ),
                                 ),
-                                IconButton(
-                                  onPressed: () async {
+                                GestureDetector(
+                                  onTap: () async {
                                     await _callUseCaseToUploadStoryImages();
                                   },
-                                  icon: const Icon(
-                                    Icons.add_photo_alternate_outlined,
+                                  child: Image.asset(
+                                    'assets/images/story.png',
+                                    width: 20,
+                                    height: 20,
                                   ),
-                                  color: AppPallete.blueColor,
-                                  iconSize: 23,
                                 ),
                               ],
                             ),

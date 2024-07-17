@@ -126,10 +126,12 @@ class _StorySeeViewState extends State<StorySeeView> {
                         ),
                       ),
                       Positioned(
-                        top: MediaQuery.of(context).size.height * .06,
+                        top: MediaQuery.of(context).size.height * .075,
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: ContactWidget(
+                            isViewingStory: true,
+                            uid: widget.storyList[index].userEntity!.uid,
                             imageUrl:
                                 widget.storyList[index].userEntity!.imageUrl,
                             radius: 50,

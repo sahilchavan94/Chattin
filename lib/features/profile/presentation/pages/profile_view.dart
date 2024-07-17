@@ -11,6 +11,7 @@ import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:chattin/features/profile/presentation/widgets/profile_details_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -236,7 +237,7 @@ class _ProfileViewState extends State<ProfileView> {
                                     style: AppTheme
                                         .darkThemeData.textTheme.displaySmall!
                                         .copyWith(
-                                      color: AppPallete.greyColor,
+                                      color: AppPallete.whiteColor,
                                     ),
                                   ),
                                   Text(
@@ -244,7 +245,7 @@ class _ProfileViewState extends State<ProfileView> {
                                     style: AppTheme
                                         .darkThemeData.textTheme.displaySmall!
                                         .copyWith(
-                                      color: AppPallete.greyColor,
+                                      color: AppPallete.whiteColor,
                                     ),
                                   ),
                                 ],
@@ -252,61 +253,74 @@ class _ProfileViewState extends State<ProfileView> {
                             ],
                           ),
                           verticalSpacing(50),
-                          ProfileDetailsWidget(
-                            title: 'Profile Information',
-                            icon: const Icon(
-                              Icons.edit,
-                              color: AppPallete.whiteColor,
-                            ),
-                            userData: userData,
-                          ),
-                          verticalSpacing(35),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              "App Settings",
-                              style: AppTheme
-                                  .darkThemeData.textTheme.displayLarge!
-                                  .copyWith(
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ProfileDetailsWidget(
+                              title: 'Profile Information',
+                              icon: const Icon(
+                                Icons.edit,
                                 color: AppPallete.whiteColor,
-                                fontSize: 16,
+                              ),
+                              userData: userData,
+                            ),
+                          ),
+                          verticalSpacing(30),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "App Settings",
+                                style: AppTheme
+                                    .darkThemeData.textTheme.displayLarge!
+                                    .copyWith(
+                                  color: AppPallete.whiteColor,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
                           verticalSpacing(25),
-                          userInfo(
-                            'Theme mode',
-                            const Icon(
-                              Icons.dark_mode,
-                              color: AppPallete.greyColor,
-                              size: 20,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                context.push(RoutePath.accountSettings.path);
-                              },
-                              iconSize: 20,
-                              icon: const Icon(
+                            child: userInfo(
+                              'Theme mode',
+                              const Icon(
+                                Icons.dark_mode,
+                                color: AppPallete.greyColor,
+                                size: 20,
+                              ),
+                              const Icon(
                                 Icons.arrow_forward,
+                                size: 20,
                                 color: AppPallete.greyColor,
                               ),
                             ),
                           ),
-                          userInfo(
-                            'Account settings',
-                            const Icon(
-                              Icons.settings,
-                              color: AppPallete.greyColor,
-                              size: 20,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                context.push(RoutePath.accountSettings.path);
-                              },
-                              iconSize: 20,
-                              icon: const Icon(
-                                Icons.arrow_forward,
-                                color: AppPallete.whiteColor,
+                            child: userInfo(
+                              'Account settings',
+                              const Icon(
+                                Icons.settings,
+                                color: AppPallete.greyColor,
+                                size: 20,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  context.push(RoutePath.accountSettings.path);
+                                },
+                                child: const Icon(
+                                  Icons.arrow_forward,
+                                  size: 20,
+                                  color: AppPallete.whiteColor,
+                                ),
                               ),
                             ),
                           ),

@@ -5,6 +5,7 @@ enum ChatStatus {
   loading,
   success,
   failure,
+  chatFailure,
 }
 
 class ChatState {

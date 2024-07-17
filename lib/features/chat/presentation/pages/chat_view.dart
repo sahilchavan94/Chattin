@@ -92,6 +92,7 @@ class _ChatViewState extends State<ChatView> {
         shadowColor: AppPallete.bottomSheetColor,
         backgroundColor: AppPallete.backgroundColor,
         title: ContactWidget(
+          uid: widget.uid,
           displayName: widget.displayName,
           imageUrl: widget.imageUrl,
           status: context
@@ -210,11 +211,9 @@ class _ChatViewState extends State<ChatView> {
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
           if (state.chatStatus == ChatStatus.loading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const CircularProgressIndicator();
           }
-          if (state.chatStatus == ChatStatus.failure) {
+          if (state.chatStatus == ChatStatus.chatFailure) {
             return const FailureWidget();
           }
 
@@ -289,6 +288,7 @@ class _ChatViewState extends State<ChatView> {
                           onLeftSwipe: (details) {
                             showDialog(
                               context: context,
+                              barrierDismissible: false,
                               builder: (context) {
                                 return ReplyDialogWidget(
                                   messageType: messages[index].messageType,

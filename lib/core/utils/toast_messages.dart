@@ -39,7 +39,7 @@ class ToastMessages {
 
   //stories cubit
   static const String storyUploadLimitFailure =
-      "You can't choose more than three images";
+      "You can't choose more than 5 images";
   static const String storyUploadSuccess = "Successfully added story";
   static const String storyInProgress = "Uploading your stories";
 
