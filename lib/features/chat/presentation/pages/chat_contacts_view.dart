@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
@@ -8,12 +6,14 @@ import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
 import 'package:chattin/features/chat/presentation/widgets/chat_contact_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:async';
 
 class ChatContactsView extends StatefulWidget {
   const ChatContactsView({super.key});
@@ -24,12 +24,37 @@ class ChatContactsView extends StatefulWidget {
 
 class _ChatContactsViewState extends State<ChatContactsView> {
   final TextEditingController _searchController = TextEditingController();
+  final StreamController<List<ContactEntity>> _filteredContactsController =
+      StreamController<List<ContactEntity>>();
+
+  List<ContactEntity> _allContacts = [];
 
   @override
   void initState() {
     context.read<AuthCubit>().checkTheAccountDetailsIfTheEmailIsVerified();
     context.read<ProfileCubit>().getProfileData();
+
+    _searchController.addListener(_filterContacts);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _filteredContactsController.close();
+    super.dispose();
+  }
+
+  void _filterContacts() {
+    final query = _searchController.text.toLowerCase();
+    if (query.isEmpty) {
+      _filteredContactsController.sink.add(_allContacts);
+    } else {
+      final filteredContacts = _allContacts
+          .where((contact) => contact.displayName.toLowerCase().contains(query))
+          .toList();
+      _filteredContactsController.sink.add(filteredContacts);
+    }
   }
 
   @override
@@ -150,57 +175,63 @@ class _ChatContactsViewState extends State<ChatContactsView> {
                           child: CircularProgressIndicator(),
                         );
                       }
-                      final chatsList = snapshot.data ?? [];
-                      if (chatsList.isEmpty) {
-                        return Center(
-                          child: Text(
-                            "No chats found!",
-                            style: AppTheme
-                                .darkThemeData.textTheme.displaySmall!
-                                .copyWith(
-                              color: AppPallete.greyColor,
-                            ),
-                          ),
-                        );
-                      }
-                      if (chatsList.isNotEmpty) {
-                        return Column(
-                          children: [
-                            verticalSpacing(30),
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount: chatsList.length,
-                                itemBuilder: (context, index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      context.push(
-                                        RoutePath.chatScreen.path,
-                                        extra: {
-                                          'uid': chatsList[index].uid,
-                                          'displayName':
-                                              chatsList[index].displayName,
-                                          'imageUrl': chatsList[index].imageUrl,
-                                        },
-                                      );
-                                    },
-                                    child: ChatContactWidget(
-                                      imageUrl: chatsList[index].imageUrl,
-                                      displayName: chatsList[index].displayName,
-                                      lastMessage: chatsList[index]
-                                              .lastMessage ??
-                                          'This message was not available due to some error',
-                                      timeSent: chatsList[index].timeSent!,
-                                      hasVerticalSpacing: true,
-                                    ),
-                                  );
-                                },
+                      _allContacts = snapshot.data ?? [];
+                      _filteredContactsController.sink.add(_allContacts);
+
+                      return StreamBuilder<List<ContactEntity>>(
+                        stream: _filteredContactsController.stream,
+                        builder: (context, snapshot) {
+                          final chatsList = snapshot.data ?? [];
+                          if (chatsList.isEmpty) {
+                            return Center(
+                              child: Text(
+                                "No chats found!",
+                                style: AppTheme
+                                    .darkThemeData.textTheme.displaySmall!
+                                    .copyWith(
+                                  color: AppPallete.greyColor,
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
+                            );
+                          }
+                          return Column(
+                            children: [
+                              verticalSpacing(30),
+                              Expanded(
+                                child: ListView.builder(
+                                  itemCount: chatsList.length,
+                                  itemBuilder: (context, index) {
+                                    return GestureDetector(
+                                      onTap: () {
+                                        context.push(
+                                          RoutePath.chatScreen.path,
+                                          extra: {
+                                            'uid': chatsList[index].uid,
+                                            'displayName':
+                                                chatsList[index].displayName,
+                                            'imageUrl':
+                                                chatsList[index].imageUrl,
+                                          },
+                                        );
+                                      },
+                                      child: ChatContactWidget(
+                                        imageUrl: chatsList[index].imageUrl,
+                                        displayName:
+                                            chatsList[index].displayName,
+                                        lastMessage: chatsList[index]
+                                                .lastMessage ??
+                                            'This message was not available due to some error',
+                                        timeSent: chatsList[index].timeSent!,
+                                        hasVerticalSpacing: true,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                   ),
                 ),
