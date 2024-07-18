@@ -4,6 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/core/common/features/upload/domain/usecases/general_upload.dart';
 import 'package:chattin/core/enum/enums.dart';
+import 'package:chattin/core/utils/toast_messages.dart';
+import 'package:chattin/core/utils/toasts.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_contacts.dart';
@@ -14,7 +16,9 @@ import 'package:chattin/features/chat/domain/usecases/send_message.dart';
 import 'package:chattin/features/chat/domain/usecases/send_reply_message.dart';
 import 'package:chattin/features/chat/domain/usecases/set_chat_status.dart';
 import 'package:chattin/features/chat/domain/usecases/set_message_status.dart';
+import 'package:chattin/features/profile/domain/usecases/get_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:toastification/toastification.dart';
 import 'package:uuid/uuid.dart';
 
 part 'chat_state.dart';
@@ -30,6 +34,7 @@ class ChatCubit extends Cubit<ChatState> {
   final SendFileMessageUseCase _sendFileMessageUseCase;
   final SetMessageStatusUseCase _setMessageStatusUseCase;
   final SendReplyUseCase _sendReplyUseCase;
+  final GetProfileDataUseCase _getProfileDataUseCase;
   final FirebaseAuth _firebaseAuth;
 
   //stream subscription for the chat contacts
@@ -48,6 +53,7 @@ class ChatCubit extends Cubit<ChatState> {
     this._sendFileMessageUseCase,
     this._setMessageStatusUseCase,
     this._sendReplyUseCase,
+    this._getProfileDataUseCase,
   ) : super(ChatState.initial()) {
     getChatContacts();
   }
@@ -237,4 +243,28 @@ class ChatCubit extends Cubit<ChatState> {
   // void notifyNewMessage({required bool newMessageFlag}) {
   //   emit(state.copyWith(isNewMessage: newMessageFlag));
   // }
+
+  //method to get the chat contact's information
+  Future<void> getChatContactInformation(String uid) async {
+    emit(state.copyWith(fetchingUserInfo: true));
+    final response = await _getProfileDataUseCase.call(uid);
+    response.fold(
+      (l) {
+        emit(state.copyWith(
+          fetchingUserInfo: null,
+        ));
+        showToast(
+          content: ToastMessages.profileFailure,
+          type: ToastificationType.error,
+          description: ToastMessages.defaultFailureDescription,
+        );
+      },
+      (r) {
+        emit(state.copyWith(
+          fetchingUserInfo: false,
+          chatContactInformation: r,
+        ));
+      },
+    );
+  }
 }

@@ -14,6 +14,7 @@ showImageDialog({
 }) {
   showDialog(
     useRootNavigator: true,
+    useSafeArea: true,
     context: context,
     builder: (context) {
       return Dialog(
@@ -24,102 +25,111 @@ showImageDialog({
         surfaceTintColor: AppPallete.bottomSheetColor,
         elevation: 0,
         backgroundColor: AppPallete.bottomSheetColor,
-        child: Padding(
-          padding: const EdgeInsets.all(2.12),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 3),
-                child: Text(
-                  displayName,
-                  style:
-                      AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                    color: AppPallete.whiteColor,
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * .65,
+          child: Padding(
+            padding: const EdgeInsets.all(2.12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 3),
+                  child: Text(
+                    displayName,
+                    style:
+                        AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+                      color: AppPallete.whiteColor,
+                    ),
                   ),
                 ),
-              ),
-              Stack(
-                children: [
-                  Hero(
-                    tag: imageUrl,
-                    child: GestureDetector(
-                      onTap: () {
-                        context.push(
-                          RoutePath.imageView.path,
-                          extra: {
-                            'displayName': displayName,
-                            'imageUrl': imageUrl,
-                          },
-                        );
-                      },
-                      child: ImageWidget(
-                        imagePath: imageUrl,
-                        fit: BoxFit.cover,
-                        width: MediaQuery.of(context).size.width * .679,
-                        height: MediaQuery.of(context).size.height * .3,
-                        radius: BorderRadius.circular(6),
-                        isImageFromChat: true,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Container(
-                      width:
-                          MediaQuery.of(context).size.width > 700 ? 600 : 275,
-                      decoration: BoxDecoration(
-                        color: AppPallete.blueColor,
-                        gradient: LinearGradient(
-                          colors: [
-                            AppPallete.transparent,
-                            AppPallete.backgroundColor.withOpacity(.4),
-                            AppPallete.backgroundColor.withOpacity(.8),
-                            AppPallete.backgroundColor,
-                          ],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
+                Stack(
+                  children: [
+                    Hero(
+                      tag: imageUrl,
+                      child: GestureDetector(
+                        onTap: () {
+                          context.push(
+                            RoutePath.imageView.path,
+                            extra: {
+                              'displayName': displayName,
+                              'imageUrl': imageUrl,
+                            },
+                          );
+                        },
+                        child: ImageWidget(
+                          imagePath: imageUrl,
+                          fit: BoxFit.cover,
+                          height: MediaQuery.of(context).size.height * .3,
+                          width: MediaQuery.of(context).size.width * 98,
+                          radius: BorderRadius.circular(2),
+                          isImageFromChat: true,
                         ),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            splashColor: AppPallete.transparent,
-                            onPressed: () {
-                              context.pop();
-                              context.push(
-                                RoutePath.chatScreen.path,
-                                extra: {
-                                  'displayName': displayName,
-                                  'imageUrl': imageUrl,
-                                  'uid': uid,
-                                },
-                              );
-                            },
-                            icon: Image.asset(
-                              'assets/images/logo.png',
-                              width: 25,
-                              height: 25,
-                            ),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        width:
+                            MediaQuery.of(context).size.width > 700 ? 600 : 275,
+                        decoration: BoxDecoration(
+                          color: AppPallete.blueColor,
+                          gradient: LinearGradient(
+                            colors: [
+                              AppPallete.transparent,
+                              AppPallete.backgroundColor.withOpacity(.4),
+                              AppPallete.backgroundColor.withOpacity(.8),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
-                          IconButton(
-                            splashColor: AppPallete.transparent,
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.info_outline,
-                              color: AppPallete.blueColor,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              splashColor: AppPallete.transparent,
+                              onPressed: () {
+                                context.pop();
+                                context.push(
+                                  RoutePath.chatScreen.path,
+                                  extra: {
+                                    'displayName': displayName,
+                                    'imageUrl': imageUrl,
+                                    'uid': uid,
+                                  },
+                                );
+                              },
+                              icon: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: AppPallete.bottomSheetColor,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/logo.png',
+                                  width: 25,
+                                  height: 25,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                            // IconButton(
+                            //   splashColor: AppPallete.transparent,
+                            //   onPressed: () {},
+                            //   icon: const Icon(
+                            //     Icons.info_outline,
+                            //     color: AppPallete.blueColor,
+                            //   ),
+                            // ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       )

@@ -3,6 +3,7 @@
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/utils/constants.dart';
+import 'package:chattin/core/utils/firebase_format.dart';
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -89,7 +90,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return "";
     } on FirebaseException catch (e) {
       throw ServerException(
-        error: e.toString().split("] ")[1],
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
       );
     } catch (e) {
       throw ServerException(error: e.toString());
@@ -120,6 +121,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         "joinedOn": DateTime.now().millisecondsSinceEpoch,
       });
       return ToastMessages.welcomeSignInMessage;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
     } catch (e) {
       throw ServerException(error: e.toString());
     }
@@ -141,7 +146,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return "User Exists";
       }
       return "";
-    } on Exception catch (e) {
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
+    } catch (e) {
       throw ServerException(
         error: e.toString(),
       );
@@ -157,6 +166,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         password: password,
       );
       return ToastMessages.signedInSuccessfully;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
     } catch (e) {
       throw ServerException(error: e.toString());
     }

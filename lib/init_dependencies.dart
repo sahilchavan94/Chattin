@@ -68,8 +68,8 @@ Future<void> initDependencies() async {
     ),
   );
   initAuth();
-  initContacts();
   initProfile();
+  initContacts();
   initChat();
   initStories();
 }
@@ -204,6 +204,7 @@ void initChat() {
     )
     ..registerLazySingleton(
       () => ChatCubit(
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),

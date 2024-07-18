@@ -2,6 +2,7 @@ import 'package:chattin/core/common/models/user_model.dart';
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/utils/constants.dart';
+import 'package:chattin/core/utils/firebase_format.dart';
 import 'package:chattin/core/utils/helper_functions.dart';
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/features/chat/data/models/contact_model.dart';
@@ -89,6 +90,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         .set(
           receiverChatContact.toMap(),
         );
+
     //same for the sender's doc
     await firebaseFirestore
         .collection(Constants.userCollection)
@@ -192,6 +194,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         }
       }
       return appContacts;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
     } catch (e) {
       throw ServerException(error: e.toString());
     }
@@ -238,6 +244,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         isReply: false,
       );
       return ToastMessages.welcomeSignInMessage; //change it later
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
     } catch (e) {
       throw ServerException(error: e.toString());
     }
@@ -286,6 +296,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         isReply: false,
       );
       return ToastMessages.welcomeSignInMessage; //change it later
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
     } catch (e) {
       throw ServerException(
         error: e.toString(),
@@ -298,68 +312,94 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required String recieverId,
     required String senderId,
   }) {
-    final response = firebaseFirestore
-        .collection(Constants.userCollection)
-        .doc(senderId)
-        .collection(Constants.chatsSubCollection)
-        .doc(recieverId)
-        .collection(Constants.messagesSubCollection)
-        .orderBy('timeSent')
-        .snapshots()
-        .map((event) {
-      List<MessageModel> messages = [];
-      for (final document in event.docs) {
-        messages.add(
-          MessageModel.fromMap(
-            document.data(),
-          ),
-        );
-      }
-      return messages;
-    });
-    return response;
+    try {
+      final response = firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(senderId)
+          .collection(Constants.chatsSubCollection)
+          .doc(recieverId)
+          .collection(Constants.messagesSubCollection)
+          .orderBy('timeSent')
+          .snapshots()
+          .map(
+        (event) {
+          List<MessageModel> messages = [];
+          for (final document in event.docs) {
+            messages.add(
+              MessageModel.fromMap(
+                document.data(),
+              ),
+            );
+          }
+          return messages;
+        },
+      );
+      return response;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
+    } catch (e) {
+      throw ServerException(
+        error: e.toString(),
+      );
+    }
   }
 
   @override
   Stream<List<ContactEntity>> getChatContacts(String uid) {
-    final response = firebaseFirestore
-        .collection(Constants.userCollection)
-        .doc(uid)
-        .collection(Constants.chatsSubCollection)
-        .snapshots()
-        .asyncMap((event) {
-      List<ContactEntity> contacts = [];
-      for (final document in event.docs) {
-        contacts.add(
-          ContactModel.fromMap(
-            document.data(),
-          ),
-        );
-      }
-      return contacts;
-    });
-    return response;
+    try {
+      final response = firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(uid)
+          .collection(Constants.chatsSubCollection)
+          .snapshots()
+          .asyncMap((event) {
+        List<ContactEntity> contacts = [];
+        for (final document in event.docs) {
+          contacts.add(
+            ContactModel.fromMap(
+              document.data(),
+            ),
+          );
+        }
+        return contacts;
+      });
+      return response;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
   }
 
   @override
   Stream<Status> getChatStatus(String uid) {
-    final response = firebaseFirestore
-        .collection(Constants.userCollection)
-        .doc(uid)
-        .snapshots()
-        .asyncMap(
-      (event) {
-        final data = event.data();
-        if (data == null) {
-          return Status.unavailable;
-        }
-        return HelperFunctions.parseStatusType(
-          data['status'] as String,
-        );
-      },
-    );
+    try {
+      final response = firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(uid)
+          .snapshots()
+          .asyncMap(
+        (event) {
+          final data = event.data();
+          if (data == null) {
+            return Status.unavailable;
+          }
+          return HelperFunctions.parseStatusType(
+            data['status'] as String,
+          );
+        },
+      );
 
-    return response;
+      return response;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
+    }
   }
 
   @override
@@ -375,6 +415,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         {
           'status': status.toStringValue(),
         },
+      );
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
       );
     } catch (e) {
       throw ServerException(
@@ -399,6 +443,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           .doc(messageId)
           .update(
         {'status': true},
+      );
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
       );
     } catch (e) {
       throw ServerException(
@@ -464,6 +512,10 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         repliedToType: repliedToType,
       );
       return ToastMessages.welcomeSignInMessage; //change it later
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
     } catch (e) {
       throw ServerException(error: e.toString());
     }

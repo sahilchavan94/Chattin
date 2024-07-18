@@ -1,7 +1,6 @@
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
-import 'package:chattin/core/widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +37,7 @@ class DialogWidget extends StatelessWidget {
         height: (size.height * .2),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               title,
@@ -51,29 +51,41 @@ class DialogWidget extends StatelessWidget {
               style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                 color: AppPallete.greyColor,
               ),
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.start,
             ),
             verticalSpacing(size.width * .06),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ButtonWidget(
-                  width: size.width * .2,
-                  height: 40,
-                  buttonText: approvalText,
-                  onPressed: onPressed,
-                ),
-                ButtonWidget(
-                  width: size.width * .2,
-                  height: 40,
-                  color: AppPallete.whiteColor,
-                  textColor: AppPallete.backgroundColor,
-                  buttonText: rejectionText,
-                  onPressed: () {
-                    context.pop();
-                  },
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      context.pop();
+                    },
+                    child: Text(
+                      rejectionText,
+                      style: AppTheme.darkThemeData.textTheme.displaySmall!
+                          .copyWith(
+                        color: AppPallete.errorColor,
+                      ),
+                    ),
+                  ),
+                  horizontalSpacing(30),
+                  GestureDetector(
+                    onTap: () {
+                      onPressed();
+                    },
+                    child: Text(
+                      approvalText,
+                      style: AppTheme.darkThemeData.textTheme.displaySmall!
+                          .copyWith(
+                        color: AppPallete.blueColor,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             )
           ],
         ),

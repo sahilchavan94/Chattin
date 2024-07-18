@@ -102,8 +102,28 @@ class _ChatViewState extends State<ChatView> {
                   ?.toStringValue() ??
               Status.unavailable.toStringValue(),
           radius: 50,
+          isViewingStory: true,
         ),
         titleSpacing: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: IconButton(
+              onPressed: () {
+                context.push(
+                  RoutePath.chatContactInformation.path,
+                  extra: {
+                    'uid': widget.uid,
+                  },
+                );
+              },
+              icon: const Icon(
+                Icons.info_outline,
+                color: AppPallete.blueColor,
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: SafeArea(
         child: Container(

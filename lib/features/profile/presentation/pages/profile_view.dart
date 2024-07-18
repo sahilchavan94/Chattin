@@ -8,10 +8,10 @@ import 'package:chattin/core/widgets/bottom_sheet_for_image.dart';
 import 'package:chattin/core/widgets/confirmation_dialog.dart';
 import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
+import 'package:chattin/core/widgets/user_info.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:chattin/features/profile/presentation/widgets/profile_details_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -40,10 +40,10 @@ class _ProfileViewState extends State<ProfileView> {
                   );
             },
             approvalText: 'Update',
-            rejectionText: 'Cancel',
+            rejectionText: 'Discard',
             title: 'Update profile image',
             description:
-                'Continue if you are confimed to change your profile picture',
+                'Continue if you are confimed to change the display picture from your profile',
           );
         },
       );
@@ -197,11 +197,12 @@ class _ProfileViewState extends State<ProfileView> {
                                                               .setProfileImage();
                                                         },
                                                         approvalText: 'Remove',
-                                                        rejectionText: 'Cancel',
+                                                        rejectionText:
+                                                            'Discard',
                                                         title:
                                                             'Remove profile image',
                                                         description:
-                                                            'Continue if you are confirmed to remove your profile image',
+                                                            'Continue if you are confirmed to remove the display picture from your profile',
                                                       ).animate().fadeIn();
                                                     },
                                                   );

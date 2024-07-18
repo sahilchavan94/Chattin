@@ -31,6 +31,9 @@ class RoutePath {
   static const RouteName chatScreen = RouteName(
     path: "/chat_screen",
   );
+  static const RouteName chatContactInformation = RouteName(
+    path: "/chat_contact_information",
+  );
 
   //profile path
   static const RouteName profileScreen = RouteName(

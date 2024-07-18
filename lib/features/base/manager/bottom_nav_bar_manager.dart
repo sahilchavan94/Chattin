@@ -3,6 +3,7 @@ import 'package:chattin/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+//not used yet, but may add it in future
 class BottomNavigationItem {
   String name;
   Widget icon;

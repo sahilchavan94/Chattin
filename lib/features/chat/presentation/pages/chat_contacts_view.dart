@@ -67,6 +67,7 @@ class _ChatContactsViewState extends State<ChatContactsView> {
               'Chattin`',
               style: AppTheme.darkThemeData.textTheme.displayLarge!.copyWith(
                 color: AppPallete.blueColor,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ],
