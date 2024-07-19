@@ -11,6 +11,7 @@ import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/core/widgets/reply_dialog_widget.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/pages/chat_contact_information_view.dart';
 import 'package:chattin/features/chat/presentation/widgets/contact_widget.dart';
 import 'package:chattin/features/chat/presentation/widgets/date_widget.dart';
 import 'package:chattin/features/chat/presentation/widgets/message_widget.dart';
@@ -110,10 +111,19 @@ class _ChatViewState extends State<ChatView> {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: IconButton(
               onPressed: () {
-                context.push(
-                  RoutePath.chatContactInformation.path,
-                  extra: {
-                    'uid': widget.uid,
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  showDragHandle: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  backgroundColor: AppPallete.backgroundColor,
+                  constraints: BoxConstraints.expand(
+                    height: MediaQuery.of(context).size.height * .9,
+                  ),
+                  builder: (context) {
+                    return ChatContactInformationView(uid: widget.uid);
                   },
                 );
               },

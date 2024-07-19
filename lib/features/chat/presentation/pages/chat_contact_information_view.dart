@@ -36,32 +36,29 @@ class _ChatContactInformationViewState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-      ),
-      body: BlocBuilder<ChatCubit, ChatState>(
-        builder: (context, state) {
-          if (state.fetchingUserInfo == true) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (state.fetchingUserInfo == null) {
-            return const FailureWidget();
-          }
-          //get the user info
-          final UserEntity userData = state.chatContactInformation!;
-          final List<MessageEntity> imageMessages = state.currentChatMessages!
-              .where((element) => element.messageType == MessageType.image)
-              .toList();
-          return SingleChildScrollView(
+    return BlocBuilder<ChatCubit, ChatState>(
+      builder: (context, state) {
+        if (state.fetchingUserInfo == true) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (state.fetchingUserInfo == null) {
+          return const FailureWidget();
+        }
+        //get the user info
+        final UserEntity userData = state.chatContactInformation!;
+        final List<MessageEntity> imageMessages = state.currentChatMessages!
+            .where((element) => element.messageType == MessageType.image)
+            .toList();
+        return SingleChildScrollView(
+          physics: const RangeMaintainingScrollPhysics(),
+          child: Container(
+            color: AppPallete.backgroundColor,
             child: Padding(
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
-                  verticalSpacing(5),
                   Align(
                     alignment: Alignment.center,
                     child: Stack(
@@ -126,7 +123,7 @@ class _ChatContactInformationViewState
                       color: AppPallete.whiteColor,
                     ),
                   ),
-                  verticalSpacing(50),
+                  verticalSpacing(35),
                   _chatContactsProfileDetails(
                     about: userData.about!,
                     email: userData.email!,
@@ -134,7 +131,7 @@ class _ChatContactInformationViewState
                     displayName: userData.displayName,
                     phoneNumber: userData.phoneNumber!,
                   ),
-                  verticalSpacing(40),
+                  verticalSpacing(35),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Row(
@@ -206,7 +203,7 @@ class _ChatContactInformationViewState
                             ),
                     ),
                   ),
-                  verticalSpacing(70),
+                  verticalSpacing(40),
                   Text(
                     'Joined Chattin on ${DateFormat("dd MMM yyyy").format(userData.joinedOn!)}',
                     style:
@@ -217,9 +214,9 @@ class _ChatContactInformationViewState
                 ],
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
