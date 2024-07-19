@@ -257,24 +257,16 @@ class _ProfileViewState extends State<ProfileView> {
                             ],
                           ),
                           verticalSpacing(50),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color:
-                                  AppPallete.bottomSheetColor.withOpacity(.4),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ProfileDetailsWidget(
-                                title: 'Profile Information',
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: AppPallete.whiteColor,
-                                  size: 19,
-                                ),
-                                userData: userData,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ProfileDetailsWidget(
+                              title: 'Profile Information',
+                              icon: const Icon(
+                                Icons.edit,
+                                color: AppPallete.whiteColor,
+                                size: 19,
                               ),
+                              userData: userData,
                             ),
                           ),
                           verticalSpacing(30),

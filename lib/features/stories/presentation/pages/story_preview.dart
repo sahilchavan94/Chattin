@@ -108,7 +108,7 @@ class _StoryPreViewState extends State<StoryPreView> {
                     ),
                   ),
                   FloatingActionButton(
-                    onPressed: () {
+                    onPressed: () async {
                       context.read<StoryCubit>().uploadStory(
                             imageUrl: widget.imageUrl,
                             displayName: widget.displayName,
