@@ -115,7 +115,7 @@ class ChatCubit extends Cubit<ChatState> {
   void getChatStream({
     required String receiverId,
   }) {
-    emit(state.copyWith(chatStatus: ChatStatus.loading));
+    emit(state.copyWith(fetchingCurrentChats: true));
     final uid = _firebaseAuth.currentUser!.uid;
     _chatMessagesStreamSubscription?.cancel();
     try {
@@ -128,7 +128,7 @@ class ChatCubit extends Cubit<ChatState> {
         emit(
           state.copyWith(
             currentChatMessages: currentChats,
-            chatStatus: ChatStatus.success,
+            fetchingCurrentChats: false,
           ),
         );
       });
@@ -136,6 +136,7 @@ class ChatCubit extends Cubit<ChatState> {
       emit(
         state.copyWith(
           chatStatus: ChatStatus.failure,
+          fetchingCurrentChats: false,
           message: e.toString(),
         ),
       );

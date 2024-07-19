@@ -142,14 +142,15 @@ class _ProfileViewState extends State<ProfileView> {
                                               child:
                                                   const CircularProgressIndicator(),
                                             )
-                                          : userData.imageUrl.isEmpty
-                                              ? ImageWidget(
-                                                  imagePath:
-                                                      'assets/images/default_profile.png',
-                                                  width: 100,
-                                                )
-                                              : ImageWidget(
-                                                  imagePath: userData.imageUrl,
+                                          : Hero(
+                                              tag: userData.imageUrl,
+                                              child: Material(
+                                                type: MaterialType.transparency,
+                                                child: ImageWidget(
+                                                  imagePath: userData
+                                                          .imageUrl.isEmpty
+                                                      ? 'assets/images/default_profile.png'
+                                                      : userData.imageUrl,
                                                   width: 100,
                                                   height: 100,
                                                   radius: BorderRadius.circular(
@@ -157,6 +158,8 @@ class _ProfileViewState extends State<ProfileView> {
                                                   fit: BoxFit.cover,
                                                   isImageFromChat: true,
                                                 ),
+                                              ),
+                                            ),
                                       if (state.isImageLoading != null &&
                                           !state.isImageLoading!)
                                         Positioned(
@@ -254,15 +257,24 @@ class _ProfileViewState extends State<ProfileView> {
                             ],
                           ),
                           verticalSpacing(50),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ProfileDetailsWidget(
-                              title: 'Profile Information',
-                              icon: const Icon(
-                                Icons.edit,
-                                color: AppPallete.whiteColor,
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color:
+                                  AppPallete.bottomSheetColor.withOpacity(.4),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ProfileDetailsWidget(
+                                title: 'Profile Information',
+                                icon: const Icon(
+                                  Icons.edit,
+                                  color: AppPallete.whiteColor,
+                                  size: 19,
+                                ),
+                                userData: userData,
                               ),
-                              userData: userData,
                             ),
                           ),
                           verticalSpacing(30),
@@ -302,6 +314,7 @@ class _ProfileViewState extends State<ProfileView> {
                               ),
                             ),
                           ),
+                          verticalSpacing(5),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8.0,

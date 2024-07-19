@@ -61,7 +61,7 @@ class _ChatContactInformationViewState
               padding: const EdgeInsets.all(24.0),
               child: Column(
                 children: [
-                  verticalSpacing(30),
+                  verticalSpacing(5),
                   Align(
                     alignment: Alignment.center,
                     child: Stack(
@@ -206,7 +206,7 @@ class _ChatContactInformationViewState
                             ),
                     ),
                   ),
-                  verticalSpacing(50),
+                  verticalSpacing(70),
                   Text(
                     'Joined Chattin on ${DateFormat("dd MMM yyyy").format(userData.joinedOn!)}',
                     style:

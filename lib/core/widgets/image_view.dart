@@ -1,11 +1,15 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/core/utils/toasts.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
+import 'package:chattin/features/chat/domain/entities/message_entity.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:toastification/toastification.dart';
@@ -30,6 +34,20 @@ class ProfileImageView extends StatefulWidget {
 
 class _ProfileImageViewState extends State<ProfileImageView> {
   bool isDownloading = false;
+  late List<MessageEntity?> imagesInChats;
+
+  @override
+  void initState() {
+    super.initState();
+    imagesInChats = context
+            .read<ChatCubit>()
+            .state
+            .currentChatMessages
+            ?.where((element) => element.messageType == MessageType.image)
+            .toList() ??
+        [];
+  }
+
   Future<void> _saveImage(String url) async {
     try {
       // Download image
@@ -105,16 +123,44 @@ class _ProfileImageViewState extends State<ProfileImageView> {
                   ]
                 : null,
       ),
+      bottomNavigationBar:
+          widget.isAnImageFromChat != null && widget.isAnImageFromChat == true
+              ? SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 80,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        itemCount: imagesInChats.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: ImageWidget(
+                              height: 70,
+                              width: 80,
+                              imagePath: imagesInChats[index]!.text,
+                              fit: BoxFit.cover,
+                              radius: BorderRadius.circular(2),
+                              isImageFromChat: true,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
       body: Center(
         child: isDownloading
             ? const CircularProgressIndicator()
             : InteractiveViewer(
                 minScale: 1,
-                boundaryMargin: EdgeInsets.zero,
                 constrained: true,
                 child: ImageWidget(
                   imagePath: widget.imageUrl,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                   isImageFromChat: true,
                 ),
               ),

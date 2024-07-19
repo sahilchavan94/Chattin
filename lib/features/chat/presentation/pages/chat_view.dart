@@ -230,8 +230,10 @@ class _ChatViewState extends State<ChatView> {
       ),
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
-          if (state.chatStatus == ChatStatus.loading) {
-            return const CircularProgressIndicator();
+          if (state.fetchingCurrentChats == true) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
           if (state.chatStatus == ChatStatus.chatFailure) {
             return const FailureWidget();
@@ -241,6 +243,7 @@ class _ChatViewState extends State<ChatView> {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             _scrollToBottom();
           });
+
           return Container(
             decoration: const BoxDecoration(
               image: DecorationImage(

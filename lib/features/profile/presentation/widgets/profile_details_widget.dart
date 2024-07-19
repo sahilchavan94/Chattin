@@ -34,12 +34,18 @@ class ProfileDetailsWidget extends StatelessWidget {
               ),
             ),
             icon != null
-                ? IconButton(
-                    onPressed: () {
+                ? GestureDetector(
+                    onTap: () {
                       context.push(RoutePath.editProfile.path);
                     },
-                    icon: icon!,
-                    iconSize: 19,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: AppPallete.blueColor,
+                      ),
+                      child: icon,
+                    ),
                   )
                 : const SizedBox.shrink(),
           ],

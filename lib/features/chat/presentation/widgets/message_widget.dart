@@ -68,17 +68,17 @@ class MessageWidget extends StatelessWidget {
                       borderRadius: isMe
                           ? BorderRadius.circular(12).copyWith(
                               bottomRight: Radius.circular(
-                                messageType == MessageType.image ? 10 : 5,
+                                messageType == MessageType.image ? 10 : 4,
                               ),
                             )
                           : BorderRadius.circular(12).copyWith(
                               bottomLeft: Radius.circular(
-                                messageType == MessageType.image ? 10 : 5,
+                                messageType == MessageType.image ? 10 : 4,
                               ),
                             ),
                     ),
                     padding: EdgeInsets.symmetric(
-                      horizontal: messageType == MessageType.image ? 4 : 15,
+                      horizontal: messageType == MessageType.image ? 4 : 12,
                       vertical: messageType == MessageType.image ? 4 : 9,
                     ),
                     child: Column(
@@ -111,22 +111,37 @@ class MessageWidget extends StatelessWidget {
                                     width: 55,
                                     fit: BoxFit.fill,
                                     imagePath: repliedTo!,
-                                    radius: BorderRadius.circular(6),
+                                    radius: BorderRadius.circular(3),
                                     isImageFromChat: true,
                                   ),
                           ),
-                        if (isReply) verticalSpacing(10),
+                        if (isReply) verticalSpacing(6),
                         if (messageType == MessageType.text)
-                          Text(
-                            text,
-                            style: AppTheme
-                                .darkThemeData.textTheme.displaySmall!
-                                .copyWith(
-                              color: AppPallete.whiteColor,
-                            ),
-                            maxLines: 10,
-                            overflow: TextOverflow
-                                .visible, // Ensure text can overflow
+                          Column(
+                            crossAxisAlignment: isMe
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                text,
+                                style: AppTheme
+                                    .darkThemeData.textTheme.displaySmall!
+                                    .copyWith(
+                                  color: AppPallete.whiteColor,
+                                ),
+                                maxLines: 10,
+                                overflow: TextOverflow
+                                    .visible, // Ensure text can overflow
+                              ),
+                              verticalSpacing(3),
+                              _messageDataWidget(
+                                isMe: isMe,
+                                name: name,
+                                timeSent: timeSent,
+                                status: status,
+                                messageType: messageType,
+                              ),
+                            ],
                           )
                         else
                           GestureDetector(
@@ -154,8 +169,9 @@ class MessageWidget extends StatelessWidget {
                                     isImageFromChat: true,
                                   ),
                                   Positioned(
-                                    bottom: 5,
-                                    right: 5,
+                                    bottom: 7,
+                                    right: isMe ? 10 : null,
+                                    left: isMe ? null : 10,
                                     child: _messageDataWidget(
                                       isMe: isMe,
                                       name: name,
@@ -168,17 +184,17 @@ class MessageWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-                        verticalSpacing(
-                          messageType == MessageType.image ? 0 : 4,
-                        ),
-                        if (messageType == MessageType.text)
-                          _messageDataWidget(
-                            isMe: isMe,
-                            name: name,
-                            timeSent: timeSent,
-                            messageType: messageType,
-                            status: status,
-                          ),
+                        // verticalSpacing(
+                        //   messageType == MessageType.image ? 0 : 4,
+                        // ),
+                        // if (messageType == MessageType.text)
+                        //   _messageDataWidget(
+                        //     isMe: isMe,
+                        //     name: name,
+                        //     timeSent: timeSent,
+                        //     messageType: messageType,
+                        //     status: status,
+                        //   ),
                       ],
                     ),
                   ),
@@ -212,6 +228,7 @@ Widget _messageDataWidget({
 }) {
   return Row(
     mainAxisSize: MainAxisSize.min,
+    mainAxisAlignment: MainAxisAlignment.end,
     children: [
       Text(
         DateFormat.jm().format(timeSent),
@@ -221,7 +238,7 @@ Widget _messageDataWidget({
         ),
         overflow: TextOverflow.ellipsis, // Ensure text can overflow
       ),
-      horizontalSpacing(6),
+      if (isMe) horizontalSpacing(6),
       if (isMe)
         Icon(
           status ? Icons.done_all : Icons.done,

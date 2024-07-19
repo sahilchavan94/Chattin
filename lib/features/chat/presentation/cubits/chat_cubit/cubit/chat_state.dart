@@ -6,7 +6,6 @@ enum ChatStatus {
   success,
   failure,
   chatFailure,
-  profileInformationFailure,
 }
 
 class ChatState {
@@ -18,6 +17,7 @@ class ChatState {
   bool? sendingMessage;
   String? message;
   bool? fetchingUserInfo = false;
+  bool? fetchingCurrentChats = false;
 
   ChatState({
     required this.chatStatus,
@@ -27,6 +27,7 @@ class ChatState {
     this.currentChatStatus,
     this.chatContactInformation,
     this.fetchingUserInfo,
+    this.fetchingCurrentChats,
     this.message,
   });
 
@@ -41,6 +42,7 @@ class ChatState {
     String? message,
     bool? sendingMessage,
     bool? fetchingUserInfo,
+    bool? fetchingCurrentChats,
   }) {
     return ChatState(
       chatStatus: chatStatus ?? this.chatStatus,
@@ -52,6 +54,7 @@ class ChatState {
       sendingMessage: sendingMessage ?? this.sendingMessage,
       currentChatStatus: currentChatStatus ?? this.currentChatStatus,
       fetchingUserInfo: fetchingUserInfo ?? this.fetchingUserInfo,
+      fetchingCurrentChats: fetchingCurrentChats ?? this.fetchingCurrentChats,
     );
   }
 }
