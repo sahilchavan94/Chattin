@@ -8,6 +8,8 @@ import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/core/utils/toasts.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
+import 'package:chattin/features/chat/domain/usecases/delete_message_for_everyone.dart';
+import 'package:chattin/features/chat/domain/usecases/delete_message_for_sender.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_contacts.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_status.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_stream.dart';
@@ -35,6 +37,8 @@ class ChatCubit extends Cubit<ChatState> {
   final SetMessageStatusUseCase _setMessageStatusUseCase;
   final SendReplyUseCase _sendReplyUseCase;
   final GetProfileDataUseCase _getProfileDataUseCase;
+  final DeleteMessageForSenderUseCase _deleteMessageForSenderUseCase;
+  final DeleteMessageForEveryoneUseCase _deleteMessageForEveryoneUseCase;
   final FirebaseAuth _firebaseAuth;
 
   //stream subscription for the chat contacts
@@ -54,6 +58,8 @@ class ChatCubit extends Cubit<ChatState> {
     this._setMessageStatusUseCase,
     this._sendReplyUseCase,
     this._getProfileDataUseCase,
+    this._deleteMessageForSenderUseCase,
+    this._deleteMessageForEveryoneUseCase,
   ) : super(ChatState.initial()) {
     getChatContacts();
   }
@@ -267,5 +273,54 @@ class ChatCubit extends Cubit<ChatState> {
         ));
       },
     );
+  }
+
+  //method to delete the message from sender side
+  Future<void> deleteMessageForSender({
+    required String messageId,
+    required String senderId,
+    required String receiverId,
+  }) async {
+    final response = await _deleteMessageForSenderUseCase.call(
+      messageId: messageId,
+      senderId: senderId,
+      receiverId: receiverId,
+    );
+    response.fold((l) {
+      showToast(
+        content: l.message ?? ToastMessages.defaultFailureMessage,
+        type: ToastificationType.error,
+      );
+    }, (r) {
+      showToast(
+        content: r,
+        description: ToastMessages.messageDeleteForMeSuccessDesc,
+        type: ToastificationType.success,
+      );
+    });
+  }
+
+  //method to delete the message from sender side
+  Future<void> deleteMessageForEveryone({
+    required String messageId,
+    required String senderId,
+    required String receiverId,
+  }) async {
+    final response = await _deleteMessageForEveryoneUseCase.call(
+      messageId: messageId,
+      senderId: senderId,
+      receiverId: receiverId,
+    );
+    response.fold((l) {
+      showToast(
+        content: l.message ?? ToastMessages.defaultFailureMessage,
+        type: ToastificationType.error,
+      );
+    }, (r) {
+      showToast(
+        content: r,
+        type: ToastificationType.success,
+      );
+    });
   }
 }

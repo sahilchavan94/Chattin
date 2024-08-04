@@ -146,10 +146,14 @@ class _SelectContactsViewState extends State<SelectContactsView> {
                             duration: Durations.medium4,
                           ),
                     ),
-                    verticalSpacing(showSearch ? 30 : 5),
+                    verticalSpacing(20),
+                    _addContactWidget(context),
+                    verticalSpacing(5),
                     if (contactsList.isNotEmpty)
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          verticalSpacing(20),
                           Text(
                             "Your available contacts",
                             style: AppTheme
@@ -222,4 +226,40 @@ class _SelectContactsViewState extends State<SelectContactsView> {
       },
     );
   }
+}
+
+Widget _addContactWidget(BuildContext context) {
+  return GestureDetector(
+    onTap: () {
+      context.push(RoutePath.addContact.path);
+    },
+    child: Row(
+      children: [
+        FloatingActionButton(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              20,
+            ),
+          ),
+          backgroundColor: AppPallete.bottomSheetColor,
+          onPressed: () {
+            context.push(RoutePath.addContact.path);
+          },
+          child: const Icon(
+            Icons.person_add_alt_outlined,
+            color: AppPallete.blueColor,
+          ),
+        ),
+        horizontalSpacing(16),
+        Text(
+          'Add a new contact',
+          style: AppTheme.darkThemeData.textTheme.displayLarge!.copyWith(
+            color: AppPallete.whiteColor,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+        )
+      ],
+    ),
+  );
 }

@@ -21,7 +21,8 @@ extension StatusExtension on Status {
 
 enum MessageType {
   text('text'),
-  image('image');
+  image('image'),
+  deleted('deleted');
 
   const MessageType(this.type);
   final String type;
@@ -34,6 +35,8 @@ extension MessageTypeExtension on MessageType {
         return '📸 Photo';
       case MessageType.text:
         return '💬 Text';
+      case MessageType.deleted:
+        return '🗑️ Deleted';
       default:
         return 'Unavailable';
     }
@@ -47,6 +50,8 @@ extension ConvertToMessageType on String {
         return MessageType.image;
       case '💬 Text':
         return MessageType.text;
+      case '🗑️ Deleted':
+        return MessageType.deleted;
 
       default:
         return MessageType.text;

@@ -76,8 +76,9 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (firebaseAuth.currentUser == null) {
       return;
     }
-    emit(state.copyWith(profileStatus: ProfileStatus.loading));
+    emit(state.copyWith(updateProfileStatus: UpdateProfileStatus.loading));
     final uid = firebaseAuth.currentUser!.uid;
+    Constants.navigatorKey.currentContext!.pop();
     final response = await _setProfileDataUseCase.call(
       uid: uid,
       about: about,
@@ -91,16 +92,17 @@ class ProfileCubit extends Cubit<ProfileState> {
           description: ToastMessages.profileFailure,
           type: ToastificationType.error,
         );
+        emit(state.copyWith(updateProfileStatus: UpdateProfileStatus.failure));
       },
       (r) {
-        Constants.navigatorKey.currentContext!.pop();
         showToast(
           content: ToastMessages.updateProfileSuccess,
           type: ToastificationType.success,
         );
+        emit(state.copyWith(updateProfileStatus: UpdateProfileStatus.success));
+        getProfileData();
       },
     );
-    getProfileData();
   }
 
   //method for updating the profile image

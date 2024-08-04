@@ -33,6 +33,16 @@ abstract interface class ChatRemoteDataSource {
     required UserModel sender,
     required MessageType messageType,
   });
+  Future<String> deleteMessageForSender({
+    required String messageId,
+    required String senderId,
+    required String receiverId,
+  });
+  Future<String> deleteMessageForEveryone({
+    required String messageId,
+    required String senderId,
+    required String receiverId,
+  });
   Stream<List<MessageEntity>> getChatStream({
     required String recieverId,
     required String senderId,
@@ -321,7 +331,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           .collection(Constants.messagesSubCollection)
           .orderBy('timeSent')
           .snapshots()
-          .map(
+          .asyncMap(
         (event) {
           List<MessageModel> messages = [];
           for (final document in event.docs) {
@@ -512,6 +522,91 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         repliedToType: repliedToType,
       );
       return ToastMessages.welcomeSignInMessage; //change it later
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> deleteMessageForEveryone({
+    required String messageId,
+    required String senderId,
+    required String receiverId,
+  }) async {
+    try {
+      // go to sender collection ->
+      //chats ->
+      //receiver collection
+      //-> messages
+      // -> messageId
+      //-> call delete function
+
+      await firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(senderId)
+          .collection(Constants.chatsSubCollection)
+          .doc(receiverId)
+          .collection(Constants.messagesSubCollection)
+          .doc(messageId)
+          .update({
+        "text": "This message is deleted by the sender",
+        "messageType": MessageType.deleted.toStringValue(),
+      });
+
+      // go to receiver collection ->
+      //chats ->
+      //sender collection
+      //-> messages
+      // -> messageId
+      //-> call delete function
+      await firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(receiverId)
+          .collection(Constants.chatsSubCollection)
+          .doc(senderId)
+          .collection(Constants.messagesSubCollection)
+          .doc(messageId)
+          .update({
+        "text": "This message is deleted by the sender",
+        "messageType": MessageType.deleted.toStringValue(),
+      });
+
+      return ToastMessages.messageDeleteEveryoneSuccess;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> deleteMessageForSender({
+    required String messageId,
+    required String senderId,
+    required String receiverId,
+  }) async {
+    // go to sender collection ->
+    //chats ->
+    //receiver collection
+    //-> messages
+    // -> messageId
+    //-> call delete function
+    try {
+      await firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(senderId)
+          .collection(Constants.chatsSubCollection)
+          .doc(receiverId)
+          .collection(Constants.messagesSubCollection)
+          .doc(messageId)
+          .delete();
+      return ToastMessages.messageDeleteForMeSuccess;
     } on FirebaseException catch (e) {
       throw ServerException(
         error: FirebaseResponseFormat.firebaseFormatError(e.toString()),

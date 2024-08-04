@@ -32,6 +32,13 @@ class ToastMessages {
   static const String chatContactsFailureMessage =
       "Something went wrong while fetching the contacts";
 
+  //chat remote data source
+  static const String messageDeleteForMeSuccess = "Message deleted for you";
+  static const String messageDeleteForMeSuccessDesc =
+      "This message is only deleted for you, the receiver can still view it from their side";
+  static const String messageDeleteEveryoneSuccess =
+      "Message deleted for everyone";
+
   //profile cubit
   static const String profileFailure =
       "Something unexpected happened while fetching the profile data";

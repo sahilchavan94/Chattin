@@ -35,6 +35,9 @@ class ProfileImageView extends StatefulWidget {
 class _ProfileImageViewState extends State<ProfileImageView> {
   bool isDownloading = false;
   late List<MessageEntity?> imagesInChats;
+  late String currentImage;
+  TransformationController _transformationController =
+      TransformationController();
 
   @override
   void initState() {
@@ -46,6 +49,8 @@ class _ProfileImageViewState extends State<ProfileImageView> {
             ?.where((element) => element.messageType == MessageType.image)
             .toList() ??
         [];
+
+    currentImage = widget.imageUrl;
   }
 
   Future<void> _saveImage(String url) async {
@@ -137,13 +142,22 @@ class _ProfileImageViewState extends State<ProfileImageView> {
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.only(right: 6),
-                            child: ImageWidget(
-                              height: 70,
-                              width: 80,
-                              imagePath: imagesInChats[index]!.text,
-                              fit: BoxFit.cover,
-                              radius: BorderRadius.circular(2),
-                              isImageFromChat: true,
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  currentImage = imagesInChats[index]!.text;
+                                  _transformationController.value =
+                                      Matrix4.identity();
+                                });
+                              },
+                              child: ImageWidget(
+                                height: 70,
+                                width: 80,
+                                imagePath: imagesInChats[index]!.text,
+                                fit: BoxFit.cover,
+                                radius: BorderRadius.circular(2),
+                                isImageFromChat: true,
+                              ),
                             ),
                           );
                         },
@@ -155,13 +169,23 @@ class _ProfileImageViewState extends State<ProfileImageView> {
       body: Center(
         child: isDownloading
             ? const CircularProgressIndicator()
-            : InteractiveViewer(
-                minScale: 1,
-                constrained: true,
-                child: ImageWidget(
-                  imagePath: widget.imageUrl,
-                  fit: BoxFit.fill,
-                  isImageFromChat: true,
+            : SizedBox(
+                width: double.infinity,
+                child: InteractiveViewer(
+                  transformationController: _transformationController,
+                  constrained: true,
+                  panAxis: PanAxis.free,
+                  boundaryMargin: EdgeInsets.zero,
+                  minScale: 1,
+                  maxScale: 7,
+                  clipBehavior: Clip.hardEdge,
+                  panEnabled: true,
+                  scaleEnabled: true,
+                  child: ImageWidget(
+                    imagePath: currentImage,
+                    fit: BoxFit.contain,
+                    isImageFromChat: true,
+                  ),
                 ),
               ),
       ),

@@ -101,17 +101,10 @@ showImageDialog({
                                   },
                                 );
                               },
-                              icon: Container(
-                                padding: const EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                  color: AppPallete.bottomSheetColor,
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: Image.asset(
-                                  'assets/images/logo.png',
-                                  width: 25,
-                                  height: 25,
-                                ),
+                              icon: Image.asset(
+                                'assets/images/logo.png',
+                                width: 25,
+                                height: 25,
                               ),
                             ),
                             // IconButton(

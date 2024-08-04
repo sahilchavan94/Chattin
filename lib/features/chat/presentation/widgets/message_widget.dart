@@ -116,7 +116,7 @@ class MessageWidget extends StatelessWidget {
                                   ),
                           ),
                         if (isReply) verticalSpacing(6),
-                        if (messageType == MessageType.text)
+                        if (messageType != MessageType.image)
                           Column(
                             crossAxisAlignment: isMe
                                 ? CrossAxisAlignment.end
@@ -127,8 +127,14 @@ class MessageWidget extends StatelessWidget {
                                 style: AppTheme
                                     .darkThemeData.textTheme.displaySmall!
                                     .copyWith(
-                                  color: AppPallete.whiteColor,
+                                  color: messageType == MessageType.deleted
+                                      ? AppPallete.greyColor
+                                      : AppPallete.whiteColor,
+                                  fontStyle: messageType == MessageType.deleted
+                                      ? FontStyle.italic
+                                      : FontStyle.normal,
                                 ),
+
                                 maxLines: 10,
                                 overflow: TextOverflow
                                     .visible, // Ensure text can overflow
@@ -184,6 +190,7 @@ class MessageWidget extends StatelessWidget {
                               ),
                             ),
                           ),
+
                         // verticalSpacing(
                         //   messageType == MessageType.image ? 0 : 4,
                         // ),

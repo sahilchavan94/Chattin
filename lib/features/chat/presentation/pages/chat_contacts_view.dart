@@ -120,7 +120,7 @@ class _ChatContactsViewState extends State<ChatContactsView> {
         },
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(
-            50,
+            20,
           ),
         ),
         backgroundColor: AppPallete.bottomSheetColor,

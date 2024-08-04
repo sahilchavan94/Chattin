@@ -8,13 +8,22 @@ enum ProfileStatus {
   failure,
 }
 
+enum UpdateProfileStatus {
+  initial,
+  loading,
+  success,
+  failure,
+}
+
 class ProfileState {
   ProfileStatus profileStatus;
+  UpdateProfileStatus? updateProfileStatus;
   bool? isImageLoading;
   UserEntity? userData;
   String? message;
   ProfileState({
     required this.profileStatus,
+    this.updateProfileStatus,
     this.userData,
     this.isImageLoading = false,
     this.message,
@@ -24,12 +33,14 @@ class ProfileState {
 
   ProfileState copyWith({
     ProfileStatus? profileStatus,
+    UpdateProfileStatus? updateProfileStatus,
     UserEntity? userData,
     bool? isImageLoading,
     String? message,
   }) {
     return ProfileState(
       profileStatus: profileStatus ?? this.profileStatus,
+      updateProfileStatus: updateProfileStatus ?? this.updateProfileStatus,
       isImageLoading: isImageLoading ?? this.isImageLoading,
       userData: userData ?? this.userData,
       message: message ?? this.message,
@@ -41,6 +52,7 @@ class ProfileState {
     if (identical(this, other)) return true;
 
     return other.profileStatus == profileStatus &&
+        other.updateProfileStatus == updateProfileStatus &&
         other.isImageLoading == isImageLoading &&
         other.userData == userData &&
         other.message == message;
@@ -49,6 +61,7 @@ class ProfileState {
   @override
   int get hashCode {
     return profileStatus.hashCode ^
+        updateProfileStatus.hashCode ^
         isImageLoading.hashCode ^
         userData.hashCode ^
         message.hashCode;

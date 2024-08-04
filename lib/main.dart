@@ -31,9 +31,11 @@ void main() async {
       providers: [
         BlocProvider(
           create: (_) => serviceLocator<AuthCubit>(),
+          lazy: false,
         ),
         BlocProvider(
           create: (_) => serviceLocator<ContactsCubit>(),
+          lazy: false,
         ),
         BlocProvider(
           create: (_) => serviceLocator<ProfileCubit>(),
@@ -64,12 +66,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _setUserOnlineStatus();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  void _setUserOnlineStatus() {
+    final currentUserData = context.read<ProfileCubit>().state.userData;
+    if (currentUserData != null) {
+      final chatCubit = context.read<ChatCubit>();
+      chatCubit.setChatStatus(
+        status: Status.online,
+        uid: currentUserData.uid,
+      );
+    }
   }
 
   @override
@@ -98,7 +112,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         break;
       default:
         chatCubit.setChatStatus(
-          status: Status.unavailable,
+          status: Status.online,
           uid: currentUserData.uid,
         );
     }

@@ -17,7 +17,6 @@ import 'package:chattin/features/stories/domain/entities/story_entity.dart';
 import 'package:chattin/features/stories/presentation/cubit/story_cubit.dart';
 import 'package:chattin/features/stories/presentation/widgets/story_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -114,7 +113,8 @@ class _StoryContactsViewState extends State<StoryContactsView> {
           }
           return BlocBuilder<StoryCubit, StoryState>(
             builder: (context, storiesState) {
-              if (storiesState.storyStatus == StoryStatus.loading) {
+              if (storiesState.storyStatus == StoryStatus.loading &&
+                  storiesState.stories == null) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );

@@ -28,6 +28,9 @@ class RoutePath {
   static const RouteName selectContact = RouteName(
     path: "/select_contact",
   );
+  static const RouteName addContact = RouteName(
+    path: "/add_contact",
+  );
   static const RouteName chatScreen = RouteName(
     path: "/chat_screen",
   );

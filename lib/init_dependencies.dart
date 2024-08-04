@@ -15,6 +15,8 @@ import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chattin/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:chattin/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:chattin/features/chat/domain/repositories/chat_repository.dart';
+import 'package:chattin/features/chat/domain/usecases/delete_message_for_everyone.dart';
+import 'package:chattin/features/chat/domain/usecases/delete_message_for_sender.dart';
 import 'package:chattin/features/chat/domain/usecases/get_app_contacts.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_contacts.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_status.dart';
@@ -202,8 +204,20 @@ void initChat() {
         chatRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<DeleteMessageForSenderUseCase>(
+      () => DeleteMessageForSenderUseCase(
+        chatRepository: serviceLocator(),
+      ),
+    )
+    ..registerLazySingleton<DeleteMessageForEveryoneUseCase>(
+      () => DeleteMessageForEveryoneUseCase(
+        chatRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton(
       () => ChatCubit(
+        serviceLocator(),
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),

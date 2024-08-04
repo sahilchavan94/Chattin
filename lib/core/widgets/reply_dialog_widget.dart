@@ -73,7 +73,7 @@ class ReplyDialogWidget extends StatelessWidget {
               ],
             ),
             verticalSpacing(15),
-            if (messageType == MessageType.text)
+            if (messageType != MessageType.image)
               Chip(
                 backgroundColor: AppPallete.blackColor,
                 surfaceTintColor: AppPallete.blackColor,

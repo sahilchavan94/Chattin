@@ -8,6 +8,7 @@ import 'package:chattin/features/auth/presentation/pages/create_profile_view.dar
 import 'package:chattin/features/auth/presentation/pages/email_auth_view.dart';
 import 'package:chattin/features/auth/presentation/pages/email_pass_login_view.dart';
 import 'package:chattin/features/auth/presentation/pages/verify_email_view.dart';
+import 'package:chattin/features/chat/presentation/pages/add_contact_view.dart';
 import 'package:chattin/features/chat/presentation/pages/chat_contact_information_view.dart';
 import 'package:chattin/features/chat/presentation/pages/chat_view.dart';
 import 'package:chattin/features/chat/presentation/pages/select_contacts_view.dart';
@@ -152,6 +153,16 @@ class AppRouter {
             context: context,
             state: state,
             child: const SelectContactsView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.addContact.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const AddContactView(),
           );
         },
       ),

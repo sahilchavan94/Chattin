@@ -44,4 +44,14 @@ abstract interface class ChatRepository {
     required String senderId,
     required MessageType repliedToType,
   });
+  Future<Either<Failure, String>> deleteMessageForSender({
+    required String messageId,
+    required String senderId,
+    required String receiverId,
+  });
+  Future<Either<Failure, String>> deleteMessageForEveryone({
+    required String messageId,
+    required String senderId,
+    required String receiverId,
+  });
 }
