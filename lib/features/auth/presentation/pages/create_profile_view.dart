@@ -13,6 +13,7 @@ import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,6 +55,9 @@ class _CreateProfileViewState extends State<CreateProfileView> {
       appBar: AppBar(
         title: const Text('Profile'),
         centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          systemNavigationBarColor: AppPallete.backgroundColor,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

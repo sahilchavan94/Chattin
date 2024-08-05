@@ -13,6 +13,7 @@ import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contact
 import 'package:chattin/features/chat/presentation/widgets/contact_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -85,6 +86,9 @@ class _SelectContactsViewState extends State<SelectContactsView> {
 
         return Scaffold(
           appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              systemNavigationBarColor: AppPallete.backgroundColor,
+            ),
             title: const Text('Select contact'),
             centerTitle: true,
             actions: [

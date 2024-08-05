@@ -5,6 +5,7 @@ import 'package:chattin/core/widgets/button_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditProfileView extends StatefulWidget {
@@ -33,6 +34,9 @@ class _EditProfileViewState extends State<EditProfileView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          systemNavigationBarColor: AppPallete.backgroundColor,
+        ),
         title: const Text("Edit Profile"),
         centerTitle: true,
       ),

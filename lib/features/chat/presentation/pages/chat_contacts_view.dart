@@ -11,6 +11,7 @@ import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_
 import 'package:chattin/features/chat/presentation/widgets/chat_contact_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -60,6 +61,9 @@ class _ChatContactsViewState extends State<ChatContactsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          systemNavigationBarColor: AppPallete.backgroundColor,
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

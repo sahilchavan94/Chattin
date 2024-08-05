@@ -1,6 +1,7 @@
 import 'package:chattin/core/common/providers/reply_message_provider.dart';
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/router/router.dart';
+import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:chattin/firebase_options.dart';
 import 'package:chattin/init_dependencies.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +29,13 @@ void main() async {
   );
 
   await initDependencies();
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: AppPallete.backgroundColor,
+      systemNavigationBarColor: AppPallete.backgroundColor,
+    ),
+  );
 
   runApp(
     MultiBlocProvider(

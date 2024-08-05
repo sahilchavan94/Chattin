@@ -2,6 +2,7 @@ import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AccountSettingsView extends StatelessWidget {
   const AccountSettingsView({super.key});
@@ -12,6 +13,9 @@ class AccountSettingsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Account Settings'),
         centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          systemNavigationBarColor: AppPallete.backgroundColor,
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

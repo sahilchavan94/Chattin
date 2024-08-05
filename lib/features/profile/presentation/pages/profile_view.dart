@@ -12,6 +12,7 @@ import 'package:chattin/core/widgets/user_info.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:chattin/features/profile/presentation/widgets/profile_details_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -74,6 +75,9 @@ class _ProfileViewState extends State<ProfileView> {
         appBar: AppBar(
           title: const Text("Profile"),
           centerTitle: true,
+          systemOverlayStyle: const SystemUiOverlayStyle(
+            systemNavigationBarColor: AppPallete.backgroundColor,
+          ),
         ),
         body: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {

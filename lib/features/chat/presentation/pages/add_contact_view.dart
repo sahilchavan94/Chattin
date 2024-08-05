@@ -7,6 +7,7 @@ import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddContactView extends StatefulWidget {
@@ -29,6 +30,9 @@ class _AddContactViewState extends State<AddContactView> {
       appBar: AppBar(
         title: const Text("New contact"),
         centerTitle: true,
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          systemNavigationBarColor: AppPallete.backgroundColor,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(

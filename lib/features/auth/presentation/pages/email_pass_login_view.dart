@@ -7,6 +7,7 @@ import 'package:chattin/core/widgets/button_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -40,6 +41,11 @@ class _EmailPassLoginViewState extends State<EmailPassLoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          systemNavigationBarColor: AppPallete.backgroundColor,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -48,7 +54,7 @@ class _EmailPassLoginViewState extends State<EmailPassLoginView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                verticalSpacing(110),
+                verticalSpacing(35),
                 Row(
                   children: [
                     Text(
