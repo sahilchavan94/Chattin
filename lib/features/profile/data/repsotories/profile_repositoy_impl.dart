@@ -9,6 +9,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
   final ProfileRemoteDataSourceImpl profileRemoteDataSourceImpl;
 
   const ProfileRepositoryImpl({required this.profileRemoteDataSourceImpl});
+
   @override
   Future<Either<Failure, UserEntity>> getProfileData(String uid) async {
     try {

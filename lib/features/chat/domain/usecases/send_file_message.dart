@@ -2,7 +2,6 @@ import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/features/chat/domain/repositories/chat_repository.dart';
 import 'package:fpdart/fpdart.dart';
-
 import '../../../../core/errors/failure.dart';
 
 class SendFileMessageUseCase {

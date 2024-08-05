@@ -2,27 +2,27 @@
 import 'package:chattin/core/enum/enums.dart';
 
 class MessageEntity {
+  final String? repliedTo;
+  final DateTime? timeSent;
+  final MessageType? repliedToType;
+  final bool isReply;
+  final String text;
+  final bool status;
   final String senderId;
   final String receiverId;
-  final String text;
-  final DateTime? timeSent;
   final String messageId;
-  final bool status;
   final MessageType messageType;
-  final bool isReply;
-  final String? repliedTo;
-  final MessageType? repliedToType;
 
   MessageEntity({
+    this.repliedTo,
+    this.repliedToType,
     required this.senderId,
     required this.isReply,
-    this.repliedTo,
     required this.receiverId,
     required this.text,
     required this.timeSent,
     required this.messageId,
     required this.status,
     required this.messageType,
-    this.repliedToType,
   });
 }

@@ -6,13 +6,17 @@ import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract interface class ProfileRemoteDataSource {
-  Future<UserEntity> getProfileData(String uid);
+  Future<UserEntity> getProfileData(
+    String uid,
+  );
+
   Future<String> setProfileData({
     required String uid,
     required String displayName,
     required String phoneNumber,
     required String about,
   });
+
   Future<String> setProfileImage({
     required String uid,
     required String imageUrl,
@@ -24,7 +28,6 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   const ProfileRemoteDataSourceImpl({required this.firebaseFirestore});
 
-  //get the profile data
   @override
   Future<UserEntity> getProfileData(String uid) async {
     try {

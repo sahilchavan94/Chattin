@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 
 class MessageModel extends MessageEntity {
   MessageModel({
+    super.repliedTo,
+    super.repliedToType,
     required super.senderId,
     required super.receiverId,
     required super.text,
@@ -14,11 +14,11 @@ class MessageModel extends MessageEntity {
     required super.status,
     required super.messageType,
     required super.isReply,
-    super.repliedTo,
-    super.repliedToType,
   });
 
   Map<String, dynamic> toMap() {
+    //if the message is a replied message then -> add required fields
+    // ( isReply,repliedTo,repliedToType )
     if (isReply) {
       return <String, dynamic>{
         'senderId': senderId,
@@ -53,20 +53,19 @@ class MessageModel extends MessageEntity {
           ? DateTime.fromMillisecondsSinceEpoch(map['timeSent'] as int)
           : null,
       messageId: map['messageId'] != null ? map['messageId'] as String : "",
-      status: map['status'] ?? false,
+      status: map['status'] ??
+          false, //status here resembles to seen/unseen status of message
       messageType: map['messageType'] != null
           ? (map['messageType'] as String).toStringValue()
           : MessageType.text,
-      isReply: map['isReply'] ?? false,
-      repliedTo: map['repliedTo'] != null ? map['repliedTo'] as String : "",
+      isReply: map['isReply'] ?? false, //whether the message is a reply
+      repliedTo: map['repliedTo'] != null
+          ? map['repliedTo'] as String
+          : "", //to which message this message is replied to
       repliedToType: map['repliedToType'] != null
           ? (map['repliedToType'] as String).toStringValue()
-          : MessageType.text,
+          : MessageType
+              .text, //the type of the message to which this message is replied
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory MessageModel.fromJson(String source) =>
-      MessageModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

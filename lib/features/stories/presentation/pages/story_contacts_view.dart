@@ -277,42 +277,40 @@ class _NoStoryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        ImageWidget(
-          imagePath: userData.imageUrl,
-          height: 50,
-          width: 50,
-          radius: BorderRadius.circular(50),
-          fit: BoxFit.cover,
-        ),
-        horizontalSpacing(10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GestureDetector(
-              onTap: () async {
-                onPressed();
-              },
-              child: Text(
+    return GestureDetector(
+      onTap: onPressed,
+      child: Row(
+        children: [
+          ImageWidget(
+            imagePath: userData.imageUrl,
+            height: 50,
+            width: 50,
+            radius: BorderRadius.circular(50),
+            fit: BoxFit.cover,
+          ),
+          horizontalSpacing(10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
                 "Add your story",
                 style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                   color: AppPallete.blueColor,
                   fontSize: 16,
                 ),
               ),
-            ),
-            verticalSpacing(5),
-            Text(
-              "Share stories by sharing awesome pics",
-              style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-                color: AppPallete.greyColor,
+              verticalSpacing(5),
+              Text(
+                "Share stories by sharing awesome pics",
+                style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+                  color: AppPallete.greyColor,
+                ),
+                maxLines: 2,
               ),
-              maxLines: 2,
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

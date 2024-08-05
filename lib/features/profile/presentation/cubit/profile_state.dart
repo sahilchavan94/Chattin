@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'profile_cubit.dart';
 
+//for handling the profile data
 enum ProfileStatus {
   initial,
   loading,
@@ -8,62 +9,53 @@ enum ProfileStatus {
   failure,
 }
 
-enum UpdateProfileStatus {
-  initial,
+//for handling the profile data updating
+enum SetProfileStatus {
   loading,
   success,
-  failure,
+}
+
+//for handling the profile image updating
+enum SetProfileImageStatus {
+  loading,
+  success,
 }
 
 class ProfileState {
   ProfileStatus profileStatus;
-  UpdateProfileStatus? updateProfileStatus;
+  SetProfileStatus? setProfileStatus;
+  SetProfileImageStatus? setProfileImageStatus;
   bool? isImageLoading;
   UserEntity? userData;
   String? message;
+
   ProfileState({
-    required this.profileStatus,
-    this.updateProfileStatus,
+    this.message,
     this.userData,
     this.isImageLoading = false,
-    this.message,
+    this.setProfileStatus,
+    this.setProfileImageStatus,
+    required this.profileStatus,
   });
 
   ProfileState.initial() : this(profileStatus: ProfileStatus.initial);
 
   ProfileState copyWith({
     ProfileStatus? profileStatus,
-    UpdateProfileStatus? updateProfileStatus,
+    SetProfileStatus? setProfileStatus,
+    SetProfileImageStatus? setProfileImageStatus,
     UserEntity? userData,
     bool? isImageLoading,
     String? message,
   }) {
     return ProfileState(
       profileStatus: profileStatus ?? this.profileStatus,
-      updateProfileStatus: updateProfileStatus ?? this.updateProfileStatus,
+      setProfileStatus: setProfileStatus ?? this.setProfileStatus,
+      setProfileImageStatus:
+          setProfileImageStatus ?? this.setProfileImageStatus,
       isImageLoading: isImageLoading ?? this.isImageLoading,
       userData: userData ?? this.userData,
       message: message ?? this.message,
     );
-  }
-
-  @override
-  bool operator ==(covariant ProfileState other) {
-    if (identical(this, other)) return true;
-
-    return other.profileStatus == profileStatus &&
-        other.updateProfileStatus == updateProfileStatus &&
-        other.isImageLoading == isImageLoading &&
-        other.userData == userData &&
-        other.message == message;
-  }
-
-  @override
-  int get hashCode {
-    return profileStatus.hashCode ^
-        updateProfileStatus.hashCode ^
-        isImageLoading.hashCode ^
-        userData.hashCode ^
-        message.hashCode;
   }
 }

@@ -10,21 +10,31 @@ abstract interface class ChatRepository {
   Future<Either<Failure, List<ContactEntity>>> getAppContacts(
     List<String> phoneNumbers,
   );
+
   Future<Either<Failure, String>> sendTextMessage({
     required String text,
     required String recieverId,
     required UserEntity sender,
   });
+
   Stream<List<MessageEntity>> getChatStream({
     required String recieverId,
     required String senderId,
   });
-  Stream<List<ContactEntity>> getChatContacts(String uid);
-  Stream<Status> getChatStatus(String uid);
+
+  Stream<List<ContactEntity>> getChatContacts(
+    String uid,
+  );
+
+  Stream<Status> getChatStatus(
+    String uid,
+  );
+
   Future<Either<Failure, void>> setChatStatus({
     required Status status,
     required String uid,
   });
+
   Future<Either<Failure, String>> sendFileMessage({
     required String downloadedUrl,
     required String recieverId,
@@ -32,11 +42,13 @@ abstract interface class ChatRepository {
     required String messageId,
     required MessageType messageType,
   });
+
   Future<Either<Failure, void>> setMessageStatus({
     required String receiverUserId,
     required String messageId,
     required String senderId,
   });
+
   Future<Either<Failure, void>> sendReplyMessage({
     required String text,
     required String repliedTo,
@@ -44,16 +56,19 @@ abstract interface class ChatRepository {
     required String senderId,
     required MessageType repliedToType,
   });
+
   Future<Either<Failure, String>> deleteMessageForSender({
     required String messageId,
     required String senderId,
     required String receiverId,
   });
+
   Future<Either<Failure, String>> deleteMessageForEveryone({
     required String messageId,
     required String senderId,
     required String receiverId,
   });
+
   Future<Either<Failure, String>> addNewContacts({
     required String displayName,
     required String phoneCode,

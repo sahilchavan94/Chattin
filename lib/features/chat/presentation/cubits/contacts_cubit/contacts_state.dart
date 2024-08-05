@@ -12,6 +12,7 @@ class ContactsState {
   ContactsStatus contactsStatus;
   List<ContactEntity>? contactList;
   String? message;
+
   ContactsState({
     required this.contactsStatus,
     this.contactList,

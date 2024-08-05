@@ -117,6 +117,7 @@ class _ChatViewState extends State<ChatView> {
                 showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
+                  elevation: 0,
                   showDragHandle: true,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
@@ -141,119 +142,135 @@ class _ChatViewState extends State<ChatView> {
       bottomNavigationBar: Consumer<ReplyMessageProvider>(
         builder: (BuildContext context,
             ReplyMessageProvider replyMessageProvider, Widget? child) {
-          return SafeArea(
-            child: Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.srgbToLinearGamma(),
-                  opacity: .3,
-                  image: AssetImage(
-                    "assets/images/bg.png",
-                  ),
-                ),
-              ),
-              child: Padding(
-                padding: MediaQuery.of(context).viewInsets,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (replyMessageProvider.isReplyWidgetOpened &&
-                        replyMessageProvider.currentReplyChatId == widget.uid)
-                      replyWidget(
-                        context: context,
-                        sender: replyMessageProvider.senderName,
-                        messageType: replyMessageProvider.messageType,
-                        senderImage: replyMessageProvider.senderImageUrl,
-                        repliedTo: replyMessageProvider.repliedTo,
-                        isMe: replyMessageProvider.isMe,
+          return BlocBuilder<ChatCubit, ChatState>(
+            builder: (context, state) {
+              if (state.chatStreamStatus == ChatStreamStatus.loading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (state.chatStreamStatus == ChatStreamStatus.failure) {
+                return const SizedBox.shrink();
+              }
+              return SafeArea(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.srgbToLinearGamma(),
+                      opacity: .3,
+                      image: AssetImage(
+                        "assets/images/bg.png",
                       ),
-                    Row(
+                    ),
+                  ),
+                  child: Padding(
+                    padding: MediaQuery.of(context).viewInsets,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Expanded(
-                          child: InputWidget(
-                            hintText: replyMessageProvider.isReplyWidgetOpened
-                                ? 'Reply'
-                                : 'Message',
-                            height: 47.5,
-                            textEditingController: _messageController,
-                            validator: (String val) {},
-                            suffixIcon: const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15),
-                              child: Icon(
-                                Icons.photo_library,
-                                color: AppPallete.greyColor,
+                        if (replyMessageProvider.isReplyWidgetOpened &&
+                            replyMessageProvider.currentReplyChatId ==
+                                widget.uid)
+                          replyWidget(
+                            context: context,
+                            sender: replyMessageProvider.senderName,
+                            messageType: replyMessageProvider.messageType,
+                            senderImage: replyMessageProvider.senderImageUrl,
+                            repliedTo: replyMessageProvider.repliedTo,
+                            isMe: replyMessageProvider.isMe,
+                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InputWidget(
+                                hintText:
+                                    replyMessageProvider.isReplyWidgetOpened
+                                        ? 'Reply'
+                                        : 'Message',
+                                height: 47.5,
+                                textEditingController: _messageController,
+                                validator: (String val) {},
+                                suffixIcon: const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 15),
+                                  child: Icon(
+                                    Icons.photo_library,
+                                    color: AppPallete.greyColor,
+                                  ),
+                                ),
+                                onSuffixIconPressed: () {
+                                  showBottomSheetForPickingImage(
+                                    context: context,
+                                    onClick1: () {
+                                      context.pop();
+                                      _selectImage(ImageSource.camera);
+                                    },
+                                    onClick2: () {
+                                      context.pop();
+                                      _selectImage(ImageSource.gallery);
+                                    },
+                                    title: "Share images ",
+                                    subTitle:
+                                        "Sending images to each other is now easy 📸",
+                                  );
+                                },
+                                fillColor: AppPallete.backgroundColor,
+                                showBorder: false,
+                                borderRadius: 60,
                               ),
                             ),
-                            onSuffixIconPressed: () {
-                              showBottomSheetForPickingImage(
-                                context: context,
-                                onClick1: () {
-                                  context.pop();
-                                  _selectImage(ImageSource.camera);
-                                },
-                                onClick2: () {
-                                  context.pop();
-                                  _selectImage(ImageSource.gallery);
-                                },
-                                title: "Share images ",
-                                subTitle:
-                                    "Sending images to each other is now easy 📸",
-                              );
-                            },
-                            fillColor: AppPallete.backgroundColor,
-                            showBorder: false,
-                            borderRadius: 60,
-                          ),
-                        ),
-                        FloatingActionButton(
-                          onPressed: () async {
-                            if (_messageController.text
-                                .replaceAll(" ", "")
-                                .isEmpty) {
-                              return;
-                            }
+                            FloatingActionButton(
+                              onPressed: () async {
+                                if (_messageController.text
+                                    .replaceAll(" ", "")
+                                    .isEmpty) {
+                                  return;
+                                }
 
-                            if (replyMessageProvider.isReplyWidgetOpened) {
-                              await context.read<ChatCubit>().sendReply(
-                                    text: _messageController.text,
-                                    repliedTo: replyMessageProvider.repliedTo,
-                                    recieverId: replyMessageProvider.receiverId,
-                                    repliedToType:
-                                        replyMessageProvider.messageType,
-                                    senderId: replyMessageProvider.senderId,
-                                  );
-                              replyMessageProvider.clearReplyData();
-                              setState(() {
-                                _messageController.clear();
-                              });
-                              return;
-                            }
-                            context.read<ChatCubit>().sendMessage(
-                                  text: _messageController.text,
-                                  recieverId: widget.uid,
-                                  sender: context
-                                      .read<ProfileCubit>()
-                                      .state
-                                      .userData!,
-                                );
-                            setState(() {
-                              _messageController.clear();
-                            });
-                          },
-                          mini: true,
-                          backgroundColor:
-                              context.watch<ChatCubit>().state.chatStatus ==
-                                      ChatStatus.loading
-                                  ? AppPallete.blueColor.withOpacity(.7)
-                                  : AppPallete.blueColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                              50,
-                            ),
-                          ),
-                          child:
-                              context.watch<ChatCubit>().state.sendingMessage ==
+                                if (replyMessageProvider.isReplyWidgetOpened) {
+                                  await context.read<ChatCubit>().sendReply(
+                                        text: _messageController.text,
+                                        repliedTo:
+                                            replyMessageProvider.repliedTo,
+                                        recieverId:
+                                            replyMessageProvider.receiverId,
+                                        repliedToType:
+                                            replyMessageProvider.messageType,
+                                        senderId: replyMessageProvider.senderId,
+                                      );
+                                  replyMessageProvider.clearReplyData();
+                                  setState(() {
+                                    _messageController.clear();
+                                  });
+                                  return;
+                                }
+                                context.read<ChatCubit>().sendMessage(
+                                      text: _messageController.text,
+                                      recieverId: widget.uid,
+                                      sender: context
+                                          .read<ProfileCubit>()
+                                          .state
+                                          .userData!,
+                                    );
+                                setState(() {
+                                  _messageController.clear();
+                                });
+                              },
+                              mini: true,
+                              backgroundColor:
+                                  context.watch<ChatCubit>().state.chatStatus ==
+                                          ChatStatus.loading
+                                      ? AppPallete.blueColor.withOpacity(.7)
+                                      : AppPallete.blueColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                  50,
+                                ),
+                              ),
+                              child: context
+                                          .watch<ChatCubit>()
+                                          .state
+                                          .sendingMessage ==
                                       true
                                   ? const SizedBox(
                                       height: 23,
@@ -267,24 +284,26 @@ class _ChatViewState extends State<ChatView> {
                                       size: 20,
                                       color: AppPallete.whiteColor,
                                     ),
-                        )
+                            )
+                          ],
+                        ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           );
         },
       ),
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
-          if (state.fetchingCurrentChats == true) {
+          if (state.chatStreamStatus == ChatStreamStatus.loading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
-          if (state.chatStatus == ChatStatus.chatFailure) {
+          if (state.chatStreamStatus == ChatStreamStatus.failure) {
             return const FailureWidget();
           }
 

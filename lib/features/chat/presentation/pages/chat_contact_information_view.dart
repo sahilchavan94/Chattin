@@ -38,12 +38,14 @@ class _ChatContactInformationViewState
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, state) {
-        if (state.fetchingUserInfo == true) {
+        if (state.chatContactInformationStatus ==
+            ChatContactInformationStatus.loading) {
           return const Center(
             child: CircularProgressIndicator(),
           );
         }
-        if (state.fetchingUserInfo == null) {
+        if (state.chatContactInformationStatus ==
+            ChatContactInformationStatus.failure) {
           return const FailureWidget();
         }
         //get the user info

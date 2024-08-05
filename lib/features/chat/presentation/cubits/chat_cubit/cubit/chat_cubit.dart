@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:chattin/core/common/entities/user_entity.dart';
@@ -68,20 +69,26 @@ class ChatCubit extends Cubit<ChatState> {
     getChatContacts();
   }
 
-  //method to send a chat message
+  //method to send a text message in the chat
   Future<void> sendMessage({
     required String text,
     required String recieverId,
     required UserEntity sender,
   }) async {
     emit(state.copyWith(sendingMessage: true));
+
     final response = await _sendMessageUseCase.call(
       text: text,
       recieverId: recieverId,
       sender: sender,
     );
+
     response.fold(
       (l) {
+        showToast(
+          content: ToastMessages.failedToSentLastMessage,
+          type: ToastificationType.error,
+        );
         emit(state.copyWith(sendingMessage: false));
       },
       (r) {
@@ -90,6 +97,7 @@ class ChatCubit extends Cubit<ChatState> {
     );
   }
 
+  //method to send a file message in the chat ( only images in our case )
   Future<void> sendFileMessage({
     required String recieverId,
     required UserEntity sender,
@@ -98,10 +106,12 @@ class ChatCubit extends Cubit<ChatState> {
   }) async {
     emit(state.copyWith(sendingMessage: true));
     final messageId = const Uuid().v1();
+
     final uploadResponse = await _generalUploadUseCase.call(
       file,
       'chats/${messageType.toStringValue()}/${sender.uid}/$recieverId/$messageId',
     );
+
     if (uploadResponse.isRight()) {
       final uploadedImageUrl = uploadResponse.getOrElse((l) => "");
       final response = await _sendFileMessageUseCase.call(
@@ -113,42 +123,15 @@ class ChatCubit extends Cubit<ChatState> {
       );
       response.fold(
         (l) {
+          showToast(
+            content: ToastMessages.failedToSentLastMessage,
+            type: ToastificationType.error,
+          );
           emit(state.copyWith(sendingMessage: false));
         },
         (r) {
           emit(state.copyWith(sendingMessage: false));
         },
-      );
-    }
-  }
-
-  void getChatStream({
-    required String receiverId,
-  }) {
-    emit(state.copyWith(fetchingCurrentChats: true));
-    final uid = _firebaseAuth.currentUser!.uid;
-    _chatMessagesStreamSubscription?.cancel();
-    try {
-      _chatMessagesStreamSubscription = _getChatStreamUseCase
-          .call(
-        receiver: receiverId,
-        senderId: uid,
-      )
-          .listen((currentChats) {
-        emit(
-          state.copyWith(
-            currentChatMessages: currentChats,
-            fetchingCurrentChats: false,
-          ),
-        );
-      });
-    } catch (e) {
-      emit(
-        state.copyWith(
-          chatStatus: ChatStatus.failure,
-          fetchingCurrentChats: false,
-          message: e.toString(),
-        ),
       );
     }
   }
@@ -178,6 +161,41 @@ class ChatCubit extends Cubit<ChatState> {
     }
   }
 
+  //method to fetch the chat stream i.e chats between two users
+  void getChatStream({
+    required String receiverId,
+  }) {
+    emit(
+      state.copyWith(
+        chatStreamStatus: ChatStreamStatus.loading,
+      ),
+    );
+    final uid = _firebaseAuth.currentUser!.uid;
+    _chatMessagesStreamSubscription?.cancel();
+    try {
+      _chatMessagesStreamSubscription = _getChatStreamUseCase
+          .call(
+        receiver: receiverId,
+        senderId: uid,
+      )
+          .listen((currentChats) {
+        emit(
+          state.copyWith(
+            chatStreamStatus: ChatStreamStatus.success,
+            currentChatMessages: currentChats,
+          ),
+        );
+      });
+    } catch (e) {
+      emit(
+        state.copyWith(
+          chatStreamStatus: ChatStreamStatus.failure,
+          message: e.toString(),
+        ),
+      );
+    }
+  }
+
   //method to get the current chat status stream
   void getChatStatus(String uid) {
     _chatStatusStreamSubscription?.cancel();
@@ -187,45 +205,56 @@ class ChatCubit extends Cubit<ChatState> {
         emit(
           state.copyWith(
             currentChatStatus: status,
-            chatStatus: ChatStatus.success,
+            chatOnOffStreamStatus: ChatOnOffStreamStatus.success,
           ),
         );
       });
     } catch (e) {
       emit(
         state.copyWith(
-          chatStatus: ChatStatus.failure,
+          chatOnOffStreamStatus: ChatOnOffStreamStatus.failure,
           message: e.toString(),
         ),
       );
     }
   }
 
-  //function to set the chat status
-  Future<void> setChatStatus({
+  //method to set the chat status
+  //as we are setting the chat online/offline status, no need to handle any states
+  //as we are using streams to update the statuses
+  Future<void> setChatOnOffStatus({
     required Status status,
     required String uid,
   }) async {
-    await _setChatStatusUseCase.call(
-      status: status,
-      uid: uid,
-    );
+    try {
+      await _setChatStatusUseCase.call(
+        status: status,
+        uid: uid,
+      );
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
-  //function to set the message status
+  //method to set the message status
+  //seen - unseen status, no need to handle states here as well
   Future<void> setMessageStatus({
     required String receiverId,
     required String senderId,
     required String messageId,
   }) async {
-    await _setMessageStatusUseCase.call(
-      receiverId: receiverId,
-      senderId: senderId,
-      messageId: messageId,
-    );
+    try {
+      await _setMessageStatusUseCase.call(
+        receiverId: receiverId,
+        senderId: senderId,
+        messageId: messageId,
+      );
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
-  //sending reply to a message
+  //method to send reply to a message
   Future<void> sendReply({
     required String text,
     required String repliedTo,
@@ -234,6 +263,7 @@ class ChatCubit extends Cubit<ChatState> {
     required String senderId,
   }) async {
     emit(state.copyWith(sendingMessage: true));
+
     final response = await _sendReplyUseCase.call(
       text: text,
       repliedTo: repliedTo,
@@ -241,6 +271,7 @@ class ChatCubit extends Cubit<ChatState> {
       repliedToType: repliedToType,
       senderId: senderId,
     );
+
     response.fold(
       (l) {
         emit(state.copyWith(sendingMessage: false));
@@ -251,28 +282,26 @@ class ChatCubit extends Cubit<ChatState> {
     );
   }
 
-  // void notifyNewMessage({required bool newMessageFlag}) {
-  //   emit(state.copyWith(isNewMessage: newMessageFlag));
-  // }
-
   //method to get the chat contact's information
   Future<void> getChatContactInformation(String uid) async {
-    emit(state.copyWith(fetchingUserInfo: true));
+    emit(state.copyWith(
+      chatContactInformationStatus: ChatContactInformationStatus.loading,
+    ));
     final response = await _getProfileDataUseCase.call(uid);
     response.fold(
       (l) {
-        emit(state.copyWith(
-          fetchingUserInfo: null,
-        ));
         showToast(
           content: ToastMessages.profileFailure,
-          type: ToastificationType.error,
           description: ToastMessages.defaultFailureDescription,
+          type: ToastificationType.error,
         );
+        emit(state.copyWith(
+          chatContactInformationStatus: ChatContactInformationStatus.failure,
+        ));
       },
       (r) {
         emit(state.copyWith(
-          fetchingUserInfo: false,
+          chatContactInformationStatus: ChatContactInformationStatus.success,
           chatContactInformation: r,
         ));
       },
@@ -280,6 +309,7 @@ class ChatCubit extends Cubit<ChatState> {
   }
 
   //method to delete the message from sender side
+  //no need to handle the states here as we are deleting the message
   Future<void> deleteMessageForSender({
     required String messageId,
     required String senderId,
@@ -304,7 +334,8 @@ class ChatCubit extends Cubit<ChatState> {
     });
   }
 
-  //method to delete the message from sender side
+  //method to delete the message for both sender and the receiver
+  //no need to handle the states here as we are deleting the message
   Future<void> deleteMessageForEveryone({
     required String messageId,
     required String senderId,
@@ -328,7 +359,7 @@ class ChatCubit extends Cubit<ChatState> {
     });
   }
 
-  //method to add a new contact
+  //method to add a new contact in native device ( currently only configured for Android )
   Future<void> addNewContact({
     required String phoneNumber,
     required String phoneCode,
@@ -349,7 +380,7 @@ class ChatCubit extends Cubit<ChatState> {
         content: r,
         type: ToastificationType.success,
       );
+      Constants.navigatorKey.currentState!.pop();
     });
-    Constants.navigatorKey.currentState!.pop();
   }
 }

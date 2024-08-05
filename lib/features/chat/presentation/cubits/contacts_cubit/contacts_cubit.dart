@@ -13,9 +13,11 @@ class ContactsCubit extends Cubit<ContactsState> {
     this._getContactsUseCase,
   ) : super(ContactsState.initial());
 
-  //method to get the app contacts
-  Future<void> getAppContacts(List<String> phoneNumbers,
-      {bool isRefreshed = false}) async {
+  //method to get the app contacts for device
+  Future<void> getAppContacts(
+    List<String> phoneNumbers, {
+    bool isRefreshed = false,
+  }) async {
     if (state.contactList != null && isRefreshed == false) {
       return;
     }

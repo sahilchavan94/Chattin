@@ -5,13 +5,17 @@ import 'package:chattin/features/stories/domain/entities/story_entity.dart';
 
 class StoryModel extends StoryEntity {
   StoryModel({
+    super.userEntity,
+    required super.uid,
     required super.phoneNumber,
     required super.imageUrlList,
-    required super.uid,
-    super.userEntity,
   });
 
   Map<String, dynamic> toMap() {
+    //adding the uploadedAt field in every uploaded image's url
+    // the array will be like this [{url1,referecePath,caption},{url2,referecePath,caption}....]
+    //after updating it's like [{url1,referecePath,caption,uploadedAt}....]
+    //this step can also be done within the cubit itself
     final urlList = imageUrlList
         .map((e) => {
               ...e,
@@ -20,7 +24,11 @@ class StoryModel extends StoryEntity {
         .toList();
     return <String, dynamic>{
       'phoneNumber': phoneNumber,
-      'imageUrlList': FieldValue.arrayUnion(urlList),
+      'imageUrlList': FieldValue.arrayUnion(
+        urlList,
+      ),
+      //arrayUnion tells the server to union the given
+      // elements with any array value that already exists on the server.
       'uid': uid,
     };
   }

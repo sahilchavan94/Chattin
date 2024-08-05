@@ -85,7 +85,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final currentUserData = context.read<ProfileCubit>().state.userData;
     if (currentUserData != null) {
       final chatCubit = context.read<ChatCubit>();
-      chatCubit.setChatStatus(
+      chatCubit.setChatOnOffStatus(
         status: Status.online,
         uid: currentUserData.uid,
       );
@@ -102,7 +102,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final chatCubit = context.read<ChatCubit>();
     switch (state) {
       case AppLifecycleState.resumed:
-        chatCubit.setChatStatus(
+        chatCubit.setChatOnOffStatus(
           status: Status.online,
           uid: currentUserData.uid,
         );
@@ -111,14 +111,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
       case AppLifecycleState.paused:
-        chatCubit.setChatStatus(
+        chatCubit.setChatOnOffStatus(
           status: Status.offline,
           uid: currentUserData.uid,
         );
         break;
       default:
-        chatCubit.setChatStatus(
-          status: Status.online,
+        chatCubit.setChatOnOffStatus(
+          status: Status.unavailable,
           uid: currentUserData.uid,
         );
     }

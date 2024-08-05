@@ -1,18 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
 
 class ContactModel extends ContactEntity {
   ContactModel({
     super.uid,
-    required super.displayName,
     super.about,
-    required super.imageUrl,
     super.lastMessage,
     super.timeSent,
     super.phoneNumber,
+    required super.imageUrl,
+    required super.displayName,
   });
 
   Map<String, dynamic> toMap() {
@@ -41,9 +39,4 @@ class ContactModel extends ContactEntity {
           : null,
     );
   }
-
-  String toJson() => json.encode(toMap());
-
-  factory ContactModel.fromJson(String source) =>
-      ContactModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

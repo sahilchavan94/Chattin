@@ -14,24 +14,22 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:uuid/uuid.dart';
 
 abstract interface class ChatRemoteDataSource {
-  Future<List<ContactEntity>> getAppContacts(List<String> phoneNumbers);
+  Future<List<ContactEntity>> getAppContacts(
+    List<String> phoneNumbers,
+  );
+
   Future<String> addNewContacts({
     required String displayName,
     required String phoneCode,
     required String phoneNumber,
   });
+
   Future<String> sendTextMessage({
     required String text,
     required String recieverId,
     required UserModel sender,
   });
-  Future<String> sendReplyMessage({
-    required String text,
-    required String repliedTo,
-    required MessageType repliedToType,
-    required String recieverId,
-    required String senderId,
-  });
+
   Future<String> sendFileMessage({
     required String downloadedUrl,
     required String recieverId,
@@ -39,26 +37,45 @@ abstract interface class ChatRemoteDataSource {
     required UserModel sender,
     required MessageType messageType,
   });
+
+  Future<String> sendReplyMessage({
+    required String text,
+    required String repliedTo,
+    required MessageType repliedToType,
+    required String recieverId,
+    required String senderId,
+  });
+
   Future<String> deleteMessageForSender({
     required String messageId,
     required String senderId,
     required String receiverId,
   });
+
   Future<String> deleteMessageForEveryone({
     required String messageId,
     required String senderId,
     required String receiverId,
   });
+
   Stream<List<MessageEntity>> getChatStream({
     required String recieverId,
     required String senderId,
   });
-  Stream<List<ContactEntity>> getChatContacts(String uid);
-  Stream<Status> getChatStatus(String uid);
+
+  Stream<List<ContactEntity>> getChatContacts(
+    String uid,
+  );
+
+  Stream<Status> getChatStatus(
+    String uid,
+  );
+
   Future<void> setChatStatus({
     required Status status,
     required String uid,
   });
+
   Future<void> setMessageStatus({
     required String receiverUserId,
     required String messageId,
@@ -73,6 +90,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required this.firebaseFirestore,
   });
 
+  //private methods//
+
+  //saving the recent chat data in the chats sub collections
   _saveDataToContactsSubcollection({
     required UserModel sender,
     required UserModel? receiver,
@@ -97,7 +117,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       lastMessage: text,
     );
 
-    //add in the reciver's doc inside the chat sub collection, a doc with the sender's id
+    //add the reciver's doc inside the chat sub collection of sender
     await firebaseFirestore
         .collection(Constants.userCollection)
         .doc(receiver.uid)
@@ -107,7 +127,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           receiverChatContact.toMap(),
         );
 
-    //same for the sender's doc
+    //add  the sender's doc inside the chat sub collection of receiver
     await firebaseFirestore
         .collection(Constants.userCollection)
         .doc(sender.uid)
@@ -118,6 +138,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         );
   }
 
+  //saving the sent message in the appropriate collections
   _saveMessageToMessageSubcollection({
     required UserModel sender,
     required UserModel? receiver,
@@ -129,8 +150,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     String? repliedTo,
     MessageType? repliedToType,
   }) async {
-    //create a message model representing a single message
+    //create a message model representing a single message entity
     MessageModel message;
+
     if (isReply) {
       message = MessageModel(
         senderId: sender.uid,
@@ -157,7 +179,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       );
     }
 
-    //sender's document
+    //save the message inside the messages sub collection of sender
+    //user collection -> sender -> chats -> receiver -> messages -> add message
     await firebaseFirestore
         .collection(Constants.userCollection)
         .doc(sender.uid)
@@ -169,7 +192,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           message.toMap(),
         );
 
-    //receiver's document
+    //save the message inside the messages sub collection of receiver
+    //user collection -> receiver -> chats -> sender -> messages -> add message
     await firebaseFirestore
         .collection(Constants.userCollection)
         .doc(receiver.uid)
@@ -187,7 +211,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     try {
       final List<ContactEntity> appContacts = [];
       const int chunkSize = 10;
+
       for (int i = 0; i < phoneNumbers.length; i += chunkSize) {
+        //search for 10 contacts at a time, reduces the search time
         final List<String> chunk = phoneNumbers.sublist(
           i,
           i + chunkSize > phoneNumbers.length
@@ -230,18 +256,17 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       final messageId = const Uuid().v1();
       UserModel? receiver;
 
-      //get the receiver's data
+      //fetching the receiver's data
       final receiverData = await firebaseFirestore
           .collection(Constants.userCollection)
           .doc(recieverId)
           .get();
 
-      //set the receiver data
       receiver = UserModel.fromMap(
         receiverData.data()!,
       );
 
-      //save the data to the contacts sub collection
+      //save the data to the chats sub collection
       _saveDataToContactsSubcollection(
         sender: sender,
         receiver: receiver,
@@ -249,7 +274,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         timeSent: timeSent,
       );
 
-      //save the message in sender and the receiver's collection
+      //save the message in sender and the receiver's appropriate sub collections
       _saveMessageToMessageSubcollection(
         sender: sender,
         receiver: receiver,
@@ -259,7 +284,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         messageType: MessageType.text,
         isReply: false,
       );
-      return ToastMessages.welcomeSignInMessage; //change it later
+      //change it later
+      return ToastMessages.welcomeSignInMessage;
     } on FirebaseException catch (e) {
       throw ServerException(
         error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
@@ -282,23 +308,20 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
       UserModel? receiver;
 
-      //get the receiver's data
+      //fetching the receiver's data
       final receiverData = await firebaseFirestore
           .collection(Constants.userCollection)
           .doc(recieverId)
           .get();
 
-      //set the receiver data
       receiver = UserModel.fromMap(
         receiverData.data()!,
       );
 
-      final String msgTypeString = messageType.toStringValue();
-
       _saveDataToContactsSubcollection(
         sender: sender,
         receiver: receiver,
-        text: msgTypeString,
+        text: messageType.toStringValue(),
         timeSent: timeSent,
       );
 
@@ -458,7 +481,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           .collection(Constants.messagesSubCollection)
           .doc(messageId)
           .update(
-        {'status': true},
+        {
+          'status': true,
+        },
       );
     } on FirebaseException catch (e) {
       throw ServerException(
@@ -485,29 +510,27 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       UserModel? sender;
       UserModel? receiver;
 
-      //get the sender's data
+      //fetching the sender's data
       final senderData = await firebaseFirestore
           .collection(Constants.userCollection)
           .doc(senderId)
           .get();
 
-      //get the receiver's data
+      //fetching the receiver's data
       final receiverData = await firebaseFirestore
           .collection(Constants.userCollection)
           .doc(recieverId)
           .get();
 
-      //set the sender data
       sender = UserModel.fromMap(
         senderData.data()!,
       );
 
-      //set the receiver data
       receiver = UserModel.fromMap(
         receiverData.data()!,
       );
 
-      //save the data to the contacts sub collection
+      //save the data to the chats sub collection
       _saveDataToContactsSubcollection(
         sender: sender,
         receiver: receiver,
@@ -515,7 +538,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         timeSent: timeSent,
       );
 
-      //save the message in sender and the receiver's collection
+      //save the message in sender and the receiver's appropriate sub collections
       _saveMessageToMessageSubcollection(
         sender: sender,
         receiver: receiver,
@@ -527,7 +550,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         repliedTo: repliedTo,
         repliedToType: repliedToType,
       );
-      return ToastMessages.welcomeSignInMessage; //change it later
+      //change it later
+      return ToastMessages.welcomeSignInMessage;
     } on FirebaseException catch (e) {
       throw ServerException(
         error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
@@ -544,13 +568,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required String receiverId,
   }) async {
     try {
-      // go to sender collection ->
-      //chats ->
-      //receiver collection
-      //-> messages
-      // -> messageId
-      //-> call delete function
-
+      //update the sender's collection of messages
+      //users -> sender -> chats -> receiver -> messageId -> update
       await firebaseFirestore
           .collection(Constants.userCollection)
           .doc(senderId)
@@ -558,17 +577,15 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           .doc(receiverId)
           .collection(Constants.messagesSubCollection)
           .doc(messageId)
-          .update({
-        "text": "This message is deleted by the sender",
-        "messageType": MessageType.deleted.toStringValue(),
-      });
+          .update(
+        {
+          "text": ToastMessages.deletedMessage,
+          "messageType": MessageType.deleted.toStringValue(),
+        },
+      );
 
-      // go to receiver collection ->
-      //chats ->
-      //sender collection
-      //-> messages
-      // -> messageId
-      //-> call delete function
+      //update the receiver's collection of messages
+      //users -> receiver -> chats -> sender -> messageId -> update
       await firebaseFirestore
           .collection(Constants.userCollection)
           .doc(receiverId)
@@ -576,10 +593,12 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           .doc(senderId)
           .collection(Constants.messagesSubCollection)
           .doc(messageId)
-          .update({
-        "text": "This message is deleted by the sender",
-        "messageType": MessageType.deleted.toStringValue(),
-      });
+          .update(
+        {
+          "text": ToastMessages.deletedMessage,
+          "messageType": MessageType.deleted.toStringValue(),
+        },
+      );
 
       return ToastMessages.messageDeleteEveryoneSuccess;
     } on FirebaseException catch (e) {
@@ -597,12 +616,8 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required String senderId,
     required String receiverId,
   }) async {
-    // go to sender collection ->
-    //chats ->
-    //receiver collection
-    //-> messages
-    // -> messageId
-    //-> call delete function
+    //update the sender's collection of messages
+    //users -> sender -> chats -> receiver -> messageId -> delete
     try {
       await firebaseFirestore
           .collection(Constants.userCollection)
@@ -629,12 +644,14 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required String phoneNumber,
   }) async {
     try {
+      //not able to see newly added contact in the contact app of user's device
+      //but instead in the phone app
       final newContact = Contact()
         ..name = Name(
           first: displayName,
         )
         ..phones = [
-          Phone("$phoneCode + $phoneNumber"),
+          Phone("$phoneCode $phoneNumber"),
         ];
 
       await newContact.insert();

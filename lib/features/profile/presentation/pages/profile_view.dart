@@ -78,7 +78,7 @@ class _ProfileViewState extends State<ProfileView> {
         body: BlocBuilder<ProfileCubit, ProfileState>(
           builder: (context, state) {
             if (state.profileStatus == ProfileStatus.loading ||
-                state.updateProfileStatus == UpdateProfileStatus.loading) {
+                state.setProfileStatus == SetProfileStatus.loading) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
@@ -129,7 +129,8 @@ class _ProfileViewState extends State<ProfileView> {
                                   child: Stack(
                                     alignment: Alignment.bottomRight,
                                     children: [
-                                      state.isImageLoading == true
+                                      state.setProfileImageStatus ==
+                                              SetProfileImageStatus.loading
                                           ? Container(
                                               width: 100,
                                               height: 100,

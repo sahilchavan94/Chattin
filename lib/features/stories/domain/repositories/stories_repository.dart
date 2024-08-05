@@ -10,6 +10,7 @@ abstract interface class StoriesRepository {
     required List imageUrlList,
     required String uid,
   });
+
   Future<Either<Failure, List<StoryEntity>>> getStories({
     required List<String> phoneNumbers,
   });

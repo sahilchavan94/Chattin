@@ -16,6 +16,7 @@ import '../../../../core/utils/toasts.dart';
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
+  //usecases
   final GetProfileDataUseCase _getProfileDataUseCase;
   final SetProfileDataUseCase _setProfileDataUseCase;
   final SetProfileImageUseCase _setProfileImageUseCase;
@@ -29,6 +30,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     this._generalUploadUseCase,
     this._setProfileImageUseCase,
   ) : super(ProfileState.initial()) {
+    //fetching the profile data as soon as the cubit is initialized
     final currentUser = firebaseAuth.currentUser;
     if (currentUser != null && currentUser.emailVerified) {
       getProfileData();
@@ -40,9 +42,16 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (firebaseAuth.currentUser == null) {
       return;
     }
-    emit(state.copyWith(profileStatus: ProfileStatus.loading));
+
+    emit(
+      state.copyWith(
+        profileStatus: ProfileStatus.loading,
+      ),
+    );
+
     final uid = firebaseAuth.currentUser!.uid;
     final response = await _getProfileDataUseCase.call(uid);
+
     response.fold(
       (l) {
         emit(
@@ -76,15 +85,23 @@ class ProfileCubit extends Cubit<ProfileState> {
     if (firebaseAuth.currentUser == null) {
       return;
     }
-    emit(state.copyWith(updateProfileStatus: UpdateProfileStatus.loading));
+
+    emit(
+      state.copyWith(
+        setProfileStatus: SetProfileStatus.loading,
+      ),
+    );
+
     final uid = firebaseAuth.currentUser!.uid;
     Constants.navigatorKey.currentContext!.pop();
+
     final response = await _setProfileDataUseCase.call(
       uid: uid,
       about: about,
       displayName: displayName,
       phoneNumber: phoneNumber,
     );
+
     response.fold(
       (l) {
         showToast(
@@ -92,14 +109,17 @@ class ProfileCubit extends Cubit<ProfileState> {
           description: ToastMessages.profileFailure,
           type: ToastificationType.error,
         );
-        emit(state.copyWith(updateProfileStatus: UpdateProfileStatus.failure));
       },
       (r) {
         showToast(
           content: ToastMessages.updateProfileSuccess,
           type: ToastificationType.success,
         );
-        emit(state.copyWith(updateProfileStatus: UpdateProfileStatus.success));
+        emit(
+          state.copyWith(
+            setProfileStatus: SetProfileStatus.success,
+          ),
+        );
         getProfileData();
       },
     );
@@ -113,8 +133,14 @@ class ProfileCubit extends Cubit<ProfileState> {
     String imageUrl = "";
     final String uid = firebaseAuth.currentUser!.uid;
 
-    emit(state.copyWith(isImageLoading: true));
+    emit(
+      state.copyWith(
+        setProfileImageStatus: SetProfileImageStatus.loading,
+      ),
+    );
 
+    //if the user is not removing the profile
+    //only in that case set the profile image as an empty string
     if (isRemoving != null && isRemoving == false) {
       final uploadResponse = await _generalUploadUseCase.call(
         imageFile!,
@@ -123,7 +149,6 @@ class ProfileCubit extends Cubit<ProfileState> {
       if (uploadResponse.isRight()) {
         imageUrl = uploadResponse.getOrElse((l) => "");
       } else {
-        emit(state.copyWith(isImageLoading: false));
         showToast(
           content: ToastMessages.profileFailure,
           type: ToastificationType.error,
@@ -133,14 +158,13 @@ class ProfileCubit extends Cubit<ProfileState> {
       }
     }
 
-    //else set the image url
     final response = await _setProfileImageUseCase.call(
       uid: uid,
       imageUrl: imageUrl,
     );
+
     response.fold(
       (l) {
-        emit(state.copyWith(isImageLoading: false));
         showToast(
           content: ToastMessages.profileFailure,
           description: ToastMessages.defaultFailureDescription,
@@ -148,7 +172,11 @@ class ProfileCubit extends Cubit<ProfileState> {
         );
       },
       (r) {
-        emit(state.copyWith(isImageLoading: false));
+        emit(
+          state.copyWith(
+            setProfileImageStatus: SetProfileImageStatus.success,
+          ),
+        );
         getProfileData();
       },
     );

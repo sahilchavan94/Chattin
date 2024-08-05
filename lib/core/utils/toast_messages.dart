@@ -31,6 +31,8 @@ class ToastMessages {
   //chat cubit
   static const String chatContactsFailureMessage =
       "Something went wrong while fetching the contacts";
+  static const String failedToSentLastMessage =
+      "Failed to send the last message";
 
   //chat remote data source
   static const String messageDeleteForMeSuccess = "Message deleted for you";
@@ -39,6 +41,7 @@ class ToastMessages {
   static const String messageDeleteEveryoneSuccess =
       "Message deleted for everyone";
   static const String newContactAdded = "New contact added successfully";
+  static const String deletedMessage = "This message is deleted by the sender";
 
   //profile cubit
   static const String profileFailure =

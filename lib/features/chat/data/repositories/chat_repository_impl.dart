@@ -17,7 +17,8 @@ class ChatRepositoryImpl implements ChatRepository {
   ChatRepositoryImpl({required this.chatRemoteDataSourceImpl});
   @override
   Future<Either<Failure, List<ContactEntity>>> getAppContacts(
-      List<String> phoneNumbers) async {
+    List<String> phoneNumbers,
+  ) async {
     try {
       final response = await chatRemoteDataSourceImpl.getAppContacts(
         phoneNumbers,
@@ -84,7 +85,6 @@ class ChatRepositoryImpl implements ChatRepository {
     }
   }
 
-  //i need to know whether there I can use fpdart with streams : will research on it
   @override
   Stream<List<MessageEntity>> getChatStream({
     required String recieverId,
