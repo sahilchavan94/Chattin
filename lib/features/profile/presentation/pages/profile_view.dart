@@ -31,7 +31,7 @@ class _ProfileViewState extends State<ProfileView> {
       showDialog(
         context: context,
         builder: (context) {
-          return DialogWidget(
+          return ConfirmationDialogWidget(
             onPressed: () {
               context.pop();
               context.read<ProfileCubit>().setProfileImage(
@@ -192,7 +192,7 @@ class _ProfileViewState extends State<ProfileView> {
                                                   showDialog(
                                                     context: context,
                                                     builder: (context) {
-                                                      return DialogWidget(
+                                                      return ConfirmationDialogWidget(
                                                         onPressed: () {
                                                           context.pop();
                                                           context

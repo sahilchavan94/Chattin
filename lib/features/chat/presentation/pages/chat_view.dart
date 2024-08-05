@@ -9,7 +9,7 @@ import 'package:chattin/core/utils/picker.dart';
 import 'package:chattin/core/widgets/bottom_sheet_for_image.dart';
 import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
-import 'package:chattin/core/widgets/message_operation_dialog.dart';
+import 'package:chattin/core/widgets/message_operation_widget.dart';
 import 'package:chattin/core/widgets/reply_widget.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
@@ -371,8 +371,18 @@ class _ChatViewState extends State<ChatView> {
                                     replyMessageProvider.isReplyWidgetOpened) {
                                   return;
                                 }
-                                showDialog(
+                                showModalBottomSheet(
                                   context: context,
+                                  isScrollControlled: true,
+                                  showDragHandle: true,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  backgroundColor: AppPallete.bottomSheetColor,
+                                  constraints: BoxConstraints.expand(
+                                    height: MediaQuery.of(context).size.height *
+                                        .35,
+                                  ),
                                   builder: (context) {
                                     return MessageOperationsDialog(
                                       messageType: messages[index].messageType,

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
-class DialogWidget extends StatelessWidget {
+class ConfirmationDialogWidget extends StatelessWidget {
   final VoidCallback onPressed;
   final String title;
   final String description;
   final String approvalText;
   final String rejectionText;
-  const DialogWidget({
+  const ConfirmationDialogWidget({
     super.key,
     required this.onPressed,
     required this.approvalText,

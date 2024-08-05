@@ -132,7 +132,7 @@ class _EmailAuthViewState extends State<EmailAuthView> {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return DialogWidget(
+                        return ConfirmationDialogWidget(
                           onPressed: () {
                             context.pop();
                             context
