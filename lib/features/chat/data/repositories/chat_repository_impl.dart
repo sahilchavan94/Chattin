@@ -214,4 +214,24 @@ class ChatRepositoryImpl implements ChatRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, String>> addNewContacts({
+    required String displayName,
+    required String phoneCode,
+    required String phoneNumber,
+  }) async {
+    try {
+      final response = await chatRemoteDataSourceImpl.addNewContacts(
+        displayName: displayName,
+        phoneCode: phoneCode,
+        phoneNumber: phoneNumber,
+      );
+      return Right(response);
+    } catch (e) {
+      return Left(
+        Failure(e.toString()),
+      );
+    }
+  }
 }

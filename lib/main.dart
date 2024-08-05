@@ -1,3 +1,4 @@
+import 'package:chattin/core/common/providers/reply_message_provider.dart';
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/router/router.dart';
 import 'package:chattin/core/utils/app_theme.dart';
@@ -12,6 +13,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
+import 'package:provider/provider.dart';
 import 'package:toastification/toastification.dart';
 
 void main() async {
@@ -21,7 +23,7 @@ void main() async {
   );
 
   await FlutterContacts.requestPermission(
-    readonly: true,
+    readonly: false,
   );
 
   await initDependencies();
@@ -29,6 +31,10 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
+        ChangeNotifierProvider(
+          create: (_) => serviceLocator<ReplyMessageProvider>(),
+          lazy: false,
+        ),
         BlocProvider(
           create: (_) => serviceLocator<AuthCubit>(),
           lazy: false,

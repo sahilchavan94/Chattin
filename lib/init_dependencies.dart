@@ -2,6 +2,7 @@ import 'package:chattin/core/common/features/upload/data/datasource/upload_remot
 import 'package:chattin/core/common/features/upload/data/repositories/upload_repository_impl.dart';
 import 'package:chattin/core/common/features/upload/domain/repositories/upload_repository.dart';
 import 'package:chattin/core/common/features/upload/domain/usecases/general_upload.dart';
+import 'package:chattin/core/common/providers/reply_message_provider.dart';
 import 'package:chattin/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:chattin/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:chattin/features/auth/domain/repositories/auth_repository.dart';
@@ -15,6 +16,7 @@ import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chattin/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:chattin/features/chat/data/repositories/chat_repository_impl.dart';
 import 'package:chattin/features/chat/domain/repositories/chat_repository.dart';
+import 'package:chattin/features/chat/domain/usecases/add_new_contact.dart';
 import 'package:chattin/features/chat/domain/usecases/delete_message_for_everyone.dart';
 import 'package:chattin/features/chat/domain/usecases/delete_message_for_sender.dart';
 import 'package:chattin/features/chat/domain/usecases/get_app_contacts.dart';
@@ -57,6 +59,11 @@ Future<void> initDependencies() async {
   serviceLocator.registerLazySingleton(() => firebaseAuthInstance);
   serviceLocator.registerLazySingleton(() => firestoreInstance);
   serviceLocator.registerLazySingleton(() => firebaseStorage);
+
+  //providers
+  serviceLocator.registerLazySingleton(
+    () => ReplyMessageProvider(),
+  );
 
   //general uploads
   serviceLocator.registerLazySingleton(
@@ -214,8 +221,14 @@ void initChat() {
         chatRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<AddNewContactUseCase>(
+      () => AddNewContactUseCase(
+        chatRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton(
       () => ChatCubit(
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),

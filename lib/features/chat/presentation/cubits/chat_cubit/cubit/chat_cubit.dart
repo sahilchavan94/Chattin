@@ -4,10 +4,12 @@ import 'package:bloc/bloc.dart';
 import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/core/common/features/upload/domain/usecases/general_upload.dart';
 import 'package:chattin/core/enum/enums.dart';
+import 'package:chattin/core/utils/constants.dart';
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/core/utils/toasts.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
+import 'package:chattin/features/chat/domain/usecases/add_new_contact.dart';
 import 'package:chattin/features/chat/domain/usecases/delete_message_for_everyone.dart';
 import 'package:chattin/features/chat/domain/usecases/delete_message_for_sender.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_contacts.dart';
@@ -39,6 +41,7 @@ class ChatCubit extends Cubit<ChatState> {
   final GetProfileDataUseCase _getProfileDataUseCase;
   final DeleteMessageForSenderUseCase _deleteMessageForSenderUseCase;
   final DeleteMessageForEveryoneUseCase _deleteMessageForEveryoneUseCase;
+  final AddNewContactUseCase _addNewContactUseCase;
   final FirebaseAuth _firebaseAuth;
 
   //stream subscription for the chat contacts
@@ -60,6 +63,7 @@ class ChatCubit extends Cubit<ChatState> {
     this._getProfileDataUseCase,
     this._deleteMessageForSenderUseCase,
     this._deleteMessageForEveryoneUseCase,
+    this._addNewContactUseCase,
   ) : super(ChatState.initial()) {
     getChatContacts();
   }
@@ -229,7 +233,7 @@ class ChatCubit extends Cubit<ChatState> {
     required MessageType repliedToType,
     required String senderId,
   }) async {
-    emit(state.copyWith(chatStatus: ChatStatus.loading));
+    emit(state.copyWith(sendingMessage: true));
     final response = await _sendReplyUseCase.call(
       text: text,
       repliedTo: repliedTo,
@@ -239,10 +243,10 @@ class ChatCubit extends Cubit<ChatState> {
     );
     response.fold(
       (l) {
-        emit(state.copyWith(chatStatus: ChatStatus.failure));
+        emit(state.copyWith(sendingMessage: false));
       },
       (r) {
-        emit(state.copyWith(chatStatus: ChatStatus.success));
+        emit(state.copyWith(sendingMessage: false));
       },
     );
   }
@@ -322,5 +326,30 @@ class ChatCubit extends Cubit<ChatState> {
         type: ToastificationType.success,
       );
     });
+  }
+
+  //method to add a new contact
+  Future<void> addNewContact({
+    required String phoneNumber,
+    required String phoneCode,
+    required String displayName,
+  }) async {
+    final response = await _addNewContactUseCase.call(
+      displayName: displayName,
+      phoneCode: phoneCode,
+      phoneNumber: phoneNumber,
+    );
+    response.fold((l) {
+      showToast(
+        content: l.message ?? ToastMessages.defaultFailureMessage,
+        type: ToastificationType.error,
+      );
+    }, (r) {
+      showToast(
+        content: r,
+        type: ToastificationType.success,
+      );
+    });
+    Constants.navigatorKey.currentState!.pop();
   }
 }

@@ -38,6 +38,7 @@ class ToastMessages {
       "This message is only deleted for you, the receiver can still view it from their side";
   static const String messageDeleteEveryoneSuccess =
       "Message deleted for everyone";
+  static const String newContactAdded = "New contact added successfully";
 
   //profile cubit
   static const String profileFailure =

@@ -36,7 +36,7 @@ class _ProfileImageViewState extends State<ProfileImageView> {
   bool isDownloading = false;
   late List<MessageEntity?> imagesInChats;
   late String currentImage;
-  TransformationController _transformationController =
+  final TransformationController _transformationController =
       TransformationController();
 
   @override
@@ -171,6 +171,7 @@ class _ProfileImageViewState extends State<ProfileImageView> {
             ? const CircularProgressIndicator()
             : SizedBox(
                 width: double.infinity,
+                height: double.infinity,
                 child: InteractiveViewer(
                   transformationController: _transformationController,
                   constrained: true,

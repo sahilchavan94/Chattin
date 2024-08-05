@@ -322,10 +322,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_contacts
-      sha256: d9de65f7e8f277b60fa59d699fd916f9aeeb7ec77c9cc631745b4c9068e0b627
+      sha256: dbdbf3cbf91fa78c8709c48f36f7cb78c906617bf3a806109d558790d15607f5
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.8"
+    version: "1.1.9+1"
   flutter_file_dialog:
     dependency: "direct main"
     description:
@@ -592,14 +592,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  palette_generator:
-    dependency: "direct main"
-    description:
-      name: palette_generator
-      sha256: eb7082b4b97487ebc65b3ad3f6f0b7489b96e76840381ed0e06a46fe7ffd4068
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.3+3"
   path:
     dependency: transitive
     description:

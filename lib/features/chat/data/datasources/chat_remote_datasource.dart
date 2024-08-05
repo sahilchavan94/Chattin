@@ -10,10 +10,16 @@ import 'package:chattin/features/chat/data/models/message_model.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:uuid/uuid.dart';
 
 abstract interface class ChatRemoteDataSource {
   Future<List<ContactEntity>> getAppContacts(List<String> phoneNumbers);
+  Future<String> addNewContacts({
+    required String displayName,
+    required String phoneCode,
+    required String phoneNumber,
+  });
   Future<String> sendTextMessage({
     required String text,
     required String recieverId,
@@ -611,6 +617,28 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       throw ServerException(
         error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
       );
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> addNewContacts({
+    required String displayName,
+    required String phoneCode,
+    required String phoneNumber,
+  }) async {
+    try {
+      final newContact = Contact()
+        ..name = Name(
+          first: displayName,
+        )
+        ..phones = [
+          Phone("$phoneCode + $phoneNumber"),
+        ];
+
+      await newContact.insert();
+      return ToastMessages.newContactAdded;
     } catch (e) {
       throw ServerException(error: e.toString());
     }

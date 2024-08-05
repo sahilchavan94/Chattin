@@ -54,4 +54,9 @@ abstract interface class ChatRepository {
     required String senderId,
     required String receiverId,
   });
+  Future<Either<Failure, String>> addNewContacts({
+    required String displayName,
+    required String phoneCode,
+    required String phoneNumber,
+  });
 }
