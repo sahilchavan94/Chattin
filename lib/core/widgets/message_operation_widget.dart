@@ -15,6 +15,7 @@ class MessageOperationsDialog extends StatelessWidget {
   final MessageType messageType;
   final String receiverId;
   final String senderId;
+  final bool isMe;
   const MessageOperationsDialog({
     super.key,
     required this.messageType,
@@ -22,6 +23,7 @@ class MessageOperationsDialog extends StatelessWidget {
     required this.text,
     required this.receiverId,
     required this.senderId,
+    required this.isMe,
   });
 
   @override
@@ -128,7 +130,7 @@ class MessageOperationsDialog extends StatelessWidget {
             ),
           ),
           verticalSpacing(20),
-          if (messageType != MessageType.deleted)
+          if (messageType != MessageType.deleted && isMe)
             GestureDetector(
               onTap: () {
                 context.pop();

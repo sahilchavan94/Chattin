@@ -380,8 +380,7 @@ class _ChatViewState extends State<ChatView> {
                                 );
                               },
                               onLeftSwipe: (details) {
-                                if (!isMe ||
-                                    replyMessageProvider.isReplyWidgetOpened) {
+                                if (replyMessageProvider.isReplyWidgetOpened) {
                                   return;
                                 }
                                 showModalBottomSheet(
@@ -405,8 +404,11 @@ class _ChatViewState extends State<ChatView> {
                                       messageType: messages[index].messageType,
                                       messageId: messages[index].messageId,
                                       text: messages[index].text,
-                                      receiverId: messages[index].receiverId,
-                                      senderId: messages[index].senderId,
+                                      receiverId: isMe
+                                          ? messages[index].receiverId
+                                          : messages[index].senderId,
+                                      senderId: userData.uid,
+                                      isMe: isMe,
                                     );
                                   },
                                 );
