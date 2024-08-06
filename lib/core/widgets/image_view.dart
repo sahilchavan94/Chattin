@@ -7,7 +7,7 @@ import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/core/utils/toasts.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
-import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/chat_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
@@ -64,7 +64,7 @@ class _ProfileImageViewState extends State<ProfileImageView> {
       final imageId = const Uuid().v1();
 
       // Create an image name
-      var filename = '${dir.path}/$imageId.png';
+      var filename = 'Chattin/${dir.path}/$imageId.png';
 
       // Save to filesystem
       final file = File(filename);

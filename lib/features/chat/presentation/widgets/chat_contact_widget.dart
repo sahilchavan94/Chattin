@@ -29,7 +29,7 @@ class ChatContactWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +60,7 @@ class ChatContactWidget extends StatelessWidget {
                     style:
                         AppTheme.darkThemeData.textTheme.displayLarge!.copyWith(
                       color: AppPallete.whiteColor,
-                      fontSize: 16,
+                      fontSize: 15,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -80,7 +80,7 @@ class ChatContactWidget extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                "${DateFormat.jm().format(timeSent)} ${DateFormat('dd MMMM yyyy').format(timeSent)}",
+                "${DateFormat.jm().format(timeSent)} ${DateFormat('dd MMM yyyy').format(timeSent)}",
                 style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                   color: AppPallete.greyColor,
                   fontSize: 11,

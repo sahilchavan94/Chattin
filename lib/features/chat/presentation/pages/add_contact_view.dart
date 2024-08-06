@@ -4,7 +4,7 @@ import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/utils/validators.dart';
 import 'package:chattin/core/widgets/button_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
-import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/chat_cubit.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

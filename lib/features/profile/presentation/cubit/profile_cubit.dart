@@ -65,7 +65,7 @@ class ProfileCubit extends Cubit<ProfileState> {
           type: ToastificationType.error,
         );
       },
-      (r) {
+      (r) async {
         emit(
           state.copyWith(
             profileStatus: ProfileStatus.success,

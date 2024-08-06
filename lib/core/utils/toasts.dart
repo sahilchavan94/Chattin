@@ -9,7 +9,7 @@ void showToast({
   required ToastificationType type,
 }) {
   toastification.show(
-    type: ToastificationType.success,
+    type: type,
     style: ToastificationStyle.fillColored,
     autoCloseDuration: const Duration(seconds: 5),
     title: Padding(

@@ -14,6 +14,7 @@ class MessageModel extends MessageEntity {
     required super.status,
     required super.messageType,
     required super.isReply,
+    required super.isForwarded,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +32,18 @@ class MessageModel extends MessageEntity {
         'repliedTo': repliedTo,
         'repliedToType': repliedToType!.toStringValue(),
         'isReply': true,
+      };
+    }
+    if (isForwarded) {
+      return <String, dynamic>{
+        'senderId': senderId,
+        'receiverId': receiverId,
+        'text': text,
+        'timeSent': timeSent!.millisecondsSinceEpoch,
+        'messageId': messageId,
+        'status': status,
+        'messageType': messageType.toStringValue(),
+        'isForwarded': true,
       };
     }
     return <String, dynamic>{
@@ -66,6 +79,7 @@ class MessageModel extends MessageEntity {
           ? (map['repliedToType'] as String).toStringValue()
           : MessageType
               .text, //the type of the message to which this message is replied
+      isForwarded: map['isForwarded'] ?? false,
     );
   }
 }

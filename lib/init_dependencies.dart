@@ -12,6 +12,7 @@ import 'package:chattin/features/auth/domain/usecases/email_auth.dart';
 import 'package:chattin/features/auth/domain/usecases/email_verification.dart';
 import 'package:chattin/features/auth/domain/usecases/set_account_details.dart';
 import 'package:chattin/features/auth/domain/usecases/sign_in.dart';
+import 'package:chattin/features/auth/domain/usecases/sign_out.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chattin/features/chat/data/datasources/chat_remote_datasource.dart';
 import 'package:chattin/features/chat/data/repositories/chat_repository_impl.dart';
@@ -19,6 +20,7 @@ import 'package:chattin/features/chat/domain/repositories/chat_repository.dart';
 import 'package:chattin/features/chat/domain/usecases/add_new_contact.dart';
 import 'package:chattin/features/chat/domain/usecases/delete_message_for_everyone.dart';
 import 'package:chattin/features/chat/domain/usecases/delete_message_for_sender.dart';
+import 'package:chattin/features/chat/domain/usecases/forward_message.dart';
 import 'package:chattin/features/chat/domain/usecases/get_app_contacts.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_contacts.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_status.dart';
@@ -28,7 +30,7 @@ import 'package:chattin/features/chat/domain/usecases/send_message.dart';
 import 'package:chattin/features/chat/domain/usecases/send_reply_message.dart';
 import 'package:chattin/features/chat/domain/usecases/set_chat_status.dart';
 import 'package:chattin/features/chat/domain/usecases/set_message_status.dart';
-import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contacts_cubit.dart';
 import 'package:chattin/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:chattin/features/profile/data/repsotories/profile_repositoy_impl.dart';
@@ -131,8 +133,14 @@ void initAuth() {
         authRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<SignOutUseCase>(
+      () => SignOutUseCase(
+        authRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton<AuthCubit>(
       () => AuthCubit(
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),
@@ -226,8 +234,14 @@ void initChat() {
         chatRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<ForwardMessageUseCase>(
+      () => ForwardMessageUseCase(
+        chatRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton(
       () => ChatCubit(
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),

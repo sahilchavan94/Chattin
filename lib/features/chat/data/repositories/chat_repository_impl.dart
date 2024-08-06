@@ -234,4 +234,31 @@ class ChatRepositoryImpl implements ChatRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, String>> forwardMessage({
+    required String text,
+    required List<String> receiverIdList,
+    required UserEntity sender,
+    required MessageType messageType,
+  }) async {
+    try {
+      final senderModel = UserModel(
+        uid: sender.uid,
+        displayName: sender.displayName,
+        imageUrl: sender.imageUrl,
+      );
+      final response = await chatRemoteDataSourceImpl.forwardMessage(
+        text: text,
+        receiverIdList: receiverIdList,
+        sender: senderModel,
+        messageType: messageType,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return Left(
+        Failure(e.toString()),
+      );
+    }
+  }
 }

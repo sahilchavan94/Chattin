@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/core/common/features/upload/domain/usecases/general_upload.dart';
 import 'package:chattin/core/enum/enums.dart';
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/constants.dart';
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/core/utils/toasts.dart';
@@ -13,6 +14,7 @@ import 'package:chattin/features/chat/domain/entities/message_entity.dart';
 import 'package:chattin/features/chat/domain/usecases/add_new_contact.dart';
 import 'package:chattin/features/chat/domain/usecases/delete_message_for_everyone.dart';
 import 'package:chattin/features/chat/domain/usecases/delete_message_for_sender.dart';
+import 'package:chattin/features/chat/domain/usecases/forward_message.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_contacts.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_status.dart';
 import 'package:chattin/features/chat/domain/usecases/get_chat_stream.dart';
@@ -23,6 +25,7 @@ import 'package:chattin/features/chat/domain/usecases/set_chat_status.dart';
 import 'package:chattin/features/chat/domain/usecases/set_message_status.dart';
 import 'package:chattin/features/profile/domain/usecases/get_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 import 'package:toastification/toastification.dart';
 import 'package:uuid/uuid.dart';
 
@@ -43,6 +46,7 @@ class ChatCubit extends Cubit<ChatState> {
   final DeleteMessageForSenderUseCase _deleteMessageForSenderUseCase;
   final DeleteMessageForEveryoneUseCase _deleteMessageForEveryoneUseCase;
   final AddNewContactUseCase _addNewContactUseCase;
+  final ForwardMessageUseCase _forwardMessageUseCase;
   final FirebaseAuth _firebaseAuth;
 
   //stream subscription for the chat contacts
@@ -65,6 +69,7 @@ class ChatCubit extends Cubit<ChatState> {
     this._deleteMessageForSenderUseCase,
     this._deleteMessageForEveryoneUseCase,
     this._addNewContactUseCase,
+    this._forwardMessageUseCase,
   ) : super(ChatState.initial()) {
     getChatContacts();
   }
@@ -381,6 +386,40 @@ class ChatCubit extends Cubit<ChatState> {
         type: ToastificationType.success,
       );
       Constants.navigatorKey.currentState!.pop();
+    });
+  }
+
+  //method to forward a message
+  Future<void> forwardMessage({
+    required String text,
+    required List<String> receiverIdList,
+    required UserEntity sender,
+    required MessageType messageType,
+  }) async {
+    showToast(
+      content: ToastMessages.forwardingMessages,
+      type: ToastificationType.info,
+    );
+    final response = await _forwardMessageUseCase.call(
+      text: text,
+      receiverIdList: receiverIdList,
+      sender: sender,
+      messageType: messageType,
+    );
+    response.fold((l) {
+      showToast(
+        content: l.message ?? ToastMessages.forwardMessageFailure,
+        description: ToastMessages.defaultFailureDescription,
+        type: ToastificationType.error,
+      );
+    }, (r) {
+      showToast(
+        content: r,
+        type: ToastificationType.success,
+      );
+      Constants.navigatorKey.currentContext!.go(
+        RoutePath.chatContacts.path,
+      );
     });
   }
 }

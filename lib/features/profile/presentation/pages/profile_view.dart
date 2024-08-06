@@ -269,7 +269,7 @@ class _ProfileViewState extends State<ProfileView> {
                               title: 'Profile Information',
                               icon: const Icon(
                                 Icons.edit,
-                                color: AppPallete.whiteColor,
+                                color: AppPallete.blueColor,
                                 size: 19,
                               ),
                               userData: userData,

@@ -11,6 +11,7 @@ import 'package:chattin/features/auth/presentation/pages/verify_email_view.dart'
 import 'package:chattin/features/chat/presentation/pages/add_contact_view.dart';
 import 'package:chattin/features/chat/presentation/pages/chat_contact_information_view.dart';
 import 'package:chattin/features/chat/presentation/pages/chat_view.dart';
+import 'package:chattin/features/chat/presentation/pages/forward_chat_view.dart';
 import 'package:chattin/features/chat/presentation/pages/select_contacts_view.dart';
 import 'package:chattin/features/profile/presentation/pages/edit_profile_view.dart';
 import 'package:chattin/features/profile/presentation/pages/profile_view.dart';
@@ -190,6 +191,20 @@ class AppRouter {
             state: state,
             child: ChatContactInformationView(
               uid: data['uid'],
+            ),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.forwardChat.path,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: ForwardChatView(
+              text: data['text'],
+              messageType: data['messageType'],
             ),
           );
         },

@@ -15,6 +15,7 @@ class MessageWidget extends StatelessWidget {
   final DateTime timeSent;
   final bool isMe;
   final bool isReply;
+  final bool isForwarded;
   final String? repliedTo;
   final MessageType? repliedToType;
   final bool status;
@@ -29,6 +30,7 @@ class MessageWidget extends StatelessWidget {
     required this.messageType,
     required this.status,
     required this.isReply,
+    required this.isForwarded,
     required this.repliedTo,
     required this.repliedToType,
   });
@@ -141,6 +143,7 @@ class MessageWidget extends StatelessWidget {
                               ),
                               verticalSpacing(3),
                               _messageDataWidget(
+                                isForwarded: isForwarded,
                                 isMe: isMe,
                                 name: name,
                                 timeSent: timeSent,
@@ -179,6 +182,7 @@ class MessageWidget extends StatelessWidget {
                                     right: isMe ? 10 : null,
                                     left: isMe ? null : 10,
                                     child: _messageDataWidget(
+                                      isForwarded: isForwarded,
                                       isMe: isMe,
                                       name: name,
                                       timeSent: timeSent,
@@ -228,6 +232,7 @@ class MessageWidget extends StatelessWidget {
 
 Widget _messageDataWidget({
   required bool isMe,
+  required bool isForwarded,
   required String name,
   required MessageType messageType,
   required DateTime timeSent,
@@ -237,6 +242,19 @@ Widget _messageDataWidget({
     mainAxisSize: MainAxisSize.min,
     mainAxisAlignment: MainAxisAlignment.end,
     children: [
+      if (isForwarded)
+        Text(
+          "Forwarded",
+          style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
+            color: messageType == MessageType.image
+                ? AppPallete.whiteColor.withOpacity(.7)
+                : AppPallete.greyColor,
+            fontSize: 11,
+            fontStyle: FontStyle.italic,
+          ),
+          overflow: TextOverflow.ellipsis, // Ensure text can overflow
+        ),
+      if (isForwarded) horizontalSpacing(8),
       Text(
         DateFormat.jm().format(timeSent),
         style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(

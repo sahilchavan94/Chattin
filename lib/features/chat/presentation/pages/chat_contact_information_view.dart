@@ -8,7 +8,7 @@ import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/core/widgets/user_info.dart';
 import 'package:chattin/features/chat/domain/entities/message_entity.dart';
-import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/chat_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

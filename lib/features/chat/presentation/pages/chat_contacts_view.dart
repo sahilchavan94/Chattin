@@ -1,3 +1,4 @@
+import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
@@ -7,7 +8,7 @@ import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:chattin/features/chat/domain/entities/contact_entity.dart';
-import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chattin/features/chat/presentation/widgets/chat_contact_widget.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:flutter/material.dart';
@@ -30,9 +31,22 @@ class _ChatContactsViewState extends State<ChatContactsView> {
   @override
   void initState() {
     context.read<AuthCubit>().checkTheAccountDetailsIfTheEmailIsVerified();
-    context.read<ProfileCubit>().getProfileData();
+    context.read<ProfileCubit>().getProfileData().then((value) {
+      _setUserOnlineStatus();
+    });
     _searchController.addListener(_onSearchChanged);
     super.initState();
+  }
+
+  void _setUserOnlineStatus() {
+    final currentUserData = context.read<ProfileCubit>().state.userData;
+    if (currentUserData != null) {
+      final chatCubit = context.read<ChatCubit>();
+      chatCubit.setChatOnOffStatus(
+        status: Status.online,
+        uid: currentUserData.uid,
+      );
+    }
   }
 
   @override

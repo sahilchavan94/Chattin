@@ -41,8 +41,8 @@ class ProfileDetailsWidget extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: AppPallete.blueColor,
+                        borderRadius: BorderRadius.circular(13),
+                        color: AppPallete.bottomSheetColor,
                       ),
                       child: icon,
                     ),

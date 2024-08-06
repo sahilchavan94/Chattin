@@ -58,6 +58,13 @@ abstract interface class ChatRemoteDataSource {
     required String receiverId,
   });
 
+  Future<String> forwardMessage({
+    required String text,
+    required List<String> receiverIdList,
+    required UserModel sender,
+    required MessageType messageType,
+  });
+
   Stream<List<MessageEntity>> getChatStream({
     required String recieverId,
     required String senderId,
@@ -147,6 +154,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
     required DateTime timeSent,
     required MessageType messageType,
     required bool isReply,
+    required bool isForwarded,
     String? repliedTo,
     MessageType? repliedToType,
   }) async {
@@ -165,6 +173,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         isReply: isReply,
         repliedTo: repliedTo,
         repliedToType: repliedToType,
+        isForwarded: isForwarded,
       );
     } else {
       message = MessageModel(
@@ -176,6 +185,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         status: false,
         messageType: messageType,
         isReply: false,
+        isForwarded: isForwarded,
       );
     }
 
@@ -283,6 +293,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         timeSent: timeSent,
         messageType: MessageType.text,
         isReply: false,
+        isForwarded: false,
       );
       //change it later
       return ToastMessages.welcomeSignInMessage;
@@ -333,6 +344,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         timeSent: timeSent,
         messageType: MessageType.image,
         isReply: false,
+        isForwarded: false,
       );
       return ToastMessages.welcomeSignInMessage; //change it later
     } on FirebaseException catch (e) {
@@ -549,6 +561,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         isReply: true,
         repliedTo: repliedTo,
         repliedToType: repliedToType,
+        isForwarded: false,
       );
       //change it later
       return ToastMessages.welcomeSignInMessage;
@@ -656,6 +669,61 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
 
       await newContact.insert();
       return ToastMessages.newContactAdded;
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> forwardMessage({
+    required String text,
+    required List<String> receiverIdList,
+    required UserModel sender,
+    required MessageType messageType,
+  }) async {
+    try {
+      final timeSent = DateTime.now();
+
+      for (String receiverId in receiverIdList) {
+        //generate the message id for each message
+        final messageId = const Uuid().v1();
+        UserModel? receiver;
+
+        //fetching the receiver's data
+        final receiverData = await firebaseFirestore
+            .collection(Constants.userCollection)
+            .doc(receiverId)
+            .get();
+
+        receiver = UserModel.fromMap(
+          receiverData.data()!,
+        );
+
+        //save the data to the chats sub collection
+        await _saveDataToContactsSubcollection(
+          sender: sender,
+          receiver: receiver,
+          text: text,
+          timeSent: timeSent,
+        );
+
+        //save the message in sender and the receiver's appropriate sub collections
+        await _saveMessageToMessageSubcollection(
+          sender: sender,
+          receiver: receiver,
+          text: text,
+          messageId: messageId,
+          timeSent: timeSent,
+          messageType: messageType,
+          isReply: false,
+          isForwarded: true,
+        );
+      }
+      return ToastMessages.forwardMessageSuccess;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
     } catch (e) {
       throw ServerException(error: e.toString());
     }

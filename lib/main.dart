@@ -4,7 +4,7 @@ import 'package:chattin/core/router/router.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
-import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chattin/features/chat/presentation/cubits/contacts_cubit/contacts_cubit.dart';
 import 'package:chattin/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:chattin/features/stories/presentation/cubit/story_cubit.dart';
@@ -81,24 +81,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _setUserOnlineStatus();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  void _setUserOnlineStatus() {
-    final currentUserData = context.read<ProfileCubit>().state.userData;
-    if (currentUserData != null) {
-      final chatCubit = context.read<ChatCubit>();
-      chatCubit.setChatOnOffStatus(
-        status: Status.online,
-        uid: currentUserData.uid,
-      );
-    }
   }
 
   @override

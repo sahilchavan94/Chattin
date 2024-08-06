@@ -37,6 +37,9 @@ class RoutePath {
   static const RouteName chatContactInformation = RouteName(
     path: "/chat_contact_information",
   );
+  static const RouteName forwardChat = RouteName(
+    path: "/forward_chat",
+  );
 
   //profile path
   static const RouteName profileScreen = RouteName(

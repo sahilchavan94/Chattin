@@ -14,14 +14,17 @@ abstract interface class AuthRemoteDataSource {
     String email,
     String password,
   );
+
   Future<String> signInWithEmailAndPassword(
     String email,
     String password,
   );
   //for sending the email verfication link
   Future<String> sendEmailVerificationLink();
+
   //for checking the email verification status
   Future<String> checkVerificationStatus();
+
   //storing the user details in the database
   Future<String> setAccountDetails({
     required String displayName,
@@ -29,8 +32,12 @@ abstract interface class AuthRemoteDataSource {
     required String phoneCode,
     required String imageUrl,
   });
+
   //for routing the user to appropriate page
   Future<String> checkTheAccountDetailsIfTheEmailIsVerified();
+
+  //for signing out
+  Future<String> signOutFromAccount();
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -170,6 +177,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(
         error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
       );
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> signOutFromAccount() async {
+    try {
+      await firebaseAuth.signOut();
+      return ToastMessages.signedOutSuccessfully;
     } catch (e) {
       throw ServerException(error: e.toString());
     }

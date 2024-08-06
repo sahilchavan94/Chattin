@@ -13,6 +13,7 @@ import 'package:chattin/features/auth/domain/usecases/email_auth.dart';
 import 'package:chattin/features/auth/domain/usecases/email_verification.dart';
 import 'package:chattin/features/auth/domain/usecases/set_account_details.dart';
 import 'package:chattin/features/auth/domain/usecases/sign_in.dart';
+import 'package:chattin/features/auth/domain/usecases/sign_out.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:go_router/go_router.dart';
@@ -29,6 +30,7 @@ class AuthCubit extends Cubit<AuthState> {
       _checkTheAccountDetailsIfTheEmailIsVerifiedUseCase;
   final SetAccountDetailsUseCase _setAccountDetailsUseCase;
   final GeneralUploadUseCase _generalUploadUseCase;
+  final SignOutUseCase _signOutUseCase;
   final FirebaseAuth _firebaseAuth;
   AuthCubit(
     this._createAccountWithEmailAndPasswordUseCase,
@@ -39,6 +41,7 @@ class AuthCubit extends Cubit<AuthState> {
     this._firebaseAuth,
     this._checkTheAccountDetailsIfTheEmailIsVerifiedUseCase,
     this._signInUseCase,
+    this._signOutUseCase,
   ) : super(AuthState.initial());
 
   //method for creating account
@@ -304,6 +307,36 @@ class AuthCubit extends Cubit<AuthState> {
         emit(
           state.copyWith(
             authStatus: AuthStatus.success,
+          ),
+        );
+      },
+    );
+  }
+
+  //method for signing out
+  Future<void> signOut() async {
+    emit(state.copyWith(authStatus: AuthStatus.loading));
+    final response = await _signOutUseCase.call();
+    response.fold(
+      (l) {
+        showToast(
+          content: l.message ?? ToastMessages.defaultFailureMessage,
+          description: ToastMessages.defaultFailureDescription,
+          type: ToastificationType.error,
+        );
+      },
+      (r) {
+        showToast(
+          content: r,
+          type: ToastificationType.success,
+        );
+        // go removes all the other pages in the stack and goes to the specified route
+        Constants.navigatorKey.currentContext!.go(
+          RoutePath.emailPassLogin.path,
+        );
+        emit(
+          state.copyWith(
+            authStatus: AuthStatus.initial,
           ),
         );
       },

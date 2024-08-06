@@ -289,7 +289,7 @@ Widget replyWidget({
                           : repliedTo,
                       style: AppTheme.darkThemeData.textTheme.displayMedium!
                           .copyWith(
-                        color: AppPallete.whiteColor,
+                        color: AppPallete.greyColor,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,

@@ -1,15 +1,17 @@
 import 'package:chattin/core/enum/enums.dart';
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/confirmation_dialog.dart';
-import 'package:chattin/features/chat/presentation/cubits/chat_cubit/cubit/chat_cubit.dart';
+import 'package:chattin/features/chat/presentation/cubits/chat_cubit/chat_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class MessageOperationsDialog extends StatelessWidget {
   final String messageId;
+  final String text;
   final MessageType messageType;
   final String receiverId;
   final String senderId;
@@ -17,6 +19,7 @@ class MessageOperationsDialog extends StatelessWidget {
     super.key,
     required this.messageType,
     required this.messageId,
+    required this.text,
     required this.receiverId,
     required this.senderId,
   });
@@ -34,28 +37,40 @@ class MessageOperationsDialog extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Forward this message',
-                style: AppTheme.darkThemeData.textTheme.displayMedium!.copyWith(
-                  color: AppPallete.blueColor,
-                ),
+          if (messageType != MessageType.deleted)
+            GestureDetector(
+              onTap: () {
+                context.pop();
+                context.push(RoutePath.forwardChat.path, extra: {
+                  'text': text,
+                  'messageType': messageType,
+                });
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'Forward this message',
+                    style: AppTheme.darkThemeData.textTheme.displayMedium!
+                        .copyWith(
+                      color: AppPallete.blueColor,
+                    ),
+                  ),
+                  horizontalSpacing(5),
+                  const Icon(
+                    Icons.arrow_forward,
+                    color: AppPallete.blueColor,
+                    size: 18,
+                  ),
+                ],
               ),
-              horizontalSpacing(5),
-              const Icon(
-                Icons.forward,
-                color: AppPallete.blueColor,
-                size: 18,
-              ),
-            ],
-          ),
-          verticalSpacing(12),
-          const Divider(
-            thickness: .1,
-          ),
-          verticalSpacing(12),
+            ),
+          if (messageType != MessageType.deleted) verticalSpacing(12),
+          if (messageType != MessageType.deleted)
+            const Divider(
+              thickness: .1,
+            ),
+          if (messageType != MessageType.deleted) verticalSpacing(12),
           Text(
             'Dangerous Area',
             style: AppTheme.darkThemeData.textTheme.displayMedium!.copyWith(

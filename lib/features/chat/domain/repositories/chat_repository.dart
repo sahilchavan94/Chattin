@@ -74,4 +74,11 @@ abstract interface class ChatRepository {
     required String phoneCode,
     required String phoneNumber,
   });
+
+  Future<Either<Failure, String>> forwardMessage({
+    required String text,
+    required List<String> receiverIdList,
+    required UserEntity sender,
+    required MessageType messageType,
+  });
 }

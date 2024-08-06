@@ -6,6 +6,7 @@ class MessageEntity {
   final DateTime? timeSent;
   final MessageType? repliedToType;
   final bool isReply;
+  final bool isForwarded;
   final String text;
   final bool status;
   final String senderId;
@@ -18,6 +19,7 @@ class MessageEntity {
     this.repliedToType,
     required this.senderId,
     required this.isReply,
+    required this.isForwarded,
     required this.receiverId,
     required this.text,
     required this.timeSent,

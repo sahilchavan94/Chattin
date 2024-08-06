@@ -27,6 +27,17 @@ class ToastMessages {
       "Email verification successful";
   static const String welcomeSignInMessage =
       "Successfully saved! Welcome to Chattin`!";
+  static const String signedOutSuccessfully = "Signed out successfully";
+
+  //chat presentation
+  static const String forwardLimitReached =
+      "Cannot forward to more than 5 chats";
+  static const String forwardingMessages =
+      "Forwarding messages to selected contacts";
+  static const String forwardMessageSuccess = "Message forwarded successfully";
+  static const String noContactsSelected =
+      "Select atleast 1 contact to forward";
+  static const String forwardMessageFailure = "Failed to forward your message";
 
   //chat cubit
   static const String chatContactsFailureMessage =
