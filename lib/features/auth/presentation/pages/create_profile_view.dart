@@ -77,6 +77,7 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                           ? ImageWidget(
                               imagePath: 'assets/images/default_profile.png',
                               width: 100,
+                              height: 100,
                             )
                           : ClipRRect(
                               borderRadius: BorderRadius.circular(60),
@@ -240,7 +241,7 @@ class _CreateProfileViewState extends State<CreateProfileView> {
                             displayName: _displayNameController.text,
                             phoneNumber: _phoneNumberController.text.trim(),
                             phoneCode: selectedCountry,
-                            imageFile: selectedImage!,
+                            imageFile: selectedImage,
                           );
                     },
                   ),

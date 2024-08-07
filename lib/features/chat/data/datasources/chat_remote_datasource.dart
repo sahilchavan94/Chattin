@@ -703,7 +703,9 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
         await _saveDataToContactsSubcollection(
           sender: sender,
           receiver: receiver,
-          text: messageType.toStringValue(),
+          text: messageType == MessageType.text
+              ? text
+              : messageType.toStringValue(),
           timeSent: timeSent,
         );
 

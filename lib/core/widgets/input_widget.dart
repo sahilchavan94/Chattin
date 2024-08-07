@@ -13,6 +13,7 @@ class InputWidget extends StatelessWidget {
   final VoidCallback? onSuffixIconPressed;
   final Function(String val) validator;
   final Color? fillColor;
+  final Color? textColor;
   final double? borderRadius;
   final bool? showBorder;
   final int? maxLines;
@@ -30,6 +31,7 @@ class InputWidget extends StatelessWidget {
     this.borderRadius,
     this.showBorder,
     this.maxLines,
+    this.textColor,
   });
 
   @override
@@ -49,7 +51,7 @@ class InputWidget extends StatelessWidget {
         SizedBox(
           height: height,
           child: TextFormField(
-            maxLines: maxLines,
+            maxLines: 1,
             controller: textEditingController,
             validator: (val) {
               if (passwordController != null &&
@@ -62,7 +64,7 @@ class InputWidget extends StatelessWidget {
             cursorColor: AppPallete.greyColor,
             cursorErrorColor: AppPallete.errorColor.withOpacity(.45),
             style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
-              color: AppPallete.whiteColor,
+              color: textColor ?? AppPallete.whiteColor,
               fontSize: 14,
             ),
             decoration: InputDecoration(

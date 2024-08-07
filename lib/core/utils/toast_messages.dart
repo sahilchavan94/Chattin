@@ -1,6 +1,8 @@
 class ToastMessages {
   //auth cubit
   static const String defaultFailureMessage = "Something went wrong";
+  static const String reauthenticatedUserSuccess = "Verified successfully";
+  static const String reauthenticatedUserFailure = "Verification failed";
   static String defaultErrorMessage =
       'An unexpected error occurred. Please try again later. You can send a message to us for reporting the issue';
 
@@ -28,6 +30,8 @@ class ToastMessages {
   static const String welcomeSignInMessage =
       "Successfully saved! Welcome to Chattin`!";
   static const String signedOutSuccessfully = "Signed out successfully";
+  static const String deletedAccountSuccessfully =
+      "Account deleted successfully";
 
   //chat presentation
   static const String forwardLimitReached =

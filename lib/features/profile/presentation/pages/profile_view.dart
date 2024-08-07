@@ -160,7 +160,8 @@ class _ProfileViewState extends State<ProfileView> {
                                                   width: 100,
                                                   height: 100,
                                                   radius: BorderRadius.circular(
-                                                      100),
+                                                    100,
+                                                  ),
                                                   fit: BoxFit.cover,
                                                   isImageFromChat: true,
                                                 ),

@@ -135,4 +135,38 @@ class AuthRepositoryImpl implements AuthRepository {
       );
     }
   }
+
+  @override
+  Future<Either<Failure, String>> reauthenticateUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await authRemoteDataSourceImpl.reauthenticateUser(
+        email: email,
+        password: password,
+      );
+      return Right(response);
+    } catch (e) {
+      return Left(
+        Failure(
+          e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> deleteAccount(String uid) async {
+    try {
+      final response = await authRemoteDataSourceImpl.deleteAccount(uid);
+      return Right(response);
+    } catch (e) {
+      return Left(
+        Failure(
+          e.toString(),
+        ),
+      );
+    }
+  }
 }

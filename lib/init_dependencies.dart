@@ -8,8 +8,10 @@ import 'package:chattin/features/auth/data/repositories/auth_repository_impl.dar
 import 'package:chattin/features/auth/domain/repositories/auth_repository.dart';
 import 'package:chattin/features/auth/domain/usecases/check_account_details.dart';
 import 'package:chattin/features/auth/domain/usecases/check_status.dart';
+import 'package:chattin/features/auth/domain/usecases/delete_account.dart';
 import 'package:chattin/features/auth/domain/usecases/email_auth.dart';
 import 'package:chattin/features/auth/domain/usecases/email_verification.dart';
+import 'package:chattin/features/auth/domain/usecases/reauthenticate_user.dart';
 import 'package:chattin/features/auth/domain/usecases/set_account_details.dart';
 import 'package:chattin/features/auth/domain/usecases/sign_in.dart';
 import 'package:chattin/features/auth/domain/usecases/sign_out.dart';
@@ -133,13 +135,25 @@ void initAuth() {
         authRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<ReauthenticateUser>(
+      () => ReauthenticateUser(
+        authRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton<SignOutUseCase>(
       () => SignOutUseCase(
         authRepository: serviceLocator(),
       ),
     )
+    ..registerLazySingleton<DeleteAccountUseCase>(
+      () => DeleteAccountUseCase(
+        authRepository: serviceLocator(),
+      ),
+    )
     ..registerLazySingleton<AuthCubit>(
       () => AuthCubit(
+        serviceLocator(),
+        serviceLocator(),
         serviceLocator(),
         serviceLocator(),
         serviceLocator(),

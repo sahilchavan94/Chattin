@@ -5,6 +5,7 @@ import 'package:chattin/core/widgets/send_image_widget.dart';
 import 'package:chattin/features/auth/presentation/pages/account_settings_view.dart';
 import 'package:chattin/features/auth/presentation/pages/check_verification_status.dart';
 import 'package:chattin/features/auth/presentation/pages/create_profile_view.dart';
+import 'package:chattin/features/auth/presentation/pages/delete_account_view.dart';
 import 'package:chattin/features/auth/presentation/pages/email_auth_view.dart';
 import 'package:chattin/features/auth/presentation/pages/email_pass_login_view.dart';
 import 'package:chattin/features/auth/presentation/pages/verify_email_view.dart';
@@ -124,6 +125,16 @@ class AppRouter {
             context: context,
             state: state,
             child: const AccountSettingsView(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RoutePath.deleteAccount.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const DeleteAccountView(),
           );
         },
       ),

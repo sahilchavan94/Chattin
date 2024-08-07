@@ -228,9 +228,9 @@ class ChatRepositoryImpl implements ChatRepository {
         phoneNumber: phoneNumber,
       );
       return Right(response);
-    } catch (e) {
+    } on ServerException catch (e) {
       return Left(
-        Failure(e.toString()),
+        Failure(e.error),
       );
     }
   }
@@ -257,7 +257,7 @@ class ChatRepositoryImpl implements ChatRepository {
       return Right(response);
     } on ServerException catch (e) {
       return Left(
-        Failure(e.toString()),
+        Failure(e.error),
       );
     }
   }

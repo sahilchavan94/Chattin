@@ -1,3 +1,4 @@
+import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
@@ -71,18 +72,24 @@ class AccountSettingsView extends StatelessWidget {
               ),
             ),
             verticalSpacing(7),
-            _getIconWithTitle(
-              Text(
-                'Delete your current account',
-                style: AppTheme.darkThemeData.textTheme.displayMedium!.copyWith(
-                  color: AppPallete.errorColor,
+            GestureDetector(
+              onTap: () {
+                context.push(RoutePath.deleteAccount.path);
+              },
+              child: _getIconWithTitle(
+                Text(
+                  'Delete your current account',
+                  style:
+                      AppTheme.darkThemeData.textTheme.displayMedium!.copyWith(
+                    color: AppPallete.errorColor,
+                  ),
                 ),
-              ),
-              const Icon(
-                Icons.delete_outlined,
-                color: AppPallete.errorColor,
-                size: 18,
-                weight: 1,
+                const Icon(
+                  Icons.delete_outlined,
+                  color: AppPallete.errorColor,
+                  size: 18,
+                  weight: 1,
+                ),
               ),
             ),
             verticalSpacing(5),

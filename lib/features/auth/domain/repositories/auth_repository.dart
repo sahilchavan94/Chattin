@@ -26,4 +26,11 @@ abstract interface class AuthRepository {
   Future<Either<Failure, String>> checkTheAccountDetailsIfTheEmailIsVerified();
 
   Future<Either<Failure, String>> signOutFromAccount();
+
+  Future<Either<Failure, String>> reauthenticateUser({
+    required String email,
+    required String password,
+  });
+
+  Future<Either<Failure, String>> deleteAccount(String uid);
 }

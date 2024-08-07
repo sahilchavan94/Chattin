@@ -15,10 +15,12 @@ abstract interface class AuthRemoteDataSource {
     String password,
   );
 
+  //for signing in
   Future<String> signInWithEmailAndPassword(
     String email,
     String password,
   );
+
   //for sending the email verfication link
   Future<String> sendEmailVerificationLink();
 
@@ -35,6 +37,15 @@ abstract interface class AuthRemoteDataSource {
 
   //for routing the user to appropriate page
   Future<String> checkTheAccountDetailsIfTheEmailIsVerified();
+
+  //for reauthenticating user
+  Future<String> reauthenticateUser({
+    required String email,
+    required String password,
+  });
+
+  //for deleting the account
+  Future<String> deleteAccount(String uid);
 
   //for signing out
   Future<String> signOutFromAccount();
@@ -187,6 +198,46 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await firebaseAuth.signOut();
       return ToastMessages.signedOutSuccessfully;
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> reauthenticateUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await firebaseAuth.currentUser!.reauthenticateWithCredential(
+        EmailAuthProvider.credential(
+          email: email,
+          password: password,
+        ),
+      );
+      return ToastMessages.reauthenticatedUserSuccess;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
+    } catch (e) {
+      throw ServerException(error: e.toString());
+    }
+  }
+
+  @override
+  Future<String> deleteAccount(String uid) async {
+    try {
+      await firebaseAuth.currentUser!.delete();
+      await firebaseFirestore
+          .collection(Constants.userCollection)
+          .doc(uid)
+          .delete();
+      return ToastMessages.deletedAccountSuccessfully;
+    } on FirebaseException catch (e) {
+      throw ServerException(
+        error: FirebaseResponseFormat.firebaseFormatError(e.toString()),
+      );
     } catch (e) {
       throw ServerException(error: e.toString());
     }

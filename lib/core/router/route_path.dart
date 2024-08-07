@@ -20,6 +20,9 @@ class RoutePath {
   static const RouteName accountSettings = RouteName(
     path: '/account_settings',
   );
+  static const RouteName deleteAccount = RouteName(
+    path: '/delete_account',
+  );
 
   //chat path ( main features )
   static const RouteName chatContacts = RouteName(
