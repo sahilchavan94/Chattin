@@ -2,6 +2,7 @@ import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/constants.dart';
 import 'package:chattin/core/widgets/image_view.dart';
 import 'package:chattin/core/widgets/send_image_widget.dart';
+import 'package:chattin/core/widgets/splash_screen_widget.dart';
 import 'package:chattin/features/auth/presentation/pages/account_settings_view.dart';
 import 'package:chattin/features/auth/presentation/pages/check_verification_status.dart';
 import 'package:chattin/features/auth/presentation/pages/create_profile_view.dart';
@@ -75,9 +76,19 @@ class AppRouter {
         return null;
       }
     },
-    initialLocation: RoutePath.chatContacts.path,
+    initialLocation: RoutePath.splashScreen.path,
     navigatorKey: Constants.navigatorKey,
     routes: [
+      GoRoute(
+        path: RoutePath.splashScreen.path,
+        pageBuilder: (context, state) {
+          return buildPageWithSlideTransition(
+            context: context,
+            state: state,
+            child: const SplashScreen(),
+          );
+        },
+      ),
       GoRoute(
         path: RoutePath.emailAuth.path,
         pageBuilder: (context, state) {

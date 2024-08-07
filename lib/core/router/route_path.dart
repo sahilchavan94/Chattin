@@ -1,6 +1,11 @@
 import 'package:chattin/core/router/route_name.dart';
 
 class RoutePath {
+  //initial
+  static const RouteName splashScreen = RouteName(
+    path: '/splash_screen',
+  );
+
   //authentication paths
   static const RouteName emailAuth = RouteName(
     path: '/email_auth',
