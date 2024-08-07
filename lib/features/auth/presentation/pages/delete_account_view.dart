@@ -83,8 +83,8 @@ class _DeleteAccountViewState extends State<DeleteAccountView> {
               ),
               verticalSpacing(20),
               ButtonWidget(
-                isLoading: context.watch<AuthCubit>().state.authStatus ==
-                    AuthStatus.loading,
+                isLoading: context.watch<AuthCubit>().state.authWorkingStatus ==
+                    AuthWorkingStatus.loading,
                 buttonText: 'Verify',
                 onPressed: () {
                   if (!_formKey.currentState!.validate()) {

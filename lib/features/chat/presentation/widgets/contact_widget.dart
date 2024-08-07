@@ -16,6 +16,8 @@ class ContactWidget extends StatelessWidget {
   final double? radius;
   final bool? hasVerticalSpacing;
   final bool? isViewingStory;
+  final Color? titleColor;
+  final Color? subTitleColor;
   const ContactWidget({
     super.key,
     required this.imageUrl,
@@ -26,6 +28,8 @@ class ContactWidget extends StatelessWidget {
     this.isViewingStory,
     this.radius,
     this.status,
+    this.titleColor,
+    this.subTitleColor,
   });
 
   @override
@@ -64,7 +68,7 @@ class ContactWidget extends StatelessWidget {
                     displayName,
                     style:
                         AppTheme.darkThemeData.textTheme.displayLarge!.copyWith(
-                      color: AppPallete.whiteColor,
+                      color: titleColor ?? AppPallete.whiteColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                     ),
@@ -77,7 +81,7 @@ class ContactWidget extends StatelessWidget {
                           : about!,
                       style: AppTheme.darkThemeData.textTheme.displaySmall!
                           .copyWith(
-                        color: AppPallete.greyColor,
+                        color: subTitleColor ?? AppPallete.greyColor,
                       ),
                     ),
                   if (status != null)

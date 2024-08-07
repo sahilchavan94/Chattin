@@ -28,9 +28,9 @@ class ImagePreview extends StatelessWidget {
           },
           autofocus: true,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: BorderRadius.circular(20),
           ),
-          backgroundColor: AppPallete.blueColor,
+          backgroundColor: AppPallete.bottomSheetColor,
           child: IconButton(
             onPressed: () {
               context.pop();
@@ -38,7 +38,7 @@ class ImagePreview extends StatelessWidget {
             },
             icon: const Icon(
               Icons.send,
-              color: AppPallete.whiteColor,
+              color: AppPallete.blueColor,
             ),
           ),
         ),

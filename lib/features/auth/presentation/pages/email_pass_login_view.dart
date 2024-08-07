@@ -54,7 +54,7 @@ class _EmailPassLoginViewState extends State<EmailPassLoginView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                verticalSpacing(35),
+                verticalSpacing(30),
                 Row(
                   children: [
                     Text(
@@ -62,21 +62,23 @@ class _EmailPassLoginViewState extends State<EmailPassLoginView> {
                       style: AppTheme.darkThemeData.textTheme.displayLarge!
                           .copyWith(
                         color: AppPallete.blueColor,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     horizontalSpacing(5),
-                    Image.asset(
-                      'assets/images/logo.png',
-                      width: 28,
-                    ),
+                    // Image.asset(
+                    //   'assets/images/logo.png',
+                    //   width: 28,
+                    // ),
                   ],
                 ),
                 Text(
-                  "Sign In into your account just with your email with ease ❗️",
+                  "Sign In into your account just by your email/pass with ease❗️",
                   style:
                       AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                     color: AppPallete.greyColor,
                   ),
+                  maxLines: 2,
                 ),
                 verticalSpacing(40),
                 InputWidget(
@@ -96,7 +98,7 @@ class _EmailPassLoginViewState extends State<EmailPassLoginView> {
                   hintText: "Enter your password",
                   fillColor: AppPallete.transparent,
                   suffixIcon: const Icon(
-                    Icons.lock,
+                    Icons.key,
                   ),
                   validator: Validators.validatePassword,
                 ),

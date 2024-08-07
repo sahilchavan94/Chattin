@@ -3,6 +3,7 @@ import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/stories/presentation/cubit/story_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -26,6 +27,8 @@ class StoryPreView extends StatefulWidget {
 class _StoryPreViewState extends State<StoryPreView> {
   late File currentFile;
   final List<TextEditingController> _textEditingControllerlist = [];
+  final TransformationController _transformationController =
+      TransformationController();
 
   @override
   void initState() {
@@ -61,6 +64,8 @@ class _StoryPreViewState extends State<StoryPreView> {
                         onTap: () {
                           setState(() {
                             currentFile = e;
+                            _transformationController.value =
+                                Matrix4.identity();
                           });
                         },
                         child: Container(
@@ -132,7 +137,7 @@ class _StoryPreViewState extends State<StoryPreView> {
                     ),
                     mini: true,
                     child: const Icon(
-                      Icons.check,
+                      Icons.send,
                       color: AppPallete.whiteColor,
                     ),
                   ),
@@ -149,12 +154,23 @@ class _StoryPreViewState extends State<StoryPreView> {
             width: double.maxFinite,
             child: Align(
               alignment: Alignment.center,
-              child: Image.file(
-                currentFile,
-                alignment: Alignment.center,
-                width: double.infinity,
-                height: double.maxFinite,
-                fit: BoxFit.contain,
+              child: InteractiveViewer(
+                transformationController: _transformationController,
+                constrained: true,
+                panAxis: PanAxis.free,
+                boundaryMargin: EdgeInsets.zero,
+                minScale: 1,
+                maxScale: 7,
+                clipBehavior: Clip.hardEdge,
+                panEnabled: true,
+                scaleEnabled: true,
+                child: Image.file(
+                  currentFile,
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  height: double.maxFinite,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),

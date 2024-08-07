@@ -336,7 +336,7 @@ class AuthCubit extends Cubit<AuthState> {
   }) async {
     emit(
       state.copyWith(
-        authStatus: AuthStatus.loading,
+        authWorkingStatus: AuthWorkingStatus.loading,
       ),
     );
     final response = await _reauthenticateUser.call(
@@ -350,7 +350,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
       emit(
         state.copyWith(
-          authStatus: AuthStatus.failure,
+          authWorkingStatus: AuthWorkingStatus.failure,
         ),
       );
     }, (r) {
@@ -360,7 +360,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
       emit(
         state.copyWith(
-          authStatus: AuthStatus.success,
+          authWorkingStatus: AuthWorkingStatus.success,
         ),
       );
       callback();
@@ -369,7 +369,11 @@ class AuthCubit extends Cubit<AuthState> {
 
   //method for signing out
   Future<void> signOut() async {
-    emit(state.copyWith(authStatus: AuthStatus.loading));
+    emit(
+      state.copyWith(
+        authStatus: AuthStatus.loading,
+      ),
+    );
     final response = await _signOutUseCase.call();
     response.fold(
       (l) {
@@ -399,9 +403,14 @@ class AuthCubit extends Cubit<AuthState> {
 
   //method to delete the account
   Future<void> deleteAccount(String uid) async {
-    emit(state.copyWith(authStatus: AuthStatus.loading));
+    emit(
+      state.copyWith(
+        authWorkingStatus: AuthWorkingStatus.loading,
+      ),
+    );
 
     final response = await _deleteAccountUseCase.call(uid);
+
     response.fold((l) {
       showToast(
         content: ToastMessages.defaultFailureMessage,
@@ -410,7 +419,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
       emit(
         state.copyWith(
-          authStatus: AuthStatus.failure,
+          authWorkingStatus: AuthWorkingStatus.failure,
         ),
       );
     }, (r) {
@@ -423,7 +432,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
       emit(
         state.copyWith(
-          authStatus: AuthStatus.success,
+          authWorkingStatus: AuthWorkingStatus.success,
         ),
       );
     });

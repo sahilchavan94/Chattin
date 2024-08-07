@@ -51,8 +51,8 @@ class DeleteAccountWidget extends StatelessWidget {
           verticalSpacing(30),
           ButtonWidget(
             buttonText: "Delete",
-            isLoading: context.watch<AuthCubit>().state.authStatus ==
-                AuthStatus.loading,
+            isLoading: context.watch<AuthCubit>().state.authWorkingStatus ==
+                AuthWorkingStatus.loading,
             onPressed: () {
               context.read<AuthCubit>().deleteAccount(uid);
             },

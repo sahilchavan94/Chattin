@@ -63,25 +63,18 @@ class _EmailAuthViewState extends State<EmailAuthView> {
                 Row(
                   children: [
                     Text(
-                      "Chattin",
+                      "Chattin`",
                       style: AppTheme.darkThemeData.textTheme.displayLarge!
                           .copyWith(
                         color: AppPallete.blueColor,
-                      ),
-                    ),
-                    Text(
-                      "`",
-                      style: AppTheme.darkThemeData.textTheme.displayLarge!
-                          .copyWith(
-                        color: AppPallete.whiteColor,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     horizontalSpacing(5),
-                    Image.asset(
-                      'assets/images/logo.png',
-                      width: 28,
-                    ),
+                    // Image.asset(
+                    //   'assets/images/logo.png',
+                    //   width: 28,
+                    // ),
                   ],
                 ),
                 Text(
@@ -109,7 +102,7 @@ class _EmailAuthViewState extends State<EmailAuthView> {
                   hintText: "Enter your password",
                   fillColor: AppPallete.transparent,
                   suffixIcon: const Icon(
-                    Icons.lock,
+                    Icons.key,
                   ),
                   validator: Validators.validatePassword,
                 ),
@@ -121,7 +114,7 @@ class _EmailAuthViewState extends State<EmailAuthView> {
                   hintText: "Confirm your password",
                   passwordController: _passwordController,
                   suffixIcon: const Icon(
-                    Icons.lock,
+                    Icons.key,
                   ),
                   validator: Validators.validatePassword,
                 ),

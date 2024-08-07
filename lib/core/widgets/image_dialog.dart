@@ -101,10 +101,9 @@ showImageDialog({
                                   },
                                 );
                               },
-                              icon: Image.asset(
-                                'assets/images/logo.png',
-                                width: 25,
-                                height: 25,
+                              icon: const Icon(
+                                Icons.message_outlined,
+                                color: AppPallete.blueColor,
                               ),
                             ),
                             // IconButton(

@@ -166,29 +166,33 @@ class _ProfileImageViewState extends State<ProfileImageView> {
                   ),
                 )
               : const SizedBox.shrink(),
-      body: Center(
-        child: isDownloading
-            ? const CircularProgressIndicator()
-            : SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: InteractiveViewer(
-                  transformationController: _transformationController,
-                  constrained: true,
-                  panAxis: PanAxis.free,
-                  boundaryMargin: EdgeInsets.zero,
-                  minScale: 1,
-                  maxScale: 7,
-                  clipBehavior: Clip.hardEdge,
-                  panEnabled: true,
-                  scaleEnabled: true,
-                  child: ImageWidget(
-                    imagePath: currentImage,
-                    fit: BoxFit.contain,
-                    isImageFromChat: true,
+      body: Stack(
+        children: [
+          Center(
+            child: isDownloading
+                ? const CircularProgressIndicator()
+                : SizedBox(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: InteractiveViewer(
+                      transformationController: _transformationController,
+                      constrained: true,
+                      panAxis: PanAxis.free,
+                      boundaryMargin: EdgeInsets.zero,
+                      minScale: 1,
+                      maxScale: 7,
+                      clipBehavior: Clip.hardEdge,
+                      panEnabled: true,
+                      scaleEnabled: true,
+                      child: ImageWidget(
+                        imagePath: currentImage,
+                        fit: BoxFit.contain,
+                        isImageFromChat: true,
+                      ),
+                    ),
                   ),
-                ),
-              ),
+          ),
+        ],
       ),
     );
   }

@@ -142,9 +142,9 @@ class _ChatContactsViewState extends State<ChatContactsView> {
           ),
         ),
         backgroundColor: AppPallete.bottomSheetColor,
-        child: Image.asset(
-          'assets/images/logo.png',
-          width: 30,
+        child: const Icon(
+          Icons.send,
+          color: AppPallete.blueColor,
         ),
       ),
       body: BlocBuilder<AuthCubit, AuthState>(

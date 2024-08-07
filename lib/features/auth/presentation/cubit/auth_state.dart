@@ -8,11 +8,19 @@ enum AuthStatus {
   failure,
 }
 
+enum AuthWorkingStatus {
+  loading,
+  failure,
+  success,
+}
+
 class AuthState {
   AuthStatus authStatus;
+  AuthWorkingStatus? authWorkingStatus;
   String? message;
   AuthState({
     required this.authStatus,
+    this.authWorkingStatus,
     this.message,
   });
 
@@ -20,21 +28,13 @@ class AuthState {
 
   AuthState copyWith({
     AuthStatus? authStatus,
+    AuthWorkingStatus? authWorkingStatus,
     String? message,
   }) {
     return AuthState(
       authStatus: authStatus ?? this.authStatus,
+      authWorkingStatus: authWorkingStatus ?? this.authWorkingStatus,
       message: message ?? this.message,
     );
   }
-
-  // @override
-  // bool operator ==(covariant AuthState other) {
-  //   if (identical(this, other)) return true;
-
-  //   return other.authStatus == authStatus && other.message == message;
-  // }
-
-  // @override
-  // int get hashCode => authStatus.hashCode ^ message.hashCode;
 }

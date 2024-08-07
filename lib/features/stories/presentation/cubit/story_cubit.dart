@@ -44,6 +44,7 @@ class StoryCubit extends Cubit<StoryState> {
 
     showToast(
       content: ToastMessages.storyInProgress,
+      description: ToastMessages.storyNote,
       type: ToastificationType.info,
     );
 

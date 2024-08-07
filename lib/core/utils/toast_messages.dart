@@ -68,6 +68,7 @@ class ToastMessages {
       "You can't choose more than 5 images";
   static const String storyUploadSuccess = "Successfully added story";
   static const String storyInProgress = "Uploading your stories";
+  static const String storyNote = "Your stories will be visible soon";
 
   //image downloading
   static const String imageDownload = "Image downloaded successfully!";

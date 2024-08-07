@@ -126,18 +126,34 @@ class _StorySeeViewState extends State<StorySeeView> {
                         ),
                       ),
                       Positioned(
-                        top: MediaQuery.of(context).size.height * .075,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: ContactWidget(
-                            isViewingStory: true,
-                            uid: widget.storyList[index].userEntity!.uid,
-                            imageUrl:
-                                widget.storyList[index].userEntity!.imageUrl,
-                            radius: 50,
-                            displayName:
-                                widget.storyList[index].userEntity!.displayName,
-                            about: uploadedAt,
+                        top: MediaQuery.of(context).size.height * .06,
+                        left: MediaQuery.of(context).size.width * .035,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppPallete.bottomSheetColor.withOpacity(.3),
+                            borderRadius: BorderRadius.circular(
+                              40,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                              left: 10.0,
+                              right: 30.0,
+                              top: 8,
+                              bottom: 8,
+                            ),
+                            child: ContactWidget(
+                              isViewingStory: true,
+                              uid: widget.storyList[index].userEntity!.uid,
+                              imageUrl:
+                                  widget.storyList[index].userEntity!.imageUrl,
+                              radius: 50,
+                              displayName: widget
+                                  .storyList[index].userEntity!.displayName,
+                              about: uploadedAt,
+                              titleColor: AppPallete.whiteColor,
+                              subTitleColor: AppPallete.whiteColor,
+                            ),
                           ),
                         ),
                       ),
