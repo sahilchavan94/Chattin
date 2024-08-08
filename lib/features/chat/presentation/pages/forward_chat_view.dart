@@ -123,7 +123,7 @@ class _ForwardChatViewState extends State<ForwardChatView> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      verticalSpacing(20),
+                      verticalSpacing(5),
                       Text(
                         "Select chats to forward",
                         style: AppTheme.darkThemeData.textTheme.displaySmall!
