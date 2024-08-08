@@ -42,6 +42,10 @@ class ToastMessages {
   static const String noContactsSelected =
       "Select atleast 1 contact to forward";
   static const String forwardMessageFailure = "Failed to forward your message";
+  static const String contactsAccessFailure =
+      "Grant the permission to access contacts";
+  static const String contactsAccessFailureDesc =
+      "Open the app permissions from app settings and enable contacts permission for Chattin` ";
 
   //chat cubit
   static const String chatContactsFailureMessage =

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
@@ -32,13 +34,13 @@ class _ChatContactsViewState extends State<ChatContactsView> {
   void initState() {
     context.read<AuthCubit>().checkTheAccountDetailsIfTheEmailIsVerified();
     context.read<ProfileCubit>().getProfileData().then((value) {
-      _setUserOnlineStatus();
+      _initialTasks();
     });
     _searchController.addListener(_onSearchChanged);
     super.initState();
   }
 
-  void _setUserOnlineStatus() {
+  void _initialTasks() async {
     final currentUserData = context.read<ProfileCubit>().state.userData;
     if (currentUserData != null) {
       final chatCubit = context.read<ChatCubit>();

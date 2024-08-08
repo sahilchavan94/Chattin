@@ -5,6 +5,9 @@ import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/utils/contacts.dart';
+import 'package:chattin/core/utils/requests.dart';
+import 'package:chattin/core/utils/toast_messages.dart';
+import 'package:chattin/core/utils/toasts.dart';
 import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
 import 'package:chattin/features/auth/presentation/cubit/auth_cubit.dart';
@@ -17,6 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:toastification/toastification.dart';
 
 class SelectContactsView extends StatefulWidget {
   const SelectContactsView({super.key});
@@ -38,6 +42,15 @@ class _SelectContactsViewState extends State<SelectContactsView> {
   }
 
   _getContactsFromPhone({bool isRefreshed = false}) async {
+    final permission = await Requests.requestContactsPermission();
+    if (!permission) {
+      showToast(
+        content: ToastMessages.contactsAccessFailure,
+        description: ToastMessages.contactsAccessFailureDesc,
+        type: ToastificationType.error,
+      );
+      return;
+    }
     String phoneNumber =
         context.read<ProfileCubit>().state.userData!.phoneNumber!;
     List<String> contactsList = await Contacts.getContacts(
@@ -75,6 +88,8 @@ class _SelectContactsViewState extends State<SelectContactsView> {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
+        // this refers to no permission given
+
         if (state.authStatus == AuthStatus.loading) {
           return const Center(
             child: CircularProgressIndicator(),
@@ -107,6 +122,42 @@ class _SelectContactsViewState extends State<SelectContactsView> {
           ),
           body: BlocBuilder<ContactsCubit, ContactsState>(
             builder: (context, contactsState) {
+              if (contactsState.contactsStatus == ContactsStatus.initial) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () async {
+                        _getContactsFromPhone();
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "No contacts can be accessed due to permission issues",
+                            style: AppTheme
+                                .darkThemeData.textTheme.displaySmall!
+                                .copyWith(
+                              color: AppPallete.errorColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            ToastMessages.contactsAccessFailureDesc,
+                            style: AppTheme
+                                .darkThemeData.textTheme.displaySmall!
+                                .copyWith(
+                              color: AppPallete.greyColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
               if (contactsState.contactsStatus == ContactsStatus.loading) {
                 return const Center(
                   child: CircularProgressIndicator(),
