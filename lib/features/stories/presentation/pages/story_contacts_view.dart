@@ -8,6 +8,9 @@ import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/utils/contacts.dart';
 import 'package:chattin/core/utils/picker.dart';
+import 'package:chattin/core/utils/requests.dart';
+import 'package:chattin/core/utils/toast_messages.dart';
+import 'package:chattin/core/utils/toasts.dart';
 import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/core/widgets/input_widget.dart';
@@ -19,6 +22,7 @@ import 'package:chattin/features/stories/presentation/widgets/story_widget.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:toastification/toastification.dart';
 
 class StoryContactsView extends StatefulWidget {
   const StoryContactsView({super.key});
@@ -41,6 +45,15 @@ class _StoryContactsViewState extends State<StoryContactsView> {
   }
 
   Future<void> _getContactsFromPhone({bool isRefreshed = false}) async {
+    final permission = await Requests.requestContactsPermission();
+    if (!permission) {
+      showToast(
+        content: ToastMessages.contactsAccessFailure,
+        description: ToastMessages.contactsAccessFailureDesc,
+        type: ToastificationType.error,
+      );
+      return;
+    }
     List<String> contactsList = await Contacts.getContacts(
       selfNumber: userData.phoneNumber!,
     );
@@ -103,6 +116,40 @@ class _StoryContactsViewState extends State<StoryContactsView> {
       ),
       body: BlocBuilder<ContactsCubit, ContactsState>(
         builder: (context, state) {
+          if (state.contactsStatus == ContactsStatus.initial) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () async {
+                    _getContactsFromPhone();
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "No contacts can be accessed due to permission issues",
+                        style: AppTheme.darkThemeData.textTheme.displaySmall!
+                            .copyWith(
+                          color: AppPallete.errorColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        ToastMessages.contactsAccessFailureDesc,
+                        style: AppTheme.darkThemeData.textTheme.displaySmall!
+                            .copyWith(
+                          color: AppPallete.greyColor,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
           if (state.contactsStatus == ContactsStatus.loading) {
             return const Center(
               child: CircularProgressIndicator(),
