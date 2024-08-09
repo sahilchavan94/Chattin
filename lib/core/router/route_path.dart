@@ -1,7 +1,7 @@
 import 'package:chattin/core/router/route_name.dart';
 
 class RoutePath {
-  //initial
+  //initial path
   static const RouteName splashScreen = RouteName(
     path: '/splash_screen',
   );

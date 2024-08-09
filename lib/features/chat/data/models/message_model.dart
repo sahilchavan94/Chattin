@@ -28,9 +28,9 @@ class MessageModel extends MessageEntity {
         'timeSent': timeSent!.millisecondsSinceEpoch,
         'messageId': messageId,
         'status': status,
-        'messageType': messageType.toStringValue(),
+        'messageType': messageType.convertMessageTypeToString(),
         'repliedTo': repliedTo,
-        'repliedToType': repliedToType!.toStringValue(),
+        'repliedToType': repliedToType!.convertMessageTypeToString(),
         'isReply': true,
       };
     }
@@ -42,7 +42,7 @@ class MessageModel extends MessageEntity {
         'timeSent': timeSent!.millisecondsSinceEpoch,
         'messageId': messageId,
         'status': status,
-        'messageType': messageType.toStringValue(),
+        'messageType': messageType.convertMessageTypeToString(),
         'isForwarded': true,
       };
     }
@@ -53,7 +53,7 @@ class MessageModel extends MessageEntity {
       'timeSent': timeSent!.millisecondsSinceEpoch,
       'messageId': messageId,
       'status': status,
-      'messageType': messageType.toStringValue(),
+      'messageType': messageType.convertMessageTypeToString(),
     };
   }
 
@@ -69,14 +69,14 @@ class MessageModel extends MessageEntity {
       status: map['status'] ??
           false, //status here resembles to seen/unseen status of message
       messageType: map['messageType'] != null
-          ? (map['messageType'] as String).toStringValue()
+          ? (map['messageType'] as String).convertStringToMessageType()
           : MessageType.text,
       isReply: map['isReply'] ?? false, //whether the message is a reply
       repliedTo: map['repliedTo'] != null
           ? map['repliedTo'] as String
           : "", //to which message this message is replied to
       repliedToType: map['repliedToType'] != null
-          ? (map['repliedToType'] as String).toStringValue()
+          ? (map['repliedToType'] as String).convertStringToMessageType()
           : MessageType
               .text, //the type of the message to which this message is replied
       isForwarded: map['isForwarded'] ?? false,

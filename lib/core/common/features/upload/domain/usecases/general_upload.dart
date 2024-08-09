@@ -9,7 +9,13 @@ class GeneralUploadUseCase {
 
   GeneralUploadUseCase({required this.uploadRepository});
 
-  Future<Either<Failure, String>> call(File media, String id) async {
-    return await uploadRepository.generalUpload(media, id);
+  Future<Either<Failure, String>> call({
+    required File media,
+    required String referencePath,
+  }) async {
+    return await uploadRepository.generalUpload(
+      media: media,
+      referencePath: referencePath,
+    );
   }
 }

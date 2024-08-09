@@ -3,10 +3,10 @@ import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
+import 'package:chattin/core/utils/date_format.dart';
 import 'package:chattin/core/widgets/user_info.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 class ProfileDetailsWidget extends StatelessWidget {
   final String title;
@@ -115,7 +115,7 @@ class ProfileDetailsWidget extends StatelessWidget {
             size: 20,
           ),
           Text(
-            DateFormat("dd MMM yyyy").format(userData.joinedOn!),
+            DateFormatters.formatDateWithDate(userData.joinedOn!),
             style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
               color: AppPallete.whiteColor,
             ),

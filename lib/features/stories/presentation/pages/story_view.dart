@@ -1,10 +1,10 @@
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_theme.dart';
+import 'package:chattin/core/utils/date_format.dart';
 import 'package:chattin/features/chat/presentation/widgets/contact_widget.dart';
 import 'package:chattin/features/stories/domain/entities/story_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
@@ -52,8 +52,7 @@ class _StorySeeViewState extends State<StorySeeView> {
       widget.storyList.first.imageUrlList.first['uploadedAt'],
     );
 
-    uploadedAt =
-        "${DateFormat('dd MMM yyyy').format(temp)} ${DateFormat.jm().format(temp)}";
+    uploadedAt = DateFormatters.formatDateWithBothDateAndDay(temp);
     currentCaption = widget.storyList.first.imageUrlList.first['caption'];
   }
 
@@ -117,8 +116,8 @@ class _StorySeeViewState extends State<StorySeeView> {
                                   currentCaption = widget.storyList[index]
                                       .imageUrlList[pos]['caption'];
 
-                                  uploadedAt =
-                                      "${DateFormat('dd MMM yyyy').format(temp)} ${DateFormat.jm().format(temp)}";
+                                  uploadedAt = DateFormatters
+                                      .formatDateWithBothDateAndDay(temp);
                                 },
                               );
                             }

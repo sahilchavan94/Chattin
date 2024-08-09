@@ -3,7 +3,10 @@ import 'package:chattin/core/errors/exceptions.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 abstract interface class UploadRemoteDataSource {
-  Future<String> generalUpload(File media, String id);
+  Future<String> generalUpload({
+    required File media,
+    required String referencePath,
+  });
 }
 
 class UploadRemoteDataSourceImpl implements UploadRemoteDataSource {
@@ -13,8 +16,11 @@ class UploadRemoteDataSourceImpl implements UploadRemoteDataSource {
     required this.firebaseStorage,
   });
   @override
-  Future<String> generalUpload(File media, String path) async {
-    final ref = firebaseStorage.ref().child(path);
+  Future<String> generalUpload({
+    required File media,
+    required String referencePath,
+  }) async {
+    final ref = firebaseStorage.ref().child(referencePath);
 
     try {
       final response = await ref.putFile(media);

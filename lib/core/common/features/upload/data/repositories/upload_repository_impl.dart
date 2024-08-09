@@ -11,11 +11,14 @@ class UploadRepositoryImpl implements UploadRepository {
 
   UploadRepositoryImpl({required this.uploadRemoteDataSourceImpl});
   @override
-  Future<Either<Failure, String>> generalUpload(File media, String id) async {
+  Future<Either<Failure, String>> generalUpload({
+    required File media,
+    required String referencePath,
+  }) async {
     try {
       final response = await uploadRemoteDataSourceImpl.generalUpload(
-        media,
-        id,
+        media: media,
+        referencePath: referencePath,
       );
       return Right(response);
     } on ServerException catch (e) {

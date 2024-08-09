@@ -51,8 +51,10 @@ class StoryCubit extends Cubit<StoryState> {
     //upload the images and store the urls
     for (final image in imageFiles) {
       final storyId = const Uuid().v1();
-      final uploadResponse =
-          await _generalUploadUseCase.call(image, 'stories/$uid/$storyId');
+      final uploadResponse = await _generalUploadUseCase.call(
+        media: image,
+        referencePath: 'stories/$uid/$storyId',
+      );
       if (uploadResponse.isRight()) {
         final uploadedUrl = uploadResponse.getOrElse((l) => "");
         if (uploadedUrl.isNotEmpty) {

@@ -3,7 +3,6 @@ import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/errors/exceptions.dart';
 import 'package:chattin/core/utils/constants.dart';
 import 'package:chattin/core/utils/firebase_format.dart';
-import 'package:chattin/core/utils/helper_functions.dart';
 import 'package:chattin/core/utils/toast_messages.dart';
 import 'package:chattin/features/chat/data/models/contact_model.dart';
 import 'package:chattin/features/chat/data/models/message_model.dart';
@@ -332,7 +331,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
       _saveDataToContactsSubcollection(
         sender: sender,
         receiver: receiver,
-        text: messageType.toStringValue(),
+        text: messageType.convertMessageTypeToString(),
         timeSent: timeSent,
       );
 
@@ -439,9 +438,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           if (data == null) {
             return Status.unavailable;
           }
-          return HelperFunctions.parseStatusType(
-            data['status'] as String,
-          );
+          return (data['status'] as String).convertStringToStatus();
         },
       );
 
@@ -464,7 +461,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           .doc(uid)
           .update(
         {
-          'status': status.toStringValue(),
+          'status': status.convertStatusToString(),
         },
       );
     } on FirebaseException catch (e) {
@@ -593,7 +590,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           .update(
         {
           "text": ToastMessages.deletedMessage,
-          "messageType": MessageType.deleted.toStringValue(),
+          "messageType": MessageType.deleted.convertMessageTypeToString(),
         },
       );
 
@@ -609,7 +606,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           .update(
         {
           "text": ToastMessages.deletedMessage,
-          "messageType": MessageType.deleted.toStringValue(),
+          "messageType": MessageType.deleted.convertMessageTypeToString(),
         },
       );
 
@@ -705,7 +702,7 @@ class ChatRemoteDataSourceImpl implements ChatRemoteDataSource {
           receiver: receiver,
           text: messageType == MessageType.text
               ? text
-              : messageType.toStringValue(),
+              : messageType.convertMessageTypeToString(),
           timeSent: timeSent,
         );
 

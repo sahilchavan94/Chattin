@@ -5,7 +5,7 @@ enum Status {
 }
 
 extension StatusExtension on Status {
-  String toStringValue() {
+  String convertStatusToString() {
     switch (this) {
       case Status.online:
         return 'Online';
@@ -15,6 +15,19 @@ extension StatusExtension on Status {
         return 'Unavailable';
       default:
         return 'Unavailable';
+    }
+  }
+}
+
+extension ConvertToStatus on String {
+  Status convertStringToStatus() {
+    switch (this) {
+      case 'Online':
+        return Status.online;
+      case 'Offline':
+        return Status.offline;
+      default:
+        return Status.unavailable;
     }
   }
 }
@@ -29,7 +42,7 @@ enum MessageType {
 }
 
 extension MessageTypeExtension on MessageType {
-  String toStringValue() {
+  String convertMessageTypeToString() {
     switch (this) {
       case MessageType.image:
         return '📸 Photo';
@@ -44,7 +57,7 @@ extension MessageTypeExtension on MessageType {
 }
 
 extension ConvertToMessageType on String {
-  MessageType toStringValue() {
+  MessageType convertStringToMessageType() {
     switch (this) {
       case '📸 Photo':
         return MessageType.image;

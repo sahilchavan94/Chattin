@@ -112,11 +112,11 @@ class ChatCubit extends Cubit<ChatState> {
     emit(state.copyWith(sendingMessage: true));
     final messageId = const Uuid().v1();
     final referencePath =
-        'chats/${messageType.toStringValue()}/${sender.uid}/$recieverId/$messageId';
+        'chats/${messageType.convertMessageTypeToString()}/${sender.uid}/$recieverId/$messageId';
 
     final uploadResponse = await _generalUploadUseCase.call(
-      file,
-      referencePath,
+      media: file,
+      referencePath: referencePath,
     );
 
     if (uploadResponse.isRight()) {

@@ -4,6 +4,7 @@ import 'package:chattin/core/router/route_path.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
+import 'package:chattin/core/utils/date_format.dart';
 import 'package:chattin/core/widgets/failure_widget.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:chattin/core/widgets/user_info.dart';
@@ -12,7 +13,6 @@ import 'package:chattin/features/chat/presentation/cubits/chat_cubit/chat_cubit.
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 class ChatContactInformationView extends StatefulWidget {
   final String uid;
@@ -207,7 +207,7 @@ class _ChatContactInformationViewState
                   ),
                   verticalSpacing(40),
                   Text(
-                    'Joined Chattin on ${DateFormat("dd MMM yyyy").format(userData.joinedOn!)}',
+                    'Joined Chattin on ${DateFormatters.formatDateWithDate(userData.joinedOn!)}',
                     style:
                         AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                       color: AppPallete.greyColor,

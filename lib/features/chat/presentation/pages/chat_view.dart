@@ -118,8 +118,8 @@ class _ChatViewState extends State<ChatView> {
                     .watch<ChatCubit>()
                     .state
                     .currentChatStatus
-                    ?.toStringValue() ??
-                Status.unavailable.toStringValue(),
+                    ?.convertStatusToString() ??
+                Status.unavailable.convertStatusToString(),
             radius: 50,
             isViewingStory: true,
           ),

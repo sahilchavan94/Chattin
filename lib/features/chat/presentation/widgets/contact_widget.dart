@@ -2,7 +2,6 @@ import 'package:chattin/core/enum/enums.dart';
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
-import 'package:chattin/core/utils/helper_functions.dart';
 import 'package:chattin/core/widgets/image_dialog.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
@@ -89,10 +88,10 @@ class ContactWidget extends StatelessWidget {
                       status!,
                       style: AppTheme.darkThemeData.textTheme.displaySmall!
                           .copyWith(
-                        color: HelperFunctions.parseStatusType(status!) ==
-                                Status.online
-                            ? AppPallete.blueColor
-                            : AppPallete.redColor,
+                        color:
+                            (status!).convertStringToStatus() == Status.online
+                                ? AppPallete.blueColor
+                                : AppPallete.redColor,
                       ),
                     )
                 ],

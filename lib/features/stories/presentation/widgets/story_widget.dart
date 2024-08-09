@@ -1,9 +1,9 @@
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
+import 'package:chattin/core/utils/date_format.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class StoryWidget extends StatelessWidget {
   final String displayName;
@@ -42,7 +42,8 @@ class StoryWidget extends StatelessWidget {
               ),
               verticalSpacing(5),
               Text(
-                "${DateFormat('dd MMM yyy').format(firestStoryUploadTime)} ${DateFormat.jm().format(firestStoryUploadTime)}",
+                DateFormatters.formatDateWithBothDateAndDay(
+                    firestStoryUploadTime),
                 style: AppTheme.darkThemeData.textTheme.displaySmall!.copyWith(
                   color: AppPallete.greyColor,
                 ),

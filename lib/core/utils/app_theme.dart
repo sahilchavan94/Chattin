@@ -1,6 +1,5 @@
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static ThemeData darkThemeData = ThemeData(
@@ -27,13 +26,14 @@ class AppTheme {
       surfaceTintColor: AppPallete.bottomSheetColor,
     ),
 
+    fontFamily: 'Inter',
     //text theme
-    textTheme: TextTheme(
-      displayLarge: GoogleFonts.inter(
+    textTheme: const TextTheme(
+      displayLarge: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w400,
       ),
-      displaySmall: GoogleFonts.inter(
+      displaySmall: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w400,
       ),

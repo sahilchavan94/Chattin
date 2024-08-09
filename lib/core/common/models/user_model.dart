@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:chattin/core/common/entities/user_entity.dart';
 import 'package:chattin/core/enum/enums.dart';
-import 'package:chattin/core/utils/helper_functions.dart';
 
 class UserModel extends UserEntity {
   UserModel({
@@ -30,7 +29,7 @@ class UserModel extends UserEntity {
           ? map['about'] as String
           : 'Hello everyone, I\'m now on Chattin`!',
       status: map['status'] != null
-          ? HelperFunctions.parseStatusType(map['status'] as String)
+          ? (map['status'] as String).convertStringToStatus()
           : Status.unavailable,
       joinedOn: map['joinedOn'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['joinedOn'] as int)

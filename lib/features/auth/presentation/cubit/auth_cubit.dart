@@ -227,8 +227,8 @@ class AuthCubit extends Cubit<AuthState> {
     //if an image is selected by the user then upload it to firebase storage
     if (imageFile != null) {
       response = await _generalUploadUseCase.call(
-        imageFile,
-        "profileImages/${_firebaseAuth.currentUser!.uid}",
+        media: imageFile,
+        referencePath: "profileImages/${_firebaseAuth.currentUser!.uid}",
       );
 
       if (response.isRight()) {

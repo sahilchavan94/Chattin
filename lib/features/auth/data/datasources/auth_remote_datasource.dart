@@ -135,7 +135,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         "phoneNumber": phoneNumber,
         "phoneCode": phoneCode,
         "imageUrl": imageUrl,
-        "status": Status.online.toStringValue(),
+        "status": Status.online.convertStatusToString(),
         "joinedOn": DateTime.now().millisecondsSinceEpoch,
       });
       return ToastMessages.welcomeSignInMessage;

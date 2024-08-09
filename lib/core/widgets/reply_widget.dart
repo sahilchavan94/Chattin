@@ -5,7 +5,6 @@ import 'package:chattin/core/utils/app_spacing.dart';
 import 'package:chattin/core/utils/app_theme.dart';
 import 'package:chattin/core/widgets/image_widget.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
@@ -265,7 +264,7 @@ Widget replyWidget({
                     child: Row(
                       children: [
                         Text(
-                          messageType.toStringValue(),
+                          messageType.convertMessageTypeToString(),
                           style: AppTheme.darkThemeData.textTheme.displayMedium!
                               .copyWith(
                             color: AppPallete.greyColor,

@@ -143,8 +143,8 @@ class ProfileCubit extends Cubit<ProfileState> {
     //only in that case set the profile image as an empty string
     if (isRemoving != null && isRemoving == false) {
       final uploadResponse = await _generalUploadUseCase.call(
-        imageFile!,
-        "profileImages/$uid",
+        media: imageFile!,
+        referencePath: "profileImages/$uid",
       );
       if (uploadResponse.isRight()) {
         imageUrl = uploadResponse.getOrElse((l) => "");

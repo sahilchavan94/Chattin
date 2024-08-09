@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class ReplyMessageProvider extends ChangeNotifier {
   MessageType messageType = MessageType.text; //type of the message
   bool isReplyWidgetOpened =
-      false; //flag to set whether to show the reply widget or not
+      false; //flag to set whether to show the reply widget
   bool isMe = false; //whether you are replying to self message
   String repliedTo = ""; //the message to which you are replying
   String senderName = ""; //sender of the message to which we are replying
