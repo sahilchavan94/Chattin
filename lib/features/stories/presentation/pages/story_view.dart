@@ -1,6 +1,6 @@
 import 'package:chattin/core/utils/app_pallete.dart';
 import 'package:chattin/core/utils/app_theme.dart';
-import 'package:chattin/core/utils/date_format.dart';
+import 'package:chattin/core/utils/dates.dart';
 import 'package:chattin/features/chat/presentation/widgets/contact_widget.dart';
 import 'package:chattin/features/stories/domain/entities/story_entity.dart';
 import 'package:flutter/material.dart';
